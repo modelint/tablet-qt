@@ -1,0 +1,9 @@
+# color_usages.yaml – Symbols used to select specific colors
+
+# states
+error : bubble gum
+ideal : clover
+recovery : sky
+
+# classes
+specification : limoncello

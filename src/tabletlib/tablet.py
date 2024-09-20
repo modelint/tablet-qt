@@ -5,10 +5,14 @@ in the drawing domain. The Tablet can be drawn using cairo or some other graphic
 import logging
 from tabletlib.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
 from tabletlib.geometry_types import Rect_Size, Position
-# import cairo
 from tabletlib.styledb import StyleDB
 from tabletlib.layer import Layer
+from tabletlib.view import View
 from typing import Optional
+import sys
+from PyQt6.QtWidgets import QApplication, QGraphicsTextItem, QGraphicsEllipseItem, QGraphicsRectItem
+from PyQt6.QtGui import QBrush, QPen, QColor
+from PyQt6.QtCore import Qt
 
 
 class Tablet:
@@ -47,8 +51,7 @@ class Tablet:
 
         - Size -- The size of the whatever surface (PDF, RGB, SVG, etc) Tablet supports.
         - Output_file -- A filename or output stream object to be output as a drawing
-        - PDF_sheet -- For now we only support PDF output as defined in Cairo.  So this is a Cairo surface
-        - Context -- A Cairo context object for drawing on the PDF sheet
+        - View -- This is the QT QGraphicsView widget that we will be drawing onto
     """
 
     def __init__(self, size: Rect_Size, output_file, drawing_type: str, presentation: str, layer: str):
@@ -66,10 +69,14 @@ class Tablet:
         StyleDB.load_config_files()
 
         # Establish a system default layer ordering. Not all of them will be used in any given
-        # Drawing, but this is the draw order from bottom-most layer upward
+        # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
+        self.App = QApplication(sys.argv)  # QT Application (must be created before any QT widgets)
+        # TODO: Change later so that we aren't sending the Flatland Command line args to QApplication
+
+        self.View = View(size)  # QT widget for drawing 2D elements
 
         if layer not in self.layer_order:
             raise NonSystemInitialLayer
@@ -80,8 +87,6 @@ class Tablet:
         self.Drawing_type = drawing_type  # class diagram, state diagram, etc
         self.Size = size
         self.Output_file = output_file
-        self.PDF_sheet = cairo.PDFSurface(self.Output_file, self.Size.width, self.Size.height)
-        self.Context = cairo.Context(self.PDF_sheet)
 
     def add_layer(self, name: str, presentation: str, drawing_type: str, fill: str = None) -> Optional[Layer]:
         """Add a new layer if not already instantiated and return it"""
@@ -99,7 +104,13 @@ class Tablet:
         """
         Renders each instantiated layer of the Tablet moving up the z axis. Any uninstantiated layers are skipped.
         """
+        # Create and show the drawing window
+        self.View.setWindowTitle("Tablet View")
         [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
+        self.View.show()
+
+        # Run the event loop
+        sys.exit(self.App.exec())
 
     def to_dc(self, tablet_coord: Position) -> Position:
         """

@@ -1,5 +1,5 @@
 """
-presentation.py – Presentation class in Drawing domain
+presentation.py – Presentation class in View domain
 """
 import logging
 from collections import namedtuple
@@ -14,7 +14,7 @@ config_dir = Path(__file__).parent / "config"
 class Presentation:
     """
    A set of compatible visual styles including fonts, colors, border widths and so forth as appropriate to a
-   given Drawing Type form a selectable Presentation. For example, an `Executable UML State Machine Diagram`
+   given View Type form a selectable Presentation. For example, an `Executable UML State Machine Diagram`
    might be drawn using certain fonts for state names and possibly different colors for transient and
    non-transient states. Alternatively, only black and white might be used with purple for a certain kind of
    connector in a diagnostic Presentation.

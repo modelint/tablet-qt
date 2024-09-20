@@ -1,0 +1,10 @@
+# line_styles.yaml – Line styles
+
+normal: {pattern: no dash, width: 1, color: black}
+hidden: {pattern: no dash, width: 0, color: white}
+double: {pattern: no dash, width: 2, color: black}
+dashed: {pattern: even dash, width: 1, color: black}
+grid: {pattern: no dash, width: 1, color: grid blue}
+margin: {pattern: no dash, width: 3, color: gold}
+connector highlight: {pattern: no dash, width: 1, color: purple}
+hide: {pattern: no dash, width: 1, color: white}

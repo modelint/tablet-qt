@@ -21,7 +21,10 @@ class EtchaSketch:
     def draw_stuff(cls):
         cls.make_a_tablet()
 
-        cls.tablet.layers['diagram'].add_rectangle(asset='state name only compartment', lower_left=Position(100, 200),
+        cls.tablet.add_layer(name='sheet', presentation='default', drawing_type="OS Engineer large frame",
+                             fill="recycle bin")
+
+        cls.tablet.layers['diagram'].add_rectangle(asset='state name only compartment', lower_left=Position(10, 10),
                                 size=Rect_Size(100, 200))
         cls.tablet.render()
 

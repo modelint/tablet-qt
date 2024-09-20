@@ -1,0 +1,20 @@
+# text_styles.yaml – Named usages of type faces
+
+# Used in model diagrams
+p9body: {typeface: Palatino, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
+p12title: {typeface: Palatino, size: 12, slant: normal, weight: bold, color: black, spacing: 1.3}
+p9italic: {typeface: Palatino, size: 9, slant: italic, weight: normal, color: black, spacing: 1.3}
+
+# Used in Frames
+Corner Title Large: {typeface: Eurostile, size: 14, slant: normal, weight: normal, color: black, spacing: 1.3}
+Corner Title Medium: {typeface: Eurostile, size: 14, slant: normal, weight: normal, color: black, spacing: 1.3}
+Corner Title Small: {typeface: Eurostile, size: 12, slant: normal, weight: normal, color: black, spacing: 1.1}
+Block Title Large: {typeface: Eurostile, size: 11, slant: normal, weight: normal, color: block blue, spacing: 1.3}
+Block Title Medium: {typeface: Eurostile, size: 11, slant: normal, weight: normal, color: block blue, spacing: 1.3}
+Block Title Small: {typeface: Eurostile, size: 9, slant: normal, weight: normal, color: block blue, spacing: 1.1}
+boilerplate: {typeface: Courier, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
+coordinate: {typeface: Courier, size: 12, slant: normal, weight: normal, color: toyota red, spacing: 1.3}
+Footer Central: {typeface: Verdana, size: 11, slant: italic, weight: normal, color: black, spacing: 1.3}
+Block Body Large: {typeface: Verdana, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
+Block Body Medium: {typeface: Verdana, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
+Block Body Small: {typeface: Verdana, size: 7, slant: normal, weight: normal, color: black, spacing: 1.1}

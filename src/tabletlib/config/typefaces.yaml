@@ -1,0 +1,9 @@
+# typefaces.yaml – System defined typefaces
+# System font names keyed by alias used internally
+
+Palatino  : Palatino Sans Informal LT Pro
+Gill_Sans : Gill Sans
+Helvetica : Helvetica
+Verdana   : Verdana
+Eurostile : Eurostile BoldExtendedTwo
+Courier   : Courier

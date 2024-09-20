@@ -4,7 +4,6 @@ layer.py - A layer of graphics drawn on a Tablet
 import sys
 import logging
 from typing import List
-import cairo
 import math  # For rounded corners
 from tabletlib.exceptions import TabletBoundsExceeded
 from tabletlib.styledb import StyleDB
@@ -13,35 +12,39 @@ from tabletlib.geometry_types import Rect_Size, Position, HorizAlign
 from tabletlib.presentation import Presentation
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
+from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsRectItem
+from PyQt6.QtGui import QPainterPath, QBrush, QPen, QColor
+from PyQt6.QtCore import Qt, QRectF
 
 if TYPE_CHECKING:
     from tabletlib.tablet import Tablet
 
-Cairo_font_weight = {'normal': cairo.FontWeight.NORMAL, 'bold': cairo.FontWeight.BOLD}
-"""Maps an application style to a cairo specific font weight"""
-Cairo_font_slant = {'normal': cairo.FontSlant.NORMAL, 'italic': cairo.FontSlant.ITALIC}
-"""Maps an application style to a cairo specific font slant"""
+# Cairo_font_weight = {'normal': cairo.FontWeight.NORMAL, 'bold': cairo.FontWeight.BOLD}
+# """Maps an application style to a cairo specific font weight"""
+# Cairo_font_slant = {'normal': cairo.FontSlant.NORMAL, 'italic': cairo.FontSlant.ITALIC}
+# """Maps an application style to a cairo specific font slant"""
 
-def roundrect(ctx, x: float, y: float, width: float, height: float, top_r: int, bottom_r: int):
-    """
-    Draw rectangle with rounded corners on top, bottom or both. Radius is expressed in points
-    with zero resulting in a square corner on top, bottom or both
-
-    :param ctx: Pycairo context
-    :param x: Upper left x
-    :param y: Upper left y
-    :param width: Rect width
-    :param height: Rect height
-    :param top_r: Top corner radius
-    :param bottom_r: Bottom corner radius
-    """
-    ctx.move_to(x,y+top_r)  # Start at the upper left corner and move down by the radius (zero radius if sharp corner)
-    ctx.arc(x+top_r, y+top_r, top_r, math.pi, 3*math.pi/2)
-    ctx.arc(x+width-top_r, y+top_r, top_r, 3*math.pi/2, 0)
-    ctx.arc(x+width-bottom_r, y+height-bottom_r, bottom_r, 0, math.pi/2)
-    ctx.arc(x+bottom_r, y+height-bottom_r, bottom_r, math.pi/2, math.pi)
-    ctx.close_path()
-
+def render_breadslice(x: float, y: float, width: float, height: float, top_r: int, bottom_r: int):
+    pass
+# TODO: Implement breadslice
+#     """
+#     Draw rectangle with rounded corners on top, bottom or both. Radius is expressed in points
+#     with zero resulting in a square corner on top, bottom or both
+#
+#     :param x: Upper left x
+#     :param y: Upper left y
+#     :param width: Rect width
+#     :param height: Rect height
+#     :param top_r: Top corner radius
+#     :param bottom_r: Bottom corner radius
+#     """
+#     ctx.move_to(x,y+top_r)  # Start at the upper left corner and move down by the radius (zero radius if sharp corner)
+#     ctx.arc(x+top_r, y+top_r, top_r, math.pi, 3*math.pi/2)
+#     ctx.arc(x+width-top_r, y+top_r, top_r, 3*math.pi/2, 0)
+#     ctx.arc(x+width-bottom_r, y+height-bottom_r, bottom_r, 0, math.pi/2)
+#     ctx.arc(x+bottom_r, y+height-bottom_r, bottom_r, math.pi/2, math.pi)
+#     ctx.close_path()
+#
 class Layer:
     """
     A common feature of many drawing and image editing applications is the ability to stack layers of
@@ -64,20 +67,24 @@ class Layer:
         :param name: The Layer name
         :param tablet: The Tablet object
         :param presentation: Presentation to be applied to this Layer
-        :param drawing_type: The Presentation's Drawing Type
+        :param drawing_type: The Presentation's View Type
         :param fill: A color to fill the drawing area
         """
         self.logger = logging.getLogger(__name__)
         self.Name = name
         self.Fill = fill
         self.Tablet = tablet
+        self.Scene = tablet.View.scene  # This is what we actually draw on
         self.Drawing_type = drawing_type
 
         # Stuff we will draw on the Layer
 
         # Create one giant fill rect for the background if this layer is filled
-        self.BackgroundRect = None if not self.Fill else element.FillRect(
-            upper_left=Position(0,0), size=tablet.Size, color=fill)
+        if self.Fill:
+            fill_rgb_color_value = StyleDB.rgbF[self.Fill]
+            self.Scene.setBackgroundBrush(QColor(*fill_rgb_color_value))
+        # self.BackgroundRect = None if not self.Fill else element.FillRect(
+        #     upper_left=Position(0,0), size=tablet.Size, color=fill)
         self.Line_segments: List[element.Line_Segment] = []
         self.Circles: List[element.Circle] = []
         self.Polygons: List[element.Polygon] = []
@@ -88,7 +95,7 @@ class Layer:
 
         # Load this Layer's presentation assets if they haven't been already
         # Unique ID (see Tablet Subsystem class diagram) of a Presentation is both
-        # its name and its Drawing Type name.  So we combine them to form the index
+        # its name and its View Type name.  So we combine them to form the index
         pres_index = ':'.join([self.Drawing_type, presentation])
         self.Presentation = self.Tablet.Presentations.get(pres_index)
         if not self.Presentation:
@@ -100,11 +107,7 @@ class Layer:
         """Renders all Elements on this Layer"""
 
         self.logger.info(f'Rendering layer: {self.Name}')
-        # For now, always assume output to cairo
-        self.Tablet.Context.set_line_join(cairo.LINE_JOIN_ROUND)
         # Rendering order determines what can potentially overlap on this Layer, so order matters
-        if self.Fill:
-            self.render_background()
         self.render_line_segments()
         self.render_circles()
         self.render_rects()
@@ -112,11 +115,6 @@ class Layer:
         self.render_text_underlays()  # Renders any color fills that lie underneath text blocks or lines
         self.render_text()  # Render text after vector content so that it is never underneath
         self.render_images()  # Text should not be drawn over images, so we can render these last
-
-    def render_background(self):
-        """Draw a solid color background on the entire layer for this layer's fill color"""
-        assert self.Fill, "Background rendering, but layer.Fill is None"
-        self.render_fillrect(self.BackgroundRect)
 
     def render_text_underlays(self):
         for u in self.TextUnderlayRects:
@@ -131,6 +129,8 @@ class Layer:
         except KeyError:
             self.logger.error(f'Fill rect color [{frect.color}] not defined in system or user configuration')
             sys.exit(1)
+
+        # TODO: Change self.Tablet.Context to self.Scene and use QT commands
 
         self.Tablet.Context.rectangle(frect.upper_left.x, frect.upper_left.y, frect.size.width, frect.size.height)
         self.Tablet.Context.set_source_rgb(*fill_rgb_color_value)
@@ -291,7 +291,7 @@ class Layer:
 
         # Add it to the list
         self.Images.append(element.Image(resource_path=resource_path, upper_left=ul, size=size))
-        self.logger.info(f'Drawing>> Layer {self.Name} registered resource at: {resource_path}')
+        self.logger.info(f'View>> Layer {self.Name} registered resource at: {resource_path}')
 
     def add_circle(self, asset: str, center: Position, radius: float):
         """
@@ -427,29 +427,61 @@ class Layer:
     def render_rects(self):
         """Draw the rectangle shapes"""
         for r in self.Rectangles:
+            pen = QPen()  # We'll determine the style and set it below
+
+            # QT issue: For some reason, the setColor method on Brush doesn't work
+            # So I need to set the color when the brush is created and just create a new one
+            # If I ever need to change the color of a brush
+            # But changing the color of a pen after creation works fine ???
+
             # Set the dash pattern
             pname = StyleDB.line_style[r.border_style].pattern  # name of border line style's pattern
             pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
             if pvalue != (0, 0):
-                self.Tablet.Context.set_dash(pvalue)  # If pvalue is [], line will be solid
+                pen.setStyle(Qt.PenStyle.DashLine)  # Zeros signify solid, so not zero is dashed
+            else:
+                pen.setStyle(Qt.PenStyle.SolidLine)
+                # TODO: Apply specific dash pattern using pvalue
             # Set color and width
             line_color_name = StyleDB.line_style[r.border_style].color
             line_rgb_color_value = StyleDB.rgbF[line_color_name]
             fill_rgb_color_value = None if not r.fill else StyleDB.rgbF[r.fill]
             w = StyleDB.line_style[r.border_style].width
-            self.Tablet.Context.set_line_width(w)
+            pen.setWidth(w)
+            pen.setColor(QColor(*line_rgb_color_value))
+            brush = None  # Assume no fill by default
+            if r.fill:
+                brush = QBrush(QColor(*fill_rgb_color_value))
+
             # Set rectangle extents and draw
             top_radius = r.radius if r.top else 0
             bottom_radius = r.radius if r.bottom else 0
-            # Zero radius gives us sharp corners top, bottom or both
-            roundrect( self.Tablet.Context,
-                       r.upper_left.x, r.upper_left.y, r.size.width, r.size.height,
-                       top_radius, bottom_radius )
-            if r.fill:
-                self.Tablet.Context.set_source_rgb(*fill_rgb_color_value)
-                self.Tablet.Context.fill_preserve()
-            self.Tablet.Context.set_source_rgb(*line_rgb_color_value)
-            self.Tablet.Context.stroke()
+
+            # Three cases to consider for the rectangle
+            # Square corners, rounded corners, or rounded on top or bottom only
+            # If square, draw normal box rectangle
+            # If rounded, draw rounded rectangle
+            # Otherwise, use local render_breadslice function
+            if top_radius != bottom_radius:
+                render_breadslice(
+                    r.upper_left.x, r.upper_left.y, r.size.width, r.size.height, top_radius, bottom_radius
+                )
+            elif top_radius:
+                rect = QRectF(r.upper_left.x, r.upper_left.y, r.size.width, r.size.height)
+                path = QPainterPath()
+                path.addRoundedRect(rect, top_radius, top_radius)
+                rr_item = QGraphicsPathItem(path)
+                rr_item.setPen(pen)
+                if brush:
+                    rr_item.setBrush(brush)
+                self.Scene.addItem(rr_item)
+            else:
+                rect = QRectF(r.upper_left.x, r.upper_left.y, r.size.width, r.size.height)
+                r_item = QGraphicsRectItem(rect)
+                r_item.setPen(pen)
+                if brush:
+                    r_item.setBrush(brush)
+                self.Scene.addItem(r_item)
 
     def render_polygons(self):
         """Draw the closed non-rectangular shapes"""
@@ -475,12 +507,13 @@ class Layer:
 
     def render_images(self):
         """Render all images"""
-        for i in self.Images:
-            try:
-                image_surface = cairo.ImageSurface.create_from_png(i.resource_path)
-            except cairo.Error:
-                self.logger.warning(f"Cannot locate png image file: [{i.resource_path}] -- Skipping")
-                continue
-            self.Tablet.Context.set_source_surface(image_surface, i.upper_left.x, i.upper_left.y)
-            self.Tablet.Context.paint()
+        pass
+        # for i in self.Images:
+        #     try:
+        #         # image_surface = cairo.ImageSurface.create_from_png(i.resource_path)
+        #     except cairo.Error:
+        #         self.logger.warning(f"Cannot locate png image file: [{i.resource_path}] -- Skipping")
+        #         continue
+        #     self.Tablet.Context.set_source_surface(image_surface, i.upper_left.x, i.upper_left.y)
+        #     self.Tablet.Context.paint()
 

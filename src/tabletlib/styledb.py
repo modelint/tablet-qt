@@ -89,7 +89,7 @@ class StyleDB:
     @classmethod
     def preprocess_colors(cls, raw_data):
         """
-        # Convert colors to float values for Cairo
+        # Validate color float values for QT6
         """
         for name, rgb in raw_data.items():
             for n in [rgb.r, rgb.g, rgb.b]:
@@ -97,7 +97,7 @@ class StyleDB:
                     _logger.error(f"Bad color value [{n}] for: {name} in "
                                   f"config file:\n    {config_dir / 'colors.yaml'}")
                     raise BadConfigData
-            StyleDB.rgbF[name] = Float_RGB(r=round(rgb.r / 255, 2), g=round(rgb.g / 255, 2), b=round(rgb.b / 255, 2))
+            StyleDB.rgbF[name] = Float_RGB(r=rgb.r, g=rgb.g, b=rgb.b)
 
     @classmethod
     def postprocess_color_usages(cls):

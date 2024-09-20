@@ -1,0 +1,4 @@
+# dash_patterns.yaml – Dash pattern line styles
+
+no dash : {solid: 0, blank: 0}
+even dash : {solid: 9, blank: 9}
