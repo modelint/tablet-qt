@@ -7,7 +7,7 @@ from tabletlib.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
 from tabletlib.geometry_types import Rect_Size, Position
 from tabletlib.styledb import StyleDB
 from tabletlib.layer import Layer
-from tabletlib.view import View
+from tabletlib.scene_view import MainWindow
 from typing import Optional
 import sys
 from PyQt6.QtWidgets import QApplication, QGraphicsTextItem, QGraphicsEllipseItem, QGraphicsRectItem
@@ -73,10 +73,9 @@ class Tablet:
         # It can (should be) customizable by the user, but this should work for most diagrams
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
-        self.App = QApplication(sys.argv)  # QT Application (must be created before any QT widgets)
-        # TODO: Change later so that we aren't sending the Flatland Command line args to QApplication
-
-        self.View = View(size)  # QT widget for drawing 2D elements
+        self.App = QApplication([])  # QT Application (must be created before any QT widgets)
+        self.Window = MainWindow("Tablet", size)  # QT widget for drawing 2D elements
+        self.View = self.Window.graphics_view
 
         if layer not in self.layer_order:
             raise NonSystemInitialLayer
@@ -105,9 +104,10 @@ class Tablet:
         Renders each instantiated layer of the Tablet moving up the z axis. Any uninstantiated layers are skipped.
         """
         # Create and show the drawing window
-        self.View.setWindowTitle("Tablet View")
         [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
-        self.View.show()
+        self.Window.show()
+        self.View.save_as_pdf("output.pdf")
+        # self.View.show()
 
         # Run the event loop
         sys.exit(self.App.exec())

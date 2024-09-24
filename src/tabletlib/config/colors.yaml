@@ -5,6 +5,7 @@
 recycle bin: {r: 131, g: 187, b: 229, canvas: True}
 sky: {r: 199, g: 227, b: 245, canvas: True }
 blue steel: {r: 159, g: 172, b: 186, canvas: True}
+blueprint : {r: 0, g: 77, b: 138, canvas: True}
 
 # Grays
 nickel: {r: 146, g: 146, b: 146, canvas: True}

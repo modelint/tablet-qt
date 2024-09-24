@@ -12,17 +12,15 @@ from tabletlib.geometry_types import Rect_Size, Position, HorizAlign
 from tabletlib.presentation import Presentation
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
-from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsRectItem
-from PyQt6.QtGui import QPainterPath, QBrush, QPen, QColor
+from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsRectItem, QGraphicsTextItem
+from PyQt6.QtGui import QPainterPath, QBrush, QPen, QColor, QFont
 from PyQt6.QtCore import Qt, QRectF
 
 if TYPE_CHECKING:
     from tabletlib.tablet import Tablet
 
-# Cairo_font_weight = {'normal': cairo.FontWeight.NORMAL, 'bold': cairo.FontWeight.BOLD}
-# """Maps an application style to a cairo specific font weight"""
-# Cairo_font_slant = {'normal': cairo.FontSlant.NORMAL, 'italic': cairo.FontSlant.ITALIC}
-# """Maps an application style to a cairo specific font slant"""
+Qt_font_weight = {'normal': QFont.Weight.Normal, 'bold': QFont.Weight.Bold}
+"""Maps an application style to a cairo specific font weight"""
 
 def render_breadslice(x: float, y: float, width: float, height: float, top_r: int, bottom_r: int):
     pass
@@ -375,16 +373,18 @@ class Layer:
     def render_text(self):
         """Draw all text lines"""
         for t in self.Text:
+            t_item = QGraphicsTextItem(t.text)
             style = StyleDB.text_style[t.style]
             text_color_name = StyleDB.text_style[t.style].color
             text_rgb_color_value = StyleDB.rgbF[text_color_name]
-            self.Tablet.Context.set_source_rgb(*text_rgb_color_value)
-            self.Tablet.Context.select_font_face(
-                style.typeface, Cairo_font_slant[style.slant], Cairo_font_weight[style.weight]
-            )
-            self.Tablet.Context.set_font_size(style.size)
-            self.Tablet.Context.move_to(t.lower_left.x, t.lower_left.y)
-            self.Tablet.Context.show_text(t.text)
+            t_item.setDefaultTextColor(QColor(*text_rgb_color_value))
+            font = QFont(StyleDB.typeface[style.typeface], style.size)
+            font.setWeight(Qt_font_weight[style.weight])
+            if style.slant == 'italic':
+                font.setItalic(True)
+            t_item.setFont(font)
+            t_item.setPos(t.lower_left.x, t.lower_left.y)
+            self.Scene.addItem(t_item)
 
     def render_line_segments(self):
         """Draw the line segments"""
