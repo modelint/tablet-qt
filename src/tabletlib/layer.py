@@ -12,15 +12,21 @@ from tabletlib.geometry_types import Rect_Size, Position, HorizAlign
 from tabletlib.presentation import Presentation
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
-from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsRectItem, QGraphicsTextItem
-from PyQt6.QtGui import QPainterPath, QBrush, QPen, QColor, QFont
-from PyQt6.QtCore import Qt, QRectF
+from PyQt6.QtWidgets import (QGraphicsPathItem, QGraphicsRectItem, QGraphicsTextItem,
+                             QGraphicsLineItem, QGraphicsEllipseItem, QGraphicsPolygonItem,
+                             QGraphicsPixmapItem, QMessageBox)
+from PyQt6.QtGui import QPainterPath, QBrush, QPen, QColor, QFont, QPolygonF, QPixmap, QFontMetrics
+from PyQt6.QtCore import Qt, QRectF, QLineF, QPointF
 
 if TYPE_CHECKING:
     from tabletlib.tablet import Tablet
 
 Qt_font_weight = {'normal': QFont.Weight.Normal, 'bold': QFont.Weight.Bold}
-"""Maps an application style to a cairo specific font weight"""
+
+tbox_xoffset = 4  # QT distance from text item origin (setPos) to lower left corner of text bounding box
+tbox_yoffset = 4  # For now, determined experimentally, not sure how to compute it from QFontMetrics
+
+"""Maps an application style to a Qt specific font weight"""
 
 def render_breadslice(x: float, y: float, width: float, height: float, top_r: int, bottom_r: int):
     pass
@@ -87,6 +93,8 @@ class Layer:
         self.Circles: List[element.Circle] = []
         self.Polygons: List[element.Polygon] = []
         self.Rectangles: List[element.Rectangle] = []
+        self.RawRectangles: List[QGraphicsRectItem] = []
+        self.RawLines: List[QGraphicsLineItem] = []
         self.TextUnderlayRects: List[element.FillRect] = []
         self.Text: List[element.Text_line] = []
         self.Images: List[element.Image] = []
@@ -113,6 +121,8 @@ class Layer:
         self.render_text_underlays()  # Renders any color fills that lie underneath text blocks or lines
         self.render_text()  # Render text after vector content so that it is never underneath
         self.render_images()  # Text should not be drawn over images, so we can render these last
+        self.render_raw_rectangles()
+        self.render_raw_lines()
 
     def render_text_underlays(self):
         for u in self.TextUnderlayRects:
@@ -128,12 +138,11 @@ class Layer:
             self.logger.error(f'Fill rect color [{frect.color}] not defined in system or user configuration')
             sys.exit(1)
 
-        # TODO: Change self.Tablet.Context to self.Scene and use QT commands
-
-        self.Tablet.Context.rectangle(frect.upper_left.x, frect.upper_left.y, frect.size.width, frect.size.height)
-        self.Tablet.Context.set_source_rgb(*fill_rgb_color_value)
-        self.Tablet.Context.fill()
-        self.Tablet.Context.stroke()
+        brush = QBrush(QColor(*fill_rgb_color_value))
+        rect = QRectF(frect.upper_left.x, frect.upper_left.y, frect.size.width, frect.size.height)
+        r_item = QGraphicsRectItem(rect)
+        r_item.setBrush(brush)
+        self.Scene.add_node(r_item)
 
     def add_text_underlay(self, lower_left: Position, size: Rect_Size):
         """
@@ -158,16 +167,23 @@ class Layer:
         Adds a line of text to the tabletlib at the specified lower left corner location which will be converted
         to device coordinates
         """
+        # Qt positions using the upper left corner
+        # We need to determine the height of the text bounding box to determine the upper left corner
+        ll_dc = self.Tablet.to_dc(Position(x=lower_left.x, y=lower_left.y))  # Convert to device coordinates
+        tl_size = self.text_line_size(asset=asset, text_line=text)  # Get height of bounding box
+        # Compute upper left corner using experimentally observed offset
+        ul = Position(x=ll_dc.x-tbox_xoffset, y=ll_dc.y - tl_size.height - tbox_yoffset)
+
         if asset in self.Presentation.Underlays:
+            # TODO: Check this for Qt
             # Compute a rectangle slightly larger than the text area to underlay the text
-            tl_size = self.text_line_size(asset=asset, text_line=text)
             underlay_size = Rect_Size(height=tl_size.height+5, width=tl_size.width+5)
             underlay_pos = Position(lower_left.x-2, lower_left.y-3)
             self.add_text_underlay(lower_left=underlay_pos, size=underlay_size)
         try:
             self.Text.append(
                 element.Text_line(
-                    lower_left=self.Tablet.to_dc(lower_left), text=text,
+                    upper_left=ul, text=text,
                     style=self.Presentation.Text_presentation[asset],
                 )
             )
@@ -185,15 +201,26 @@ class Layer:
         """
         style_name = self.Presentation.Text_presentation[asset]  # Look up the text style for this asset
         style = StyleDB.text_style[style_name]
-        # Configure the Cairo context with style properties and the text line
-        self.Tablet.Context.select_font_face(
-            style.typeface, Cairo_font_slant[style.slant], Cairo_font_weight[style.weight],
-        )
-        self.Tablet.Context.set_font_size(style.size)
-        te = self.Tablet.Context.text_extents(text_line)
-        # Add x_bearing to account for any indented whitespace
-        # Otherwise you just get the width of the text after the whitespace
-        return Rect_Size(height=te.height, width=te.width+te.x_bearing)
+        font_name = StyleDB.typeface[style.typeface]
+
+        font = QFont(font_name, style.size)
+        font.setItalic(style.slant == 'italic')
+        font.setBold(style.weight == 'bold')
+
+        font_metrics = QFontMetrics(font)
+        bound_rect = font_metrics.boundingRect(text_line)
+        tight_rect = font_metrics.tightBoundingRect(text_line)
+        descent = font_metrics.descent()
+        ascent = font_metrics.ascent()
+        capheight = font_metrics.capHeight()
+        left_bearing = font_metrics.minLeftBearing()
+
+        width = font_metrics.horizontalAdvance(text_line)
+        # # te = self.Tablet.Context.text_extents(text_line)
+        # # Add x_bearing to account for any indented whitespace
+        # # Otherwise you just get the width of the text after the whitespace
+        # return Rect_Size(height=te.height, width=te.width+te.x_bearing)
+        return Rect_Size(height=bound_rect.height(), width=bound_rect.width())
 
     def text_block_size(self, asset: str, text_block: List[str]) -> Rect_Size:
         """
@@ -305,6 +332,53 @@ class Layer:
             center=center_dc, radius=radius, border_style=self.Presentation.Shape_presentation[asset], fill=fill,
         ))
 
+    def add_cross_hair(self, location: Position, color: str):
+        """
+        Place a diagnostic cross hair at the requested point in the Scene
+
+        :param location:
+        :return:
+        """
+        xwidth = 5
+        pen = QPen(QColor(color), 1)
+        # Flip to device coordinates
+        ll_dc = self.Tablet.to_dc(Position(x=location.x, y=location.y))
+        hline = QGraphicsLineItem(QLineF(ll_dc.x-2.5, ll_dc.y, ll_dc.x+2.5, ll_dc.y))
+        hline.setPen(pen)
+        vline = QGraphicsLineItem(QLineF(ll_dc.x, ll_dc.y-2.5, ll_dc.x, ll_dc.y+2.5))
+        vline.setPen(pen)
+        self.RawLines.append(hline)
+        self.RawLines.append(vline)
+
+    def add_raw_rectangle(self, upper_left: Position, size: Rect_Size):
+        """
+        Adds an unfilled rectangle for diagnostic purposes. 'raw' means that the dimensions
+        are supplied directly without consulting the StyleDB
+
+        :param upper_left:
+        :param size:
+        :return:
+        """
+        # Use upper left corner instead
+        # ul = Position(x=upper_left.x, y=upper_left.y - size.height)
+
+        # Convert upper left corner to device coordinates
+        uldc = self.Tablet.to_dc(Position(x=upper_left.x, y=upper_left.y))
+
+        rect = QRectF(uldc.x, uldc.y, size.width, size.height)
+        rect_item = QGraphicsRectItem(rect)
+        self.RawRectangles.append(rect_item)
+
+    def render_raw_lines(self):
+        for l in self.RawLines:
+            self.Scene.addItem(l)
+
+    def render_raw_rectangles(self):
+        pen = QPen(QColor(0, 0, 0))
+        for r in self.RawRectangles:
+            r.setPen(pen)
+            self.Scene.addItem(r)
+
     def add_rectangle(self, asset: str, lower_left: Position, size: Rect_Size, color_usage: Optional['str'] = None):
         """
         Adds a rectangle to this Layer with position converted to Tablet (device) coordinates. If one is specified
@@ -367,7 +441,7 @@ class Layer:
         :param vertices: A sequences of 2 or more vertices
         """
         for v1, v2 in zip(vertices, vertices[1:]):
-            assert len(vertices) > 1, "Open pollygon has less than two vertices"
+            assert len(vertices) > 1, "Open polygon has less than two vertices"
             self.add_line_segment(asset=asset, from_here=v1, to_there=v2)
 
     def render_text(self):
@@ -383,74 +457,67 @@ class Layer:
             if style.slant == 'italic':
                 font.setItalic(True)
             t_item.setFont(font)
-            t_item.setPos(t.lower_left.x, t.lower_left.y)
+            t_item.setPos(t.upper_left.x, t.upper_left.y)
             self.Scene.addItem(t_item)
 
     def render_line_segments(self):
         """Draw the line segments"""
         for l in self.Line_segments:
-            # Set the dash pattern
-            pname = StyleDB.line_style[l.style].pattern  # name of line style's pattern
-            pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
-            self.Tablet.Context.set_dash(pvalue)  # If pvalue is [], line will be solid
-            # Set color and width
+            # Create a line item for the scene
+            l_item = QGraphicsLineItem(QLineF(*l.from_here, *l.to_there))
+
+            # Set its color and width
             cname = StyleDB.line_style[l.style].color
             c = StyleDB.rgbF[cname]
-            self.Tablet.Context.set_source_rgb(*c)
             w = StyleDB.line_style[l.style].width
-            self.Tablet.Context.set_line_width(w)
-            # Set line segment and draw
-            self.Tablet.Context.move_to(*l.from_here)
-            self.Tablet.Context.line_to(*l.to_there)
-            self.Tablet.Context.stroke()
+            pen = QPen(QColor(*c), w)
+            # Set the dash pattern if not solid
+            pname = StyleDB.line_style[l.style].pattern  # name of line style's pattern
+            if pname != 'no dash':
+                pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
+                pen.setDashPattern([*pvalue])
+            l_item.setPen(pen)
+            self.Scene.addItem(l_item)
 
     def render_circles(self):
         """Draw the circle shapes"""
         for c in self.Circles:
-            # Set the dash pattern
-            pname = StyleDB.line_style[c.border_style].pattern  # name of border line style's pattern
-            pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
-            self.Tablet.Context.set_dash(pvalue)  # If pvalue is [], line will be solid
-            # Set color and width
-            line_color_name = StyleDB.line_style[c.border_style].color
-            line_rgb_color_value = StyleDB.rgbF[line_color_name]
-            fill_rgb_color_value = None if not c.fill else StyleDB.rgbF[c.fill]
+            # Set pen color, width and dash pattern
+            cname = StyleDB.line_style[c.border_style].color
+            c_color = StyleDB.rgbF[cname]
             w = StyleDB.line_style[c.border_style].width
-            self.Tablet.Context.set_line_width(w)
-            self.Tablet.Context.arc(c.center.x, c.center.y, c.radius, 0, 2*math.pi)
+            pen = QPen(QColor(*c_color), w)
+            pname = StyleDB.line_style[c.border_style].pattern  # name of line style's pattern
+            if pname != 'no dash':
+                pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
+                pen.setDashPattern([*pvalue])
+            brush = None  # Assume no fill by default
             if c.fill:
-                self.Tablet.Context.set_source_rgb(*fill_rgb_color_value)
-                self.Tablet.Context.fill_preserve()
-            self.Tablet.Context.set_source_rgb(*line_rgb_color_value)
-            self.Tablet.Context.stroke()
+                fill_rgb_color_value = StyleDB.rgbF[c.fill]
+                brush = QBrush(QColor(*fill_rgb_color_value))
+
+            diameter = c.radius*2
+            c_item = QGraphicsEllipseItem(QRectF(c.center.x, c.center.y, diameter, diameter))
+            if brush:
+                c_item.setBrush(brush)
+            c_item.setPen(pen)
+            self.Scene.addItem(c_item)
 
     def render_rects(self):
         """Draw the rectangle shapes"""
         for r in self.Rectangles:
-            pen = QPen()  # We'll determine the style and set it below
-
-            # QT issue: For some reason, the setColor method on Brush doesn't work
-            # So I need to set the color when the brush is created and just create a new one
-            # If I ever need to change the color of a brush
-            # But changing the color of a pen after creation works fine ???
-
-            # Set the dash pattern
-            pname = StyleDB.line_style[r.border_style].pattern  # name of border line style's pattern
-            pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
-            if pvalue != (0, 0):
-                pen.setStyle(Qt.PenStyle.DashLine)  # Zeros signify solid, so not zero is dashed
-            else:
-                pen.setStyle(Qt.PenStyle.SolidLine)
-                # TODO: Apply specific dash pattern using pvalue
-            # Set color and width
-            line_color_name = StyleDB.line_style[r.border_style].color
-            line_rgb_color_value = StyleDB.rgbF[line_color_name]
-            fill_rgb_color_value = None if not r.fill else StyleDB.rgbF[r.fill]
+            # Set pen color, width and dash pattern
+            cname = StyleDB.line_style[r.border_style].color
+            c = StyleDB.rgbF[cname]
             w = StyleDB.line_style[r.border_style].width
-            pen.setWidth(w)
-            pen.setColor(QColor(*line_rgb_color_value))
+            pen = QPen(QColor(*c), w)
+            pname = StyleDB.line_style[r.border_style].pattern  # name of line style's pattern
+            if pname != 'no dash':
+                pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
+                pen.setDashPattern([*pvalue])
             brush = None  # Assume no fill by default
             if r.fill:
+                fill_rgb_color_value = StyleDB.rgbF[r.fill]
                 brush = QBrush(QColor(*fill_rgb_color_value))
 
             # Set rectangle extents and draw
@@ -486,34 +553,42 @@ class Layer:
     def render_polygons(self):
         """Draw the closed non-rectangular shapes"""
         for p in self.Polygons:
-            pattern_name = StyleDB.line_style[p.border_style].pattern  # name of border line style's pattern
-            pattern_value = StyleDB.dash_pattern[pattern_name]  # find pattern value in dash pattern dict
-            self.Tablet.Context.set_dash(pattern_value)  # If pattern_value is [], line will be solid
-            # Set color and width
-            line_color_name = StyleDB.line_style[p.border_style].color
-            line_rgb_color_value = StyleDB.rgbF[line_color_name]
-            fill_rgb_color_value = StyleDB.rgbF[p.fill]
+
+            pverts = [QPointF(*x) for x in p.vertices]
+            polygon = QPolygonF(pverts)
+            poly_item = QGraphicsPolygonItem(polygon)
+            print()
+
+            cname = StyleDB.line_style[p.border_style].color
+            c = StyleDB.rgbF[cname]
             w = StyleDB.line_style[p.border_style].width
-            self.Tablet.Context.set_line_width(w)
-            # Draw a closed polygon
-            self.Tablet.Context.move_to(*p.vertices[0])  # Start drawing here
-            for v in p.vertices[1:]:
-                self.Tablet.Context.line_to(*v)
-            self.Tablet.Context.close_path()
-            self.Tablet.Context.set_source_rgb(*fill_rgb_color_value)
-            self.Tablet.Context.fill_preserve()
-            self.Tablet.Context.set_source_rgb(*line_rgb_color_value)
-            self.Tablet.Context.stroke()
+            pen = QPen(QColor(*c), w)
+            pname = StyleDB.line_style[p.border_style].pattern  # name of line style's pattern
+            if pname != 'no dash':
+                pvalue = StyleDB.dash_pattern[pname]  # find pattern value in dash pattern dict
+                pen.setDashPattern([*pvalue])
+            brush = None  # Assume no fill by default
+            if p.fill:
+                fill_rgb_color_value = StyleDB.rgbF[p.fill]
+                brush = QBrush(QColor(*fill_rgb_color_value))
+
+            if brush:
+                poly_item.setBrush(brush)
+            poly_item.setPen(pen)
+            self.Scene.addItem(poly_item)
 
     def render_images(self):
         """Render all images"""
-        pass
-        # for i in self.Images:
-        #     try:
-        #         # image_surface = cairo.ImageSurface.create_from_png(i.resource_path)
-        #     except cairo.Error:
-        #         self.logger.warning(f"Cannot locate png image file: [{i.resource_path}] -- Skipping")
-        #         continue
-        #     self.Tablet.Context.set_source_surface(image_surface, i.upper_left.x, i.upper_left.y)
-        #     self.Tablet.Context.paint()
+        for i in self.Images:
+            if not i.resource_path.exists():
+                self.logger.error(f'Image file [{i.resource_path}] not found')
+                continue
 
+            pixmap = QPixmap(str(i.resource_path))
+            if pixmap.isNull():
+                self.logger.error(f'Image file [{i.resource_path}] could not be loaded as pixmap')
+                continue
+
+            pix_item = QGraphicsPixmapItem(pixmap)
+            pix_item.setPos(i.upper_left.x, i.upper_left.y)
+            self.Scene.addItem(pix_item)

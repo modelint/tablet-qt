@@ -1,6 +1,6 @@
 """
 tabletlib.py – Flatland binds a Canvas instance in the Flatland Application domain to a Tablet instance
-in the drawing domain. The Tablet can be drawn using cairo or some other graphics drawing framework.
+in the drawing domain. The Tablet can be drawn using cairo, Qt or some other graphics drawing framework.
 """
 import logging
 from tabletlib.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
@@ -10,9 +10,7 @@ from tabletlib.layer import Layer
 from tabletlib.scene_view import MainWindow
 from typing import Optional
 import sys
-from PyQt6.QtWidgets import QApplication, QGraphicsTextItem, QGraphicsEllipseItem, QGraphicsRectItem
-from PyQt6.QtGui import QBrush, QPen, QColor
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 
 class Tablet:
@@ -107,7 +105,6 @@ class Tablet:
         [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
         self.Window.show()
         self.View.save_as_pdf("output.pdf")
-        # self.View.show()
 
         # Run the event loop
         sys.exit(self.App.exec())
