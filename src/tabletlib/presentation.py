@@ -49,7 +49,7 @@ class Presentation:
         for asset_name,v in my_data['text'].items():
             self.Text_presentation[asset_name] = v['Text style']
             if v['Underlay']:
-                self.Underlays.add(k)
+                self.Underlays.add(asset_name)
         # Load shape presentations
         for asset_name, v in my_data['shape'].items():
             self.Shape_presentation[asset_name] = v['Line style']

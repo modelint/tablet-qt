@@ -351,21 +351,21 @@ xUML state machine diagram:
         Line style: normal
         Fill: white
         Corner spec:
-          Radius: 6
+          Radius: 4
           Top: true
           Bottom: false
       state name only compartment:
         Line style: normal
         Fill: white
         Corner spec:
-          Radius: 6
+          Radius: 4
           Top: true
           Bottom: true
       state activity compartment:
         Line style: normal
         Fill: white
         Corner spec:
-          Radius: 6
+          Radius: 4
           Top: false
           Bottom: true
       # Symbols

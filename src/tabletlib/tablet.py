@@ -1,6 +1,5 @@
 """
-tabletlib.py – Flatland binds a Canvas instance in the Flatland Application domain to a Tablet instance
-in the drawing domain. The Tablet can be drawn using cairo, Qt or some other graphics drawing framework.
+tablet.py – A multi-layered drawing surface implemented on top of the Qt GUI framework
 """
 import logging
 from tabletlib.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
@@ -11,14 +10,19 @@ from tabletlib.scene_view import MainWindow
 from typing import Optional
 import sys
 from PyQt6.QtWidgets import QApplication
-
+from pathlib import Path
 
 class Tablet:
     """
-    The Tablet class is part of the drawing_domain which provides a service to the Flatland model
-    diagram application. We can imagine a virtual Tablet that the application uses to draw
-    all of its nodes and connectors and other model elements. The Tablet abstracts away the details
-    of drawing and graphics library interaction from the fundamental Flatland application.
+    The Tablet class is part of the Drawing domain which provides a service to an application
+    with simple 2D diagramming needs such as the Flatland model diagram generator.
+
+    Most importantly, the Drawing domain and hence the Tablet abstract away the details of
+    graphics library interaction from the fundamental diagramming application.
+
+    The original implementation of Tablet supported the Cairo graphics library while the current
+    implementation is built on the Qt Gui framework. No changes are necessary in any client diagramming
+    applications that draw on a Tablet.
 
     For example, when a Flatland node compartment wants to draw itself, it doesn't worry about line
     widths, dash patterns and colors. It also doesn't worry about flipping to whatever coordinate
@@ -27,39 +31,40 @@ class Tablet:
     the size in points (or whatever units the Flatland app wants to use) and location expressed in Flatland
     Canvas coordinates.
 
-    When a blank Flatland Canvas is created, it will initialize its underlying Tablet and select a predefined
-    drawing Type ('class diagram', 'state machine diagram' etc.) and Presentation Style ('default', 'formal',
-    'diagnostic', etc).  The Diagram Type determines what kinds of things might be drawn, Assets such as 'connector',
-    'compartment', 'class name', etc., while the Presentation Style establishes the Text and Line Styles to
-    be used when drawing those Assets. All of this information is stored in a database which the Tablet
+    When a Tablet is created, it is initialized with a single populated Layer where Assets can be drawn.
+    For example, Flatland might start with a predefined 'diagram' Layer using a Drawing Type such as
+    'state machine diagram' and a Presentation such as 'default' or 'formal' or 'corporate'.
+
+    The Diagram Type determines what kinds of things might be drawn, Assets such as 'connector',
+    'compartment', 'class name', etc., while the Presentation establishes the Text and Line Styles to
+    be used when drawing those Assets. All of this information is stored in yaml files which the Tablet
     loads upon creation.
 
     Each time the application wants something drawn, it will ask Tablet to add the appropriate Asset
-    to one of its draw lists. A separate list is maintained for all the rectangles, line segments and
+    to one of its render lists. A separate list is maintained for all the rectangles, line segments and
     text lines to be rendered. When the application is finished populating these lists, the Tablet can
-    render everything using its graphic library, such as Cairo, using whatever coordinate system the
-    library supplies, making any necessary conversions from the application coordinate system.
-
-    Consequently, a new graphics library, such as NumPy for example, can be supported by updating the drawing_domain
-    and primarily the Tablet class without having to make any changes in the Flatland application. Futhermore, any
-    changes to text styles, colors, line patterns etc can be perfomred by updating the drawing_domain's style
-    database.
+    render everything using its graphic library (Qt in this implementation) using whatever coordinate
+    system the library supplies, making any necessary conversions from the application coordinate system.
 
         Attributes
 
-        - Size -- The size of the whatever surface (PDF, RGB, SVG, etc) Tablet supports.
+        - Size -- The rectangular size of the total drawing surface
         - Output_file -- A filename or output stream object to be output as a drawing
-        - View -- This is the QT QGraphicsView widget that we will be drawing onto
+        - platform specific:
+        - App -- The Qt application
+        - Window -- The Qt main window to be displayed
+        - View -- The Qt view of the tablet content in this window
     """
 
-    def __init__(self, size: Rect_Size, output_file, drawing_type: str, presentation: str, layer: str):
+    def __init__(self, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str, layer: str):
         """
         Constructs a new Tablet instance
+
         :param size: Vertical and horizontal span of the entire draw surface in points
         :param output_file: Name of the drawing file to be generated, PDF only for now
-        :param drawing_type: Type of drawing so we can determine what kinds text and graphics can be drawn
-        :param presentation: The layer's Presentation to load
-        :param layer: The initial layer to be created on this Tablet (usually 'diagram')
+        :param drawing_type: Initial layer Drawing Type so we know what kinds text and graphics Assets can be drawn
+        :param presentation: Initial layer's Presentation so we know what graphic styles to use for our Assets
+        :param layer: The name of the initial Layer to be created on this Tablet (typically 'diagram')
         """
         self.logger = logging.getLogger(__name__)
 
@@ -81,12 +86,36 @@ class Tablet:
         # Initialize the first layer at the indicated position. If the position is not in the system layer order
         # list, it will be placed as the topmost layer. Usually, though, the initial layer should be diagram
 
-        self.Drawing_type = drawing_type  # class diagram, state diagram, etc
+        # self.Drawing_type = drawing_type  # class diagram, state diagram, etc
         self.Size = size
         self.Output_file = output_file
 
     def add_layer(self, name: str, presentation: str, drawing_type: str, fill: str = None) -> Optional[Layer]:
-        """Add a new layer if not already instantiated and return it"""
+        """
+        Populate a new layer by name and return it. If a layer of the same name has already been
+        populated, no layer is returned.
+
+        All drawing takes place on a designated layer, such as 'diagram' or 'sheet'.
+
+        A defined layer is simply a known layer name within a predefined rendering order.
+        You can think of each position in the order as a z coordinate with 0 corresponding to the first
+        rendered layer. For example, the 'sheet' layer is at the bottom (0) with 'diagram' somewhere
+        above it.
+
+        A layer, predefined or custom, must be populated before anything can be drawn on it.
+        The client application is responsible for populating any layers that it needs. There is not automatic
+        population.
+
+        If a layer name is supplied that does not correspond to any of the predefined layers, it will be stacked
+        after the last predefined layer and, thus, rendered last.
+
+        :param name: One of the standard layer names or a custom layer name
+        :param presentation: The Presentation name associated with this Layer
+        :param drawing_type: The Drawing Type defining this Presentation
+        :param fill: An optional background fill for this layer (if opaque, any lower level layers will not be visible)
+        :return: A reference to the newly created layer
+        """
+
         if not self.layers.get(name):
             if name not in self.layer_order:
                 self.layer_order.append(name)
@@ -94,25 +123,43 @@ class Tablet:
                                       fill=fill)
             return self.layers[name]
         else:
-            self.logger.warning(f"Layer: [{name}] previously instantiated")
+            self.logger.warning(f"Layer: [{name}] already exists")
             return None
 
     def render(self):
         """
-        Renders each instantiated layer of the Tablet moving up the z axis. Any uninstantiated layers are skipped.
+        Renders each populated layer of the Tablet moving up the z axis. Any unpopulated layers are skipped.
         """
         # Create and show the drawing window
         [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
         self.Window.show()
-        self.View.save_as_pdf("output.pdf")
 
-        # Run the event loop
+        # Save the rendered tablet as a PDF for alternate viewing
+        self.View.save_as_pdf(self.Output_file)
+
+        # Run the Qt GUI event loop
         sys.exit(self.App.exec())
 
     def to_dc(self, tablet_coord: Position) -> Position:
         """
-        To display coordinates – Convert tabletlib bottom_left origin coordinate to
-        display coordinate where top-left origin is used.
+        Convert from tablet coordinates (tc) used by the client application to device
+        coordinates (dc).
+
+        Tablet coordinates are upper right quadrant cartesian with the origin (0,0) in the
+        lower left corner of the tablet. This is what client application (user) specifies
+        when drawing.
+
+        Device coordinates depend on the graphics library. Here we are using Qt, so we have
+        a standard display coordinate system with the origin in the upper left corner with
+        y values ascending toward the bottom of the display.
+
+        An exception is thrown if the supplied position is outside of the tablet boundary.
+
+        Note: This may seem like overkill for a simple computation and check, but less
+        error prone than having this pattern sprinked throughout the code.
+
+        :param tablet_coord: Position in table coordinates
+        :return: Position in device coordinates
         """
         if tablet_coord.y > self.Size.height:
             raise TabletBoundsExceeded
@@ -121,5 +168,4 @@ class Tablet:
         return Position(x=tablet_coord.x, y=self.Size.height - tablet_coord.y)
 
     def __repr__(self):
-        return f'Size: {self.Size}, Dtype: {self.Drawing_type},' \
-               f'Output: {self.Output_file}'
+        return f'Size: {self.Size},  Output: {self.Output_file}'

@@ -38,7 +38,7 @@ class SceneView(QGraphicsView):
         printer.setPageOrientation(QPageLayout.Orientation.Landscape)
         # printer.setPageMargins(QMarginsF(0, 0, 0, 0))
         printer.setFullPage(True)
-        printer.setOutputFileName(file_path)
+        printer.setOutputFileName(str(file_path))
 
         # Create a QPainter to render the view content onto the printer
         painter = QPainter(printer)
