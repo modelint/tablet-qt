@@ -16,7 +16,11 @@ Text_Style = namedtuple('Text_Style', 'typeface size slant weight color spacing'
 Dash_Pattern = namedtuple('Dash_Pattern', 'solid blank')
 
 config_dir = Path(__file__).parent / "config"
+# nt - named tuple is defined
+# pre/post - Whether or not the data must be pre or post processed
 PP = namedtuple('PP', 'nt pre post')  # Postprocess config file data
+
+# yaml file name : load data using this tuple
 config_type = {
     'colors': PP(Color_Canvas, pre=True, post=False),
     'line_styles': PP(nt=Line_Style, pre=False, post=False ),
@@ -56,23 +60,32 @@ class StyleDB:
         a named tuple or a simple key value dictionary if no named tuple is provided
         and then sets the corresponding StyleDB class attribute to that value
         """
+        _logger.info(f"StyleDB loading tablet configuration\n---")
         for fname, pp in config_type.items():
             config_file_path = config_dir / (fname+".yaml")
+            _logger.info(f"loading: {config_file_path}")
             if pp.nt:
+                # A named tuple is defined for this file, so we use it to load the data
                 attr_val = load_yaml_to_namedtuple(config_file_path, pp.nt)
             else:
+                # No named tuple, so we just read file into a dictionary
                 with open(config_file_path, 'r') as file:
                     attr_val = yaml.safe_load(file)
             if pp.pre:
+                # Retrieve the relevant preprocessing method name using the filename suffix
                 method_name = 'preprocess_'+fname
                 method = getattr(cls, method_name, None)
+                # Invoke it on the loaded yaml data
                 method(attr_val)
             attr_name = fname[:-1]  # drop the plural 's' from the file name to get the attribute name
+            # Assign the loaded and possibly preprocessed yaml data to the relevant class attribute
             setattr(cls, attr_name, attr_val)
             if pp.post:
                 method_name = 'postprocess_'+fname  # Keep the plural
                 method = getattr(cls, method_name, None)
                 method()
+
+        _logger.info(f"---\n")
 
     @classmethod
     def postprocess_text_styles(cls):
@@ -112,6 +125,9 @@ class StyleDB:
 
     @classmethod
     def report_colors(cls):
+        """
+        Prints out a list of the available colors for the user
+        """
         cls.load_config_files()
         print("Canvas colors:")
         print("---")

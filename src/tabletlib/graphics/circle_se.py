@@ -12,7 +12,7 @@ from tabletlib.graphics.crayon_box import CrayonBox
 if TYPE_CHECKING:
     from tabletlib.layer import Layer
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 class CircleSE:
     """
     Manage the rendering of circle Shape Elements
@@ -42,6 +42,7 @@ class CircleSE:
             # Create the circle item
             diameter = c.radius*2
             c_item = QGraphicsEllipseItem(QRectF(c.center.x, c.center.y, diameter, diameter))
+            _logger.info(f"> Circle at: ({c.center.x}, {c.center.y}), diameter: {diameter}")
 
             # Set pen and brush
             CrayonBox.choose_crayons(item=c_item, border_style=c.border_style, fill=c.fill)

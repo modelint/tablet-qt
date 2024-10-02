@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QAbstractGraphicsShapeItem, QGraphicsLineItem
 from tabletlib.styledb import StyleDB
 from typing import Optional
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 class CrayonBox:
     """
     Get your crayons here. Specifically, your Qt pen and brush settings.
@@ -41,15 +41,17 @@ class CrayonBox:
                 # If a fill is specified, create a corresponding brush
                 fill_rgb_color_value = StyleDB.rgbF[fill]
                 brush = QBrush(QColor(*fill_rgb_color_value))
+                _logger.info(f"Brush color: [{fill}]")
             else:
                 brush = QBrush(Qt.GlobalColor.transparent)
             item.setBrush(brush)
 
         # Set the item pen and brush of the graphic item
         item.setPen(pen)
+        _logger.info(f"Pen color: [{cname}], width: [{w}], pattern: [{pname}]")
 
     @classmethod
-    def choose_fill_only(cls, item: QAbstractGraphicsShapeItem, fill: 'str'):
+    def choose_fill_only(cls, item: QAbstractGraphicsShapeItem, fill: tuple[int, int, int]):
         """
         Set fill with a transparent pen
 
@@ -57,14 +59,15 @@ class CrayonBox:
         :param fill:
         :return:
         """
-        # Lookup the RGB color value from the user color name
-        try:
-            fill_rgb_color_value = StyleDB.rgbF[fill]
-        except KeyError:
-            logger.error(f'Fill rect color [{fill}] not defined in system or user configuration')
-            sys.exit(1)
+        # # Lookup the RGB color value from the user color name
+        # try:
+        #     fill_rgb_color_value = StyleDB.rgbF[fill]
+        # except KeyError:
+        #     _logger.error(f'Fill rect color [{fill}] not defined in system or user configuration')
+        #     sys.exit(1)
+        _logger.info(f"Brush color: {fill}")
 
         pen = QPen(Qt.GlobalColor.transparent)
-        brush = QBrush(QColor(*fill_rgb_color_value))
+        brush = QBrush(QColor(*fill))
         item.setPen(pen)
         item.setBrush(brush)

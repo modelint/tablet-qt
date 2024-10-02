@@ -14,7 +14,7 @@ from tabletlib.graphics.line_segment import LineSegment
 if TYPE_CHECKING:
     from tabletlib.layer import Layer
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 class PolygonSE:
     """
     Manage the rendering of Polygon Shape Elements
@@ -55,6 +55,7 @@ class PolygonSE:
     def render(cls, layer: 'Layer'):
         """Draw the closed non-rectangular shapes"""
         for p in layer.Polygons:
+            _logger.info(f"> Polygon at: [{p.vertices}]")
 
             pverts = [QPointF(*x) for x in p.vertices]
             polygon = QPolygonF(pverts)

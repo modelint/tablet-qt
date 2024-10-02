@@ -1,13 +1,16 @@
 """ scene_view.py - create a vector drawing view in QT """
 
+import logging
 from PyQt6.QtWidgets import QGraphicsView, QVBoxLayout, QGraphicsScene, QGraphicsRectItem, QWidget
 from PyQt6.QtCore import QRectF, QMarginsF, Qt, QSize
 from PyQt6.QtGui import QColor, QPainter, QPageSize, QPageLayout, QPen
 from PyQt6.QtPrintSupport import QPrinter
 from pypdf import PdfWriter, PdfReader
 
+_logger = logging.getLogger(__name__)
+
 class SceneView(QGraphicsView):
-    def __init__(self, size):
+    def __init__(self, size, background):
         super().__init__()
 
         # Create a QGraphicsScene
@@ -15,7 +18,9 @@ class SceneView(QGraphicsView):
         self.setSceneRect(0, 0, size.width, size.height)
         pad = 10
         self.setFixedSize(size.width+pad, size.height+pad)
-        self.scene.setBackgroundBrush(QColor(131, 187, 229))
+        if background:
+            _logger.info(f"Setting scene background to RGB: {background}")
+            self.scene.setBackgroundBrush(QColor(*background))
 
         # Set the scene to the view
         self.setScene(self.scene)
@@ -67,12 +72,12 @@ class SceneView(QGraphicsView):
 
 
 class MainWindow(QWidget):
-    def __init__(self, title, size):
+    def __init__(self, title, size, background):
         super().__init__()
 
         # Set up the layout and graphics view
         layout = QVBoxLayout()
-        self.graphics_view = SceneView(size)
+        self.graphics_view = SceneView(size, background)
         layout.addWidget(self.graphics_view)
 
         self.setLayout(layout)

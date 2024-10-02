@@ -6,7 +6,7 @@ from tabletlib.geometry_types import Rect_Size, Position
 from tabletlib.styledb import StyleDB
 
 from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsRectItem
-from PyQt6.QtCore import QRectF
+from PyQt6.QtCore import QRectF, QPointF
 from PyQt6.QtGui import QPainterPath
 from typing import TYPE_CHECKING, Optional
 from tabletlib.graphics.crayon_box import CrayonBox
@@ -14,7 +14,7 @@ from tabletlib.graphics.crayon_box import CrayonBox
 if TYPE_CHECKING:
     from tabletlib.layer import Layer
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 class RectangleSE:
     """
@@ -124,6 +124,8 @@ class RectangleSE:
             top_radius = r.radius if r.top else 0
             bottom_radius = r.radius if r.bottom else 0
             path = cls.roundrect(r.upper_left.x, r.upper_left.y, r.size.width, r.size.height, top_radius, bottom_radius)
+            _logger.info(f"> Roundrect at: {r.upper_left}, size: {r.size},"
+                         f"top round: {top_radius}, bottom_round: {bottom_radius}")
             # Set pen and brush
             CrayonBox.choose_crayons(item=path, border_style=r.border_style, fill=r.fill)
             layer.Scene.addItem(path)
@@ -135,8 +137,9 @@ class RectangleSE:
         # Create the rect item
         rect = QRectF(frect.upper_left.x, frect.upper_left.y, frect.size.width, frect.size.height)
         r_item = QGraphicsRectItem(rect)
+        _logger.info(f"> Filled rect at: {frect.upper_left}, size: {frect.size}")
 
         # Set pen and brush
         CrayonBox.choose_fill_only(item=r_item, fill=frect.color)
-        layer.Scene.addItem(rect)
+        layer.Scene.addItem(r_item)
 

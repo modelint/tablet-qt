@@ -2,6 +2,7 @@
 tablet.py – A multi-layered drawing surface implemented on top of the Qt GUI framework
 """
 import logging
+from datetime import datetime
 from tabletlib.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
 from tabletlib.geometry_types import Rect_Size, Position
 from tabletlib.styledb import StyleDB
@@ -56,7 +57,8 @@ class Tablet:
         - View -- The Qt view of the tablet content in this window
     """
 
-    def __init__(self, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str, layer: str):
+    def __init__(self, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
+                 layer: str, rgb_color: tuple[int, int, int] = None):
         """
         Constructs a new Tablet instance
 
@@ -67,6 +69,7 @@ class Tablet:
         :param layer: The name of the initial Layer to be created on this Tablet (typically 'diagram')
         """
         self.logger = logging.getLogger(__name__)
+        self.logger.info(f"Tablet init: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
 
         # Load all of the common font, color, etc. styles used by all Presentations from yaml files
         StyleDB.load_config_files()
@@ -74,10 +77,11 @@ class Tablet:
         # Establish a system default layer ordering. Not all of them will be used in any given
         # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
+        self.background_color = rgb_color
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
         self.App = QApplication([])  # QT Application (must be created before any QT widgets)
-        self.Window = MainWindow("Tablet", size)  # QT widget for drawing 2D elements
+        self.Window = MainWindow("Tablet", size, self.background_color)  # QT widget for drawing 2D elements
         self.View = self.Window.graphics_view
 
         if layer not in self.layer_order:
@@ -90,7 +94,7 @@ class Tablet:
         self.Size = size
         self.Output_file = output_file
 
-    def add_layer(self, name: str, presentation: str, drawing_type: str, fill: str = None) -> Optional[Layer]:
+    def add_layer(self, name: str, presentation: str, drawing_type: str) -> Optional[Layer]:
         """
         Populate a new layer by name and return it. If a layer of the same name has already been
         populated, no layer is returned.
@@ -119,8 +123,7 @@ class Tablet:
         if not self.layers.get(name):
             if name not in self.layer_order:
                 self.layer_order.append(name)
-            self.layers[name] = Layer(name=name, tablet=self, presentation=presentation, drawing_type=drawing_type,
-                                      fill=fill)
+            self.layers[name] = Layer(name=name, tablet=self, presentation=presentation, drawing_type=drawing_type)
             return self.layers[name]
         else:
             self.logger.warning(f"Layer: [{name}] already exists")

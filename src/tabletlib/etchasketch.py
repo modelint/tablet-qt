@@ -24,7 +24,7 @@ class EtchaSketch:
         # size = Rect_Size(22*72, 34*72) # Ansi D
         output_path = Path(__file__).parent.parent.parent / "working" / "tablet.pdf"
         cls.tablet = Tablet(size=cls.size, output_file=output_path, drawing_type="xUML state machine diagram",
-                            presentation="default", layer="diagram")
+                            presentation="default", layer="diagram", rgb_color=(255, 255, 255))
 
     @classmethod
     def draw_stuff(cls):
@@ -32,8 +32,7 @@ class EtchaSketch:
 
         dlayer = cls.tablet.layers['diagram']
 
-        slayer = cls.tablet.add_layer(name='sheet', presentation='default', drawing_type="OS Engineer large frame",
-                                      fill="white")
+        slayer = cls.tablet.add_layer(name='sheet', presentation='default', drawing_type="OS Engineer large frame")
 
         RectangleSE.add(layer=dlayer, asset='state name only compartment',
                         lower_left=Position(50, 700), size=Rect_Size(height=20, width=70))

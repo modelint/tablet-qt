@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from tabletlib.layer import Layer
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
 class ImageE:
     """
@@ -24,6 +24,7 @@ class ImageE:
         """
         Adds the image
 
+        :param layer:
         :param size:
         :param resource_path: Path to an image file
         :param lower_left:  Lower left corner of the image in Cartesian coordinates
@@ -32,7 +33,7 @@ class ImageE:
         try:
             ll_dc = layer.Tablet.to_dc(Position(x=lower_left.x, y=lower_left.y))
         except TabletBoundsExceeded:
-            logger.warning(f"Lower left corner of image [{resource_path.name}] is outside Tablet draw region")
+            _logger.warning(f"Lower left corner of image [{resource_path.name}] is outside Tablet draw region")
             return
 
         # Use upper left corner instead
@@ -40,7 +41,7 @@ class ImageE:
 
         # Add it to the list
         layer.Images.append(element.Image(resource_path=resource_path, upper_left=ul, size=size))
-        logger.info(f'View>> Layer {layer.Name} registered resource at: {resource_path}')
+        _logger.info(f'View>> Layer {layer.Name} registered resource at: {resource_path}')
 
     @classmethod
     def render(cls, layer: 'Layer'):
@@ -49,17 +50,17 @@ class ImageE:
 
         :param layer: Draw on this Layer
         """
-
         for i in layer.Images:
             if not i.resource_path.exists():
-                logger.error(f'Image file [{i.resource_path}] not found')
+                _logger.error(f'Image file [{i.resource_path}] not found')
                 continue
 
             pixmap = QPixmap(str(i.resource_path))
             if pixmap.isNull():
-                logger.error(f'Image file [{i.resource_path}] could not be loaded as pixmap')
+                _logger.error(f'Image file [{i.resource_path}] could not be loaded as pixmap')
                 continue
 
             pix_item = QGraphicsPixmapItem(pixmap)
             pix_item.setPos(i.upper_left.x, i.upper_left.y)
             layer.Scene.addItem(pix_item)
+            _logger.info(f"> Image at: ({i.upper_left.x}, {i.upper_left.y})")

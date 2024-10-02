@@ -12,7 +12,7 @@ from tabletlib.graphics.crayon_box import CrayonBox
 if TYPE_CHECKING:
     from tabletlib.layer import Layer
 
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 class LineSegment:
     """
     Manage the rendering of Line Segments
@@ -37,6 +37,7 @@ class LineSegment:
         """Draw the line segments"""
 
         for ls in layer.Line_segments:
+            _logger.info(f"> Line {ls.from_here}, {ls.to_there}")
 
             # Create a line item for the scene
             ls_item = QGraphicsLineItem(QLineF(*ls.from_here, *ls.to_there))

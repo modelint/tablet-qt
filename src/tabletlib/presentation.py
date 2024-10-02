@@ -34,7 +34,7 @@ class Presentation:
         self.Corner_spec = {}
 
         # Load Asset Presentations for all Assets in this Presentation
-        self.logger.info(f"Loading assets for Presentation [{self.Name}]")
+        self.logger.info(f"using presentation: [{self.Name}]")
         self.load_drawing_type()
 
     def load_drawing_type(self):
@@ -42,6 +42,7 @@ class Presentation:
         Load shape and text assets for my drawing type and presentation
         """
         file_path = config_dir / "drawing_types.yaml"
+        self.logger.info(f"loading assets in: [{file_path}]")
         with open(file_path, 'r') as file:
             raw_data = yaml.safe_load(file)
         my_data = raw_data[self.Drawing_type][self.Name]

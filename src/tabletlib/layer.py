@@ -2,7 +2,6 @@
 layer.py - Layer of content drawn on a Tablet
 """
 import logging
-from tabletlib.styledb import StyleDB
 import tabletlib.element as element
 from tabletlib.presentation import Presentation
 from graphics.circle_se import CircleSE
@@ -14,7 +13,6 @@ from graphics.image import ImageE
 from graphics.diagnostic_marker import DiagnosticMarker
 from typing import TYPE_CHECKING, List
 from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsLineItem
-from PyQt6.QtGui import QColor
 
 if TYPE_CHECKING:
     from tabletlib.tablet import Tablet
@@ -34,7 +32,7 @@ class Layer:
         - Text -- A list of text lines (new lines are not supported)
     """
 
-    def __init__(self, name: str, tablet: 'Tablet', presentation: str, drawing_type: str, fill: str = None):
+    def __init__(self, name: str, tablet: 'Tablet', presentation: str, drawing_type: str):
         """
         Constructor
 
@@ -45,20 +43,13 @@ class Layer:
         :param fill: A color to fill the drawing area
         """
         self.logger = logging.getLogger(__name__)
+        self.logger.info(f"creating layer: [{name}] ")
         self.Name = name
-        self.Fill = fill
         self.Tablet = tablet
         self.Scene = tablet.View.scene  # This is what we actually draw on
         self.Drawing_type = drawing_type
 
         # Stuff we will draw on the Layer
-
-        # Create one giant fill rect for the background if this layer is filled
-        if self.Fill:
-            fill_rgb_color_value = StyleDB.rgbF[self.Fill]
-            self.Scene.setBackgroundBrush(QColor(*fill_rgb_color_value))
-        # self.BackgroundRect = None if not self.Fill else element.FillRect(
-        #     upper_left=Position(0,0), size=tablet.Size, color=fill)
         self.Line_segments: List[element.Line_Segment] = []
         self.Circles: List[element.Circle] = []
         self.Polygons: List[element.Polygon] = []
@@ -78,6 +69,7 @@ class Layer:
             # It hasn't been loaded from the Flatland DB yet
             self.Presentation = Presentation(name=presentation, drawing_type=self.Drawing_type)
             self.Tablet.Presentations[pres_index] = self.Presentation
+
 
     def render(self):
         """Renders all Elements on this Layer"""

@@ -97,11 +97,8 @@ class TextElement:
         the text matches the background color. This is useful when you want to draw text over the top of some
         graphical component such as a line without being too visually disruptive.
         """
-        # If a sheet layer has been specified, use its color.
-        # Otherwise, use the scene background
-        sheet_layer = layer.Tablet.layers.get('sheet')
-        fill = 'white' if not sheet_layer else sheet_layer.Fill
-        # TODO: Use scene background instead of white. Also make this color settable on tablet creation
+        # Use the scene background or white if no background is specified
+        fill = (255, 255, 255) if not layer.Tablet.background_color else layer.Tablet.background_color
 
         # Flip lower left corner to device coordinates
         ll_dc = layer.Tablet.to_dc(Position(x=lower_left.x, y=lower_left.y))
@@ -140,7 +137,6 @@ class TextElement:
             logger.warning(f"Asset: [{asset}] Text: [{text}] outside of tabletlib draw area")
             return
 
-        logger.info(f'Text line [{text}] added to layer [{layer.Name}]')
 
     @classmethod
     def add_block(cls, layer: 'Layer', asset: str, lower_left: Position, text: List[str],
@@ -206,5 +202,7 @@ class TextElement:
             if style.slant == 'italic':
                 font.setItalic(True)
             t_item.setFont(font)
+            logger.info(f'Font [{style}]')
             t_item.setPos(t.upper_left.x, t.upper_left.y)
+            logger.info(f'> Text line [{t.text}] at {t.upper_left}')
             layer.Scene.addItem(t_item)
