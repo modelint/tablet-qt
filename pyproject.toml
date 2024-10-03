@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mi-tabletqt"
-version = "0.1.1"
+version = "0.1.2"
 description = "Tablet simple 2D drawing interface to Qt"
 readme = "README.md"
 authors = [{ name = "Leon Starr", email = "leon_starr@modelint.com" }]
