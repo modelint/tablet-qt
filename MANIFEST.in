@@ -1,2 +1,2 @@
 include src/tabletlib/log.conf
-recursive-include src/tabletlib/config/*
+include src/tabletlib/config/*.yaml
