@@ -1,0 +1,30 @@
+[build-system]
+requires      = ["setuptools>=75.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mi-tabletqt"
+version = "0.1.1"
+description = "Tablet simple 2D drawing interface to Qt"
+readme = "README.md"
+authors = [{ name = "Leon Starr", email = "leon_starr@modelint.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["2D", "draw", "graphics", "canvas", "mbse", "xuml", "xtuml", "sysml"]
+dependencies = ['pypdf', 'PyQt6', 'PyYAML', 'tomli; python_version < "3.12"']
+requires-python = ">=3.12"
+
+[project.optional-dependencies]
+build = ["build", "twine"]
+dev = ["bump2version", "pytest"]
+
+[project.scripts]
+tablet = "tabletlib.__main__:main"
+
+[project.urls]
+repository    = "https://github.com/modelint/tablet-qt"
+documentation = "https://github.com/modelint/tablet-qt/wiki"
