@@ -4,13 +4,13 @@ layer.py - Layer of content drawn on a Tablet
 import logging
 import tabletlib.element as element
 from tabletlib.presentation import Presentation
-from graphics.circle_se import CircleSE
-from graphics.polygonSE import PolygonSE
-from graphics.line_segment import LineSegment
-from graphics.rectangle_se import RectangleSE
-from graphics.text_element import TextElement
-from graphics.image import ImageE
-from graphics.diagnostic_marker import DiagnosticMarker
+from tabletlib.graphics.circle_se import CircleSE
+from tabletlib.graphics.polygonSE import PolygonSE
+from tabletlib.graphics.line_segment import LineSegment
+from tabletlib.graphics.rectangle_se import RectangleSE
+from tabletlib.graphics.text_element import TextElement
+from tabletlib.graphics.image import ImageE
+from tabletlib.graphics.diagnostic_marker import DiagnosticMarker
 from typing import TYPE_CHECKING, List
 from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsLineItem
 

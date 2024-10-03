@@ -3,13 +3,13 @@
 from pathlib import Path
 from tabletlib.tablet import Tablet
 from tabletlib.geometry_types import Rect_Size, Position
-from graphics.circle_se import CircleSE
-from graphics.polygonSE import PolygonSE
-from graphics.line_segment import LineSegment
-from graphics.rectangle_se import RectangleSE
-from graphics.image import ImageE
-from graphics.text_element import TextElement
-from graphics.diagnostic_marker import DiagnosticMarker
+from tabletlib.graphics.circle_se import CircleSE
+from tabletlib.graphics.polygonSE import PolygonSE
+from tabletlib.graphics.line_segment import LineSegment
+from tabletlib.graphics.rectangle_se import RectangleSE
+from tabletlib.graphics.image import ImageE
+from tabletlib.graphics.text_element import TextElement
+from tabletlib.graphics.diagnostic_marker import DiagnosticMarker
 
 
 class EtchaSketch:
