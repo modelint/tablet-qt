@@ -1,27 +1,45 @@
 """ circle_se.py -- Circle shape element """
 
+# System
 import logging
-import tabletlib.element as element
-from tabletlib.geometry_types import Position
+from typing import TYPE_CHECKING
 
+# Qt
 from PyQt6.QtWidgets import QGraphicsEllipseItem
 from PyQt6.QtCore import QRectF
-from typing import TYPE_CHECKING
-from tabletlib.graphics.crayon_box import CrayonBox
+
+# Tablet
+import tabletqt.element as element
+from tabletqt.geometry_types import Position
+from tabletqt.graphics.crayon_box import CrayonBox
 
 if TYPE_CHECKING:
-    from tabletlib.layer import Layer
+    from tabletqt.layer import Layer
 
 _logger = logging.getLogger(__name__)
 class CircleSE:
     """
-    Manage the rendering of circle Shape Elements
+    Manage the rendering of Circle Shape Elements
+
+    Attributes and relationships defined on the class model
+
+    Subclass of Closed Shape on class model (R22)
+
+    - ID {I} -- Element ID, unique within a Layer, implemented as object reference
+    - Layer {I, R22} -- Element drawn on this Layer via R22/R12/R15/Element/R19/Layer
+    - Radius -- Circle radius
+    - Center -- Position of center in tablet coordinates
     """
 
     @classmethod
     def add(cls, layer: 'Layer', asset: str, center: Position, radius: float):
         """
         Adds a circle to the layer and converts the center to device coordinates
+
+        :param layer: Draw on this layer
+        :param asset: Used to look up the border style
+        :param center: The center position in tablet coordinates
+        :param radius: The radius length in points
         """
         # Flip lower left corner to device coordinates
         center_dc = layer.Tablet.to_dc(Position(x=center.x, y=center.y))
@@ -35,7 +53,11 @@ class CircleSE:
 
     @classmethod
     def render(cls, layer: 'Layer'):
-        """Draw the circle shapes"""
+        """
+        Draw the circle shapes
+
+        :param layer: Draw on this layer
+        """
 
         for c in layer.Circles:
 

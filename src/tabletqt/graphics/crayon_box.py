@@ -1,13 +1,16 @@
 """ crayon_box.py - Sets the Qt pen and brush properties using the StyleDB """
 
-import sys
+# System
 import logging
+from typing import Optional
 
+# Qt
 from PyQt6.QtGui import QBrush, QPen, QColor
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QAbstractGraphicsShapeItem, QGraphicsLineItem
-from tabletlib.styledb import StyleDB
-from typing import Optional
+
+# Tablet
+from tabletqt.styledb import StyleDB, Float_RGB
 
 _logger = logging.getLogger(__name__)
 class CrayonBox:
@@ -18,9 +21,12 @@ class CrayonBox:
     def choose_crayons(cls, item: QAbstractGraphicsShapeItem | QGraphicsLineItem, border_style: str,
                        fill: Optional['str'] = None):
         """
-        :param item: Sets the pen properties of this item
-        :param border_style: Name of the border style used to index StyleDB
-        :param fill: Name of fill, if any
+        Create and assign a pen and brush for a given QT graphics item with settings found
+        in the StyleDB
+
+        :param item: Qt graphic item to be displayed
+        :param border_style: Name of the user border style key in the StyleDB
+        :param fill: Name of user fill key in the StyleDB, if any
         """
         # Create a pen and set its properties using the StyleDB
         # Color
@@ -51,20 +57,15 @@ class CrayonBox:
         _logger.info(f"Pen color: [{cname}], width: [{w}], pattern: [{pname}]")
 
     @classmethod
-    def choose_fill_only(cls, item: QAbstractGraphicsShapeItem, fill: tuple[int, int, int]):
+    def choose_fill_only(cls, item: QAbstractGraphicsShapeItem, fill: Float_RGB):
         """
-        Set fill with a transparent pen
+        Create and assign a transparent pen (no border) and brush for a given QT graphics item
+        with settings found in the StyleDB.
 
-        :param item:
-        :param fill:
+        :param item: Qt graphic item to be displayed (must be a closed shape)
+        :param fill: RGB color
         :return:
         """
-        # # Lookup the RGB color value from the user color name
-        # try:
-        #     fill_rgb_color_value = StyleDB.rgbF[fill]
-        # except KeyError:
-        #     _logger.error(f'Fill rect color [{fill}] not defined in system or user configuration')
-        #     sys.exit(1)
         _logger.info(f"Brush color: {fill}")
 
         pen = QPen(Qt.GlobalColor.transparent)

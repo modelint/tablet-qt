@@ -1,13 +1,14 @@
 """ scene_view.py - create a vector drawing view in QT """
 
 import logging
-from PyQt6.QtWidgets import QGraphicsView, QVBoxLayout, QGraphicsScene, QGraphicsRectItem, QWidget
-from PyQt6.QtCore import QRectF, QMarginsF, Qt, QSize
-from PyQt6.QtGui import QColor, QPainter, QPageSize, QPageLayout, QPen
+from PyQt6.QtWidgets import QGraphicsView, QVBoxLayout, QGraphicsScene, QWidget
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter, QPageSize, QPageLayout
 from PyQt6.QtPrintSupport import QPrinter
 from pypdf import PdfWriter, PdfReader
 
 _logger = logging.getLogger(__name__)
+
 
 class SceneView(QGraphicsView):
     def __init__(self, size, background):
@@ -17,7 +18,7 @@ class SceneView(QGraphicsView):
         self.scene = QGraphicsScene()
         self.setSceneRect(0, 0, size.width, size.height)
         pad = 10
-        self.setFixedSize(size.width+pad, size.height+pad)
+        self.setFixedSize(size.width + pad, size.height + pad)
         if background:
             _logger.info(f"Setting scene background to RGB: {background}")
             self.scene.setBackgroundBrush(QColor(*background))
@@ -70,7 +71,6 @@ class SceneView(QGraphicsView):
             writer.write(fp)
 
 
-
 class MainWindow(QWidget):
     def __init__(self, title, size, background):
         super().__init__()
@@ -83,5 +83,3 @@ class MainWindow(QWidget):
         self.setLayout(layout)
         self.setWindowTitle(title)
         self.setGeometry(500, 100, size.width, size.height)  # Position and size of the main window on the screen
-
-

@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 import yaml
 from collections import namedtuple
-from tabletlib.exceptions import BadConfigData
+from tabletqt.exceptions import BadConfigData
 
 _logger = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ class StyleDB:
         a named tuple or a simple key value dictionary if no named tuple is provided
         and then sets the corresponding StyleDB class attribute to that value
         """
-        _logger.info(f"StyleDB loading tablet configuration\n---")
+        _logger.info(f"StyleDB loading tabletqt configuration\n---")
         for fname, pp in config_type.items():
             config_file_path = config_dir / (fname+".yaml")
             _logger.info(f"loading: {config_file_path}")

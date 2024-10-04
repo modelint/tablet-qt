@@ -1,24 +1,37 @@
 """ rectangle_se.py -- Rectangle Shape Element """
 
+# System
 import logging
-import tabletlib.element as element
-from tabletlib.geometry_types import Rect_Size, Position
-from tabletlib.styledb import StyleDB
+from typing import TYPE_CHECKING, Optional
 
+# Qt
 from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsRectItem
 from PyQt6.QtCore import QRectF, QPointF
 from PyQt6.QtGui import QPainterPath
-from typing import TYPE_CHECKING, Optional
-from tabletlib.graphics.crayon_box import CrayonBox
+
+# Tablet
+import tabletqt.element as element
+from tabletqt.geometry_types import Rect_Size, Position
+from tabletqt.styledb import StyleDB
+from tabletqt.graphics.crayon_box import CrayonBox
 
 if TYPE_CHECKING:
-    from tabletlib.layer import Layer
+    from tabletqt.layer import Layer
 
 _logger = logging.getLogger(__name__)
 
 class RectangleSE:
     """
     Manage the rendering of Rectangle Shape Elements
+
+    Attributes and relationships defined on the class model
+
+    Subclass of Closed Shape on class model (R22)
+
+    - ID {I} -- Element ID, unique within a Layer, implemented as object reference
+    - Layer {I, R22} -- Element drawn on this Layer via R22/R12/R15/Element/R19/Layer
+    - Size -- Rectangle height and width
+    - Lower left -- Position of corner in tablet coordinates
     """
     @classmethod
     def add(cls, layer: 'Layer', asset: str, lower_left: Position, size: Rect_Size,
@@ -29,8 +42,8 @@ class RectangleSE:
         will be applied. If a color_usage is supplied, the associated color overrides the Closed Shape Fill.
 
         :param layer: Draw on this Layer
-        :param asset:  Draw this Asset
-        :param lower_left:  Lower left corner position in Cartesian coordinates
+        :param asset: Used to determine draw style
+        :param lower_left:  Lower left corner position in tablet coordinates
         :param size: The Size of the rectangle in points
         :param color_usage: If a usage string is provided, it will be indexed into the Style DB usage table to find
                             an associated RGB color.
@@ -49,7 +62,7 @@ class RectangleSE:
             try:
                 fill = StyleDB.color_usage[color_usage]  # Overrides any closed shape fill
             except KeyError:
-                logger.warning(f'No color defined for usage [{color_usage}]')
+                _logger.warning(f'No color defined for usage [{color_usage}]')
 
         # Set the corner spec, if any
         cspec = layer.Presentation.Corner_spec.get(asset)
@@ -132,8 +145,16 @@ class RectangleSE:
 
     @classmethod
     def render_fillrect(cls, layer: 'Layer', frect: element.FillRect):
-        """Render a filled retangle"""
+        """
+        Render a single specified filled retangle
 
+        For now, this feature is not directly available to the user. It is used
+        on demand as a component of other elements such as text to create an
+        opaque underlay.
+
+        :param layer: Draw on this layer
+        :param frect: The fill color
+        """
         # Create the rect item
         rect = QRectF(frect.upper_left.x, frect.upper_left.y, frect.size.width, frect.size.height)
         r_item = QGraphicsRectItem(rect)
@@ -142,4 +163,3 @@ class RectangleSE:
         # Set pen and brush
         CrayonBox.choose_fill_only(item=r_item, fill=frect.color)
         layer.Scene.addItem(r_item)
-

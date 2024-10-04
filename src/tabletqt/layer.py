@@ -1,21 +1,27 @@
 """
 layer.py - Layer of content drawn on a Tablet
 """
+# System
 import logging
-import tabletlib.element as element
-from tabletlib.presentation import Presentation
-from tabletlib.graphics.circle_se import CircleSE
-from tabletlib.graphics.polygonSE import PolygonSE
-from tabletlib.graphics.line_segment import LineSegment
-from tabletlib.graphics.rectangle_se import RectangleSE
-from tabletlib.graphics.text_element import TextElement
-from tabletlib.graphics.image import ImageE
-from tabletlib.graphics.diagnostic_marker import DiagnosticMarker
 from typing import TYPE_CHECKING, List
+
+# Qt
 from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsLineItem
 
+# Tablet
+import tabletqt.element as element
+from tabletqt.presentation import Presentation
+from tabletqt.graphics.circle_se import CircleSE
+from tabletqt.graphics.polygon_se import PolygonSE
+from tabletqt.graphics.line_segment import LineSegment
+from tabletqt.graphics.rectangle_se import RectangleSE
+from tabletqt.graphics.text_element import TextElement
+from tabletqt.graphics.image import ImageE
+from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
+
+
 if TYPE_CHECKING:
-    from tabletlib.tablet import Tablet
+    from tabletqt.tablet import Tablet
 
 class Layer:
     """
@@ -24,23 +30,23 @@ class Layer:
     from the lowest value on the z axis toward the highest. Thus, content on the higher layers may overlap
     content underneath.
 
-        Attributes
+        Attributes and relationships defined on the class model
 
-        - Line_segments -- A list of geometric lines each with start and end coordinates.
-        - Rectangles -- A list of rectangles each with a lower left corner, height and width
-        - Polygons -- A list of closed polygons
-        - Text -- A list of text lines (new lines are not supported)
+        - Name {I} -- A name that is unique among other Layers on this Tablet (attribute)
+        - Z coord {I2, OR20} -- Rendering order, also unique on this Tablet (implement as Tablet list)
+        - Presentation {R2} -- Defines styling of text and graphics (attribute)
+        - Drawing type {R?} -- Determines assets that can be drawn (attribute)
+        - Tablet {R13} -- Layer is managed on this Tablet (attribute)
     """
 
     def __init__(self, name: str, tablet: 'Tablet', presentation: str, drawing_type: str):
         """
         Constructor
 
-        :param name: The Layer name
-        :param tablet: The Tablet object
-        :param presentation: Presentation to be applied to this Layer
-        :param drawing_type: The Presentation's View Type
-        :param fill: A color to fill the drawing area
+        :param name: A predefined or custom Layer name
+        :param tablet: Layer is created on this Tablet object
+        :param presentation: Name of Presentation styling the text and graphics on this Layer
+        :param drawing_type: Name of Drawing Type to determine assets that may be drawn on this Layer
         """
         self.logger = logging.getLogger(__name__)
         self.logger.info(f"creating layer: [{name}] ")
@@ -70,7 +76,6 @@ class Layer:
             self.Presentation = Presentation(name=presentation, drawing_type=self.Drawing_type)
             self.Tablet.Presentations[pres_index] = self.Presentation
 
-
     def render(self):
         """Renders all Elements on this Layer"""
 
@@ -88,5 +93,3 @@ class Layer:
         # Diagnostic elements with explicit styling that bypass StyleDB lookup
         # Not intended for use by any client applications
         DiagnosticMarker.render(self)
-
-

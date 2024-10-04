@@ -1,33 +1,50 @@
 """ image.py -- Image element """
 
+# System
 import logging
-import tabletlib.element as element
-from tabletlib.geometry_types import Position, Rect_Size
-from tabletlib.exceptions import TabletBoundsExceeded
-
 from pathlib import Path
-from PyQt6.QtWidgets import QGraphicsPixmapItem
-from PyQt6.QtGui import QPixmap
 from typing import TYPE_CHECKING
 
+# Qt
+from PyQt6.QtWidgets import QGraphicsPixmapItem
+from PyQt6.QtGui import QPixmap
+
+# Tablet
+import tabletqt.element as element
+from tabletqt.geometry_types import Position, Rect_Size
+from tabletqt.exceptions import TabletBoundsExceeded
+
 if TYPE_CHECKING:
-    from tabletlib.layer import Layer
+    from tabletqt.layer import Layer
 
 _logger = logging.getLogger(__name__)
 
 class ImageE:
     """
     Manage the loading and rendering of Image Elements
+
+    Attributes and relationships defined on the class model
+
+    (Not currently in the class model, but will be added)
+
+    Subclass of Element on class model (R15) - most likely
+
+    - ID {I} -- Element ID, unique within a Layer, implemented as object reference
+    - Layer {I, R22} -- Element drawn on this Layer via R22/R12/R15/Element/R19/Layer
+    - Location -- Path to the image file
+    - Lower left -- Position of the lower left image corner in tablet coordinates
+    - Size -- The actual size of the image in the file
     """
     @classmethod
     def add(cls, layer: 'Layer', resource_path: Path, lower_left: Position, size: Rect_Size):
         """
-        Adds the image
+        Adds the image to the layer, converting to device coordinates and using the upper
+        left corner of the image instead to suit Qt placement
 
-        :param layer:
-        :param size:
+        :param layer: Draw on this Layer
         :param resource_path: Path to an image file
-        :param lower_left:  Lower left corner of the image in Cartesian coordinates
+        :param size: The actual size of the image in points
+        :param lower_left:  Lower left corner of the image in tablet coordinates
         """
         # Flip lower left corner to device coordinates
         try:

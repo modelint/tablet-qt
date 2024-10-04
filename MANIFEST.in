@@ -1,2 +1,2 @@
-include src/tabletlib/log.conf
-include src/tabletlib/config/*.yaml
+include src/tabletqt/log.conf
+include src/tabletqt/config/*.yaml

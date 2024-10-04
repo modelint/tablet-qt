@@ -1,15 +1,15 @@
-""" etchasketch.py - Testbed for exercising the tablet with drawing patterns """
+""" etchasketch.py - Testbed for exercising the tabletqt with drawing patterns """
 
 from pathlib import Path
-from tabletlib.tablet import Tablet
-from tabletlib.geometry_types import Rect_Size, Position
-from tabletlib.graphics.circle_se import CircleSE
-from tabletlib.graphics.polygonSE import PolygonSE
-from tabletlib.graphics.line_segment import LineSegment
-from tabletlib.graphics.rectangle_se import RectangleSE
-from tabletlib.graphics.image import ImageE
-from tabletlib.graphics.text_element import TextElement
-from tabletlib.graphics.diagnostic_marker import DiagnosticMarker
+from tabletqt.tablet import Tablet
+from tabletqt.geometry_types import Rect_Size, Position
+from tabletqt.graphics.circle_se import CircleSE
+from tabletqt.graphics.polygon_se import PolygonSE
+from tabletqt.graphics.line_segment import LineSegment
+from tabletqt.graphics.rectangle_se import RectangleSE
+from tabletqt.graphics.image import ImageE
+from tabletqt.graphics.text_element import TextElement
+from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
 
 class EtchaSketch:
@@ -22,9 +22,9 @@ class EtchaSketch:
         # size = Rect_Size(11*72, 17*72) # Ansi D
         cls.size = Rect_Size(17 * 72, 22 * 72)  # Ansi C h=1224 x w=1584
         # size = Rect_Size(22*72, 34*72) # Ansi D
-        output_path = Path(__file__).parent.parent.parent / "working" / "tablet.pdf"
+        output_path = Path(__file__).parent.parent.parent / "working" / "tabletqt.pdf"
         cls.tablet = Tablet(size=cls.size, output_file=output_path, drawing_type="xUML state machine diagram",
-                            presentation="default", layer="diagram", rgb_color=(255, 255, 255))
+                            presentation="default", layer="diagram")
 
     @classmethod
     def draw_stuff(cls):
@@ -84,7 +84,7 @@ class EtchaSketch:
 
         # Print this text
         # sample_text = "Thirty seven goodies"
-        # cls.tablet.layers['diagram'].add_text_line(
+        # cls.tabletqt.layers['diagram'].add_text_line(
         #     asset='transition name', lower_left=Position(255, 623), text=sample_text)
         sample_text = "Thirty seven goodies"
         TextElement.add_line(layer=dlayer,
@@ -92,7 +92,7 @@ class EtchaSketch:
 
         DiagnosticMarker.add_cross_hair(dlayer, Position(498, 712), 'purple')
         # Get the tbox size
-        # tbox = cls.tablet.layers['diagram'].text_line_size(asset='transition name', text_line=sample_text)
+        # tbox = cls.tabletqt.layers['diagram'].text_line_size(asset='transition name', text_line=sample_text)
         tbox = TextElement.line_size(layer=dlayer, asset='state name', text_line=sample_text)
 
         # Draw cross hairs where the displayed text should line up
@@ -105,7 +105,7 @@ class EtchaSketch:
 
         pad_x = 5  # To adjust the position of the bounding rectangle relative to the text upper left corner
         pad_y = -4
-        # cls.tablet.layers['diagram'].add_raw_rectangle(upper_left=Position(255, 635+pad_y),
+        # cls.tabletqt.layers['diagram'].add_raw_rectangle(upper_left=Position(255, 635+pad_y),
         #                                                size=Rect_Size(tbox.height, tbox.width))
         # DiagnosticMarker.add_cross_hair(layer=dlayer, Position(255, 635)) # Upper left of text
         #
@@ -119,7 +119,7 @@ class EtchaSketch:
                               text=['From here', 'to quick goats'])
         tbox = TextElement.text_block_size(layer=dlayer, asset='transition name',
                                            text_block=['From here', 'to quick goats'])
-        # cls.tablet.layers['diagram'].add_raw_rectangle(upper_left=Position(500, 500+tbox.height),
+        # cls.tabletqt.layers['diagram'].add_raw_rectangle(upper_left=Position(500, 500+tbox.height),
         #                                                size=Rect_Size(tbox.height, tbox.width))
 
         cls.tablet.render()

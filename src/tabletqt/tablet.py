@@ -1,17 +1,25 @@
 """
-tablet.py – A multi-layered drawing surface implemented on top of the Qt GUI framework
+tabletqt.py – A multi-layered drawing surface implemented on top of the Qt GUI framework
 """
+# System
+import sys  # For fatal error exit
 import logging
-from datetime import datetime
-from tabletlib.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
-from tabletlib.geometry_types import Rect_Size, Position
-from tabletlib.styledb import StyleDB
-from tabletlib.layer import Layer
-from tabletlib.scene_view import MainWindow
-from typing import Optional
-import sys
-from PyQt6.QtWidgets import QApplication
+from datetime import datetime  # For initial log entry
 from pathlib import Path
+from typing import Optional
+
+# Qt
+from PyQt6.QtWidgets import QApplication
+
+# Tablet
+from tabletqt.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
+from tabletqt.geometry_types import Rect_Size, Position
+from tabletqt.styledb import StyleDB
+from tabletqt.layer import Layer
+from tabletqt.scene_view import MainWindow
+from tabletqt.styledb import Float_RGB
+
+default_background = Float_RGB(255, 255, 255)  # White
 
 class Tablet:
     """
@@ -47,26 +55,25 @@ class Tablet:
     render everything using its graphic library (Qt in this implementation) using whatever coordinate
     system the library supplies, making any necessary conversions from the application coordinate system.
 
-        Attributes
+        Attributes and relationships defined on the class model
 
-        - Size -- The rectangular size of the total drawing surface
-        - Output_file -- A filename or output stream object to be output as a drawing
-        - platform specific:
-        - App -- The Qt application
-        - Window -- The Qt main window to be displayed
-        - View -- The Qt view of the tablet content in this window
+        - ID {I} -- Unique id, implemented as a reference to a Tablet object, no attribute needed
+        - Size -- The height and width of the drawing surface (attribute)
+        - Output_file -- A filename or output stream object to be output as a drawing (attribute)
+        - Background_color -- The color of the Tablet (visible through all non-opaque layer elements)
     """
 
     def __init__(self, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
-                 layer: str, rgb_color: tuple[int, int, int] = None):
+                 layer: str, background_color: Float_RGB = default_background):
         """
-        Constructs a new Tablet instance
+        Constructs a new Tablet instance with a single initial predefined Layer
 
         :param size: Vertical and horizontal span of the entire draw surface in points
         :param output_file: Name of the drawing file to be generated, PDF only for now
         :param drawing_type: Initial layer Drawing Type so we know what kinds text and graphics Assets can be drawn
         :param presentation: Initial layer's Presentation so we know what graphic styles to use for our Assets
-        :param layer: The name of the initial Layer to be created on this Tablet (typically 'diagram')
+        :param layer: The name of the predefined initial Layer to be created on this Tablet (typically 'diagram')
+        :param background_color: RGB tabletqt background color, set to white if none specified
         """
         self.logger = logging.getLogger(__name__)
         self.logger.info(f"Tablet init: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
@@ -77,7 +84,7 @@ class Tablet:
         # Establish a system default layer ordering. Not all of them will be used in any given
         # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
-        self.background_color = rgb_color
+        self.background_color = background_color  # This is referenced when filling text underlay rects
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
         self.App = QApplication([])  # QT Application (must be created before any QT widgets)
@@ -116,10 +123,8 @@ class Tablet:
         :param name: One of the standard layer names or a custom layer name
         :param presentation: The Presentation name associated with this Layer
         :param drawing_type: The Drawing Type defining this Presentation
-        :param fill: An optional background fill for this layer (if opaque, any lower level layers will not be visible)
         :return: A reference to the newly created layer
         """
-
         if not self.layers.get(name):
             if name not in self.layer_order:
                 self.layer_order.append(name)
@@ -137,7 +142,7 @@ class Tablet:
         [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
         self.Window.show()
 
-        # Save the rendered tablet as a PDF for alternate viewing
+        # Save the rendered tabletqt as a PDF for alternate viewing
         self.View.save_as_pdf(self.Output_file)
 
         # Run the Qt GUI event loop
@@ -145,18 +150,18 @@ class Tablet:
 
     def to_dc(self, tablet_coord: Position) -> Position:
         """
-        Convert from tablet coordinates (tc) used by the client application to device
+        Convert from tabletqt coordinates (tc) used by the client application to device
         coordinates (dc).
 
         Tablet coordinates are upper right quadrant cartesian with the origin (0,0) in the
-        lower left corner of the tablet. This is what client application (user) specifies
+        lower left corner of the tabletqt. This is what client application (user) specifies
         when drawing.
 
         Device coordinates depend on the graphics library. Here we are using Qt, so we have
         a standard display coordinate system with the origin in the upper left corner with
         y values ascending toward the bottom of the display.
 
-        An exception is thrown if the supplied position is outside of the tablet boundary.
+        An exception is thrown if the supplied position is outside of the tabletqt boundary.
 
         Note: This may seem like overkill for a simple computation and check, but less
         error prone than having this pattern sprinked throughout the code.

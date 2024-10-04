@@ -1,21 +1,26 @@
 """ text_element.py -- Text Element """
 
+# System
 import logging
-import tabletlib.element as element
-from tabletlib.geometry_types import Position, Rect_Size, HorizAlign
-from tabletlib.styledb import StyleDB
-from tabletlib.exceptions import TabletBoundsExceeded
+from typing import TYPE_CHECKING, List
 
+# Qt
 from PyQt6.QtWidgets import QGraphicsTextItem
 from PyQt6.QtGui import QFont, QFontMetrics, QColor
-from typing import TYPE_CHECKING, List
-from tabletlib.graphics.rectangle_se import RectangleSE
+
+# Tablet
+import tabletqt.element as element
+from tabletqt.geometry_types import Position, Rect_Size, HorizAlign
+from tabletqt.styledb import StyleDB
+from tabletqt.graphics.rectangle_se import RectangleSE
+from tabletqt.exceptions import TabletBoundsExceeded
 
 if TYPE_CHECKING:
-    from tabletlib.layer import Layer
+    from tabletqt.layer import Layer
 
 logger = logging.getLogger(__name__)
 
+# Constants
 tbox_xoffset = 4  # QT distance from text item origin (setPos) to lower left corner of text bounding box
 tbox_yoffset = 4  # For now, determined experimentally, not sure how to compute it from QFontMetrics
 
@@ -31,7 +36,17 @@ Qt_font_weight = {'normal': QFont.Weight.Normal, 'bold': QFont.Weight.Bold}
 
 class TextElement:
     """
-    Manage the rendering of Text Elements
+    Manage the defnition and rendering of Text Elements (blocks of text)
+
+    Attributes and relationships defined on the class model
+
+    Subclass of Element on class model (R15)
+
+    - ID {I} -- Element ID, unique within a Layer, implemented as object reference
+    - Layer {I, R22} -- Element drawn on this Layer via R22/R12/R15/Element/R19/Layer
+    - Content -- One or more lines of text, implemented here as a list of strings
+    - Lower left -- Position in tablet coordinates of the entire text block
+    - Text style {R16} -- Typeface, color, and other display properties to be applied
     """
     @classmethod
     def line_size(cls, layer: 'Layer', asset: str, text_line: str) -> Rect_Size:
@@ -39,8 +54,8 @@ class TextElement:
         Returns the size of a line of text when rendered with the asset's text style
 
         :param layer: Text is drawn on this Layer
-        :param asset: Application entity to determine text style
-        :param text_line: Text that would be rendered
+        :param asset: Determines text display style
+        :param text_line: Line of text
         :return: Size of the text line ink area
         """
         style_name = layer.Presentation.Text_presentation[asset]  # Look up the text style for this asset
@@ -54,13 +69,6 @@ class TextElement:
         font_metrics = QFontMetrics(font)
         bound_rect = font_metrics.boundingRect(text_line)
 
-        # Comments below are from Cairo implementation
-        # Keeping them for now in case they become relevant
-        # # te = self.Tablet.Context.text_extents(text_line)
-        # # Add x_bearing to account for any indented whitespace
-        # # Otherwise you just get the width of the text after the whitespace
-        # return Rect_Size(height=te.height, width=te.width+te.x_bearing)
-
         return Rect_Size(height=bound_rect.height(), width=bound_rect.width())
 
     @classmethod
@@ -71,7 +79,7 @@ class TextElement:
         :param layer: Text in block is drawn on this layer
         :param asset: Name of the text asset to get display style properties
         :param text_block: A list of text lines to be displayed
-        :return:  The display size of the text bloxk
+        :return:  The display size of the text block
         """
         style_name = layer.Presentation.Text_presentation[asset]  # Look up the text style for this asset
         style = StyleDB.text_style[style_name]
@@ -92,27 +100,35 @@ class TextElement:
     @classmethod
     def add_underlay(cls, layer: 'Layer', lower_left: Position, size: Rect_Size):
         """
-        Adds a rectangle matching the color of the sheet layer (if one exists) otherwise, defaults
-        to white. This rectangle will be drawn underneath a text line or block so that the color surrounding
-        the text matches the background color. This is useful when you want to draw text over the top of some
-        graphical component such as a line without being too visually disruptive.
-        """
-        # Use the scene background or white if no background is specified
-        fill = (255, 255, 255) if not layer.Tablet.background_color else layer.Tablet.background_color
+        Adds a rectangle matching the tablet background color. This rectangle will be
+        drawn underneath a text line or block so that the color surrounding
+        the text matches the background. This is useful when you want to draw text
+        over the top of some graphical component such as a line without being too
+        visually disruptive.
 
+        :param layer: Draw on this layer
+        :param lower_left: Lower left corner position in tablet coordinates
+        :param size: The Size of the rectangle in points
+        """
         # Flip lower left corner to device coordinates
         ll_dc = layer.Tablet.to_dc(Position(x=lower_left.x, y=lower_left.y))
 
         # Use upper left corner instead
         ul = Position(x=ll_dc.x, y=ll_dc.y - size.height)
 
-        layer.TextUnderlayRects.append(element.FillRect(upper_left=ul, size=size, color=fill))
+        layer.TextUnderlayRects.append(element.FillRect(
+            upper_left=ul, size=size, color=layer.Tablet.background_color))
 
     @classmethod
     def add_line(cls, layer: 'Layer', asset: str, lower_left: Position, text: str):
         """
         Adds a line of text to the Tablet at the specified lower left corner location which will be converted
         to device coordinates
+
+        :param layer: Draw on this layer
+        :param asset: Used to determine text style
+        :param lower_left: Lower left corner position of text line in tablet coordinates
+        :param size: The size of the text line rectangle in points
         """
         # Qt positions using the upper left corner
         # We need to determine the height of the text bounding box to determine the upper left corner
@@ -190,7 +206,11 @@ class TextElement:
 
     @classmethod
     def render(cls, layer: 'Layer'):
-        """Draw all text lines"""
+        """
+        Draw all lines of text on this layer
+
+        :param layer: Draw on this Layer
+        """
         for t in layer.Text:
             t_item = QGraphicsTextItem(t.text)
             style = StyleDB.text_style[t.style]

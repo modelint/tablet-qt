@@ -1,6 +1,6 @@
 """ diagnostic_marker.py -- Diagnostic marking """
 
-from tabletlib.geometry_types import Position, Rect_Size
+from tabletqt.geometry_types import Position, Rect_Size
 
 from PyQt6.QtWidgets import QGraphicsLineItem, QGraphicsRectItem
 from PyQt6.QtCore import QRectF, QLineF
@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from PyQt6.QtGui import QPen, QColor
 
 if TYPE_CHECKING:
-    from tabletlib.layer import Layer
+    from tabletqt.layer import Layer
 
 
 class DiagnosticMarker:

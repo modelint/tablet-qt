@@ -1,23 +1,45 @@
 """ polygon_se.py -- Polygon Shape Element """
 
+# System
 import logging
-import tabletlib.element as element
-from tabletlib.geometry_types import Position
+from typing import TYPE_CHECKING, List
 
+# Qt
 from PyQt6.QtWidgets import QGraphicsPolygonItem
 from PyQt6.QtCore import QPointF
 from PyQt6.QtGui import QPolygonF
-from typing import TYPE_CHECKING, List
-from tabletlib.graphics.crayon_box import CrayonBox
-from tabletlib.graphics.line_segment import LineSegment
+
+# Tablet
+import tabletqt.element as element
+from tabletqt.geometry_types import Position
+from tabletqt.graphics.crayon_box import CrayonBox
+from tabletqt.graphics.line_segment import LineSegment
 
 if TYPE_CHECKING:
-    from tabletlib.layer import Layer
+    from tabletqt.layer import Layer
 
 _logger = logging.getLogger(__name__)
 class PolygonSE:
     """
-    Manage the rendering of Polygon Shape Elements
+    Manage the rendering of Polygon Shape Elements which are Closed Shapes
+
+    Additionally, a contiguous sequence of Line Segements are managed here as an
+    open polygon shape. There is no concept of an open polygon in the class models so
+    the add_open method could just as easily be part of the Line Segment Element class.
+    In fact, there is no enforced constraint that the segments be contiguous.
+
+    (The idea was to support drawing a pattern like an open arrow head).
+
+    For legacy reasons, let's just leave it here for now.
+
+    Attributes and relationships defined on the class model
+
+    Subclass of Closed Shape on class model (R22)
+    Related via {R17} to an ordered set of Vertex instances
+    These are implemented as a supplied list of tablet positions
+
+    - ID {I} -- Element ID, unique within a Layer, implemented as object reference
+    - Layer {I, R22} -- Element drawn on this Layer via R22/R12/R15/Element/R19/Layer
     """
 
     @classmethod
@@ -41,7 +63,8 @@ class PolygonSE:
     @classmethod
     def add_open(cls, layer: 'Layer', asset: str, vertices: List[Position]):
         """
-        Add all of the line segments necessary to draw the polygon to our list of line segments
+        Rather than manage a seperate render open polygon list in the Layer, we
+        can just add these to the line segment list.
 
         :param layer: Draw on this layer
         :param asset: Used to look up the line style
@@ -53,7 +76,11 @@ class PolygonSE:
 
     @classmethod
     def render(cls, layer: 'Layer'):
-        """Draw the closed non-rectangular shapes"""
+        """
+        Draw the closed non-rectangular shapes
+
+        :param layer: Draw on this layer
+        """
         for p in layer.Polygons:
             _logger.info(f"> Polygon at: [{p.vertices}]")
 

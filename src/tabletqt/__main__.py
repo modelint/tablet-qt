@@ -6,11 +6,11 @@ import logging
 import logging.config
 import sys
 import argparse
-from tabletlib import version
+from tabletqt import version
 from pathlib import Path
-from tabletlib.etchasketch import EtchaSketch
+from tabletqt.etchasketch import EtchaSketch
 
-_logpath = Path("tabletlib.log")
+_logpath = Path("tabletqt.log")
 app_name = "Tablet"
 
 def get_logger():
@@ -54,12 +54,12 @@ def main():
         sys.exit(0)
 
     if args.test:
-        from tabletlib.styledb import StyleDB
+        from tabletqt.styledb import StyleDB
         StyleDB.load_config_files()
 
     if args.colors:
         # Just print the database colors and quit
-        from tabletlib.styledb import StyleDB
+        from tabletqt.styledb import StyleDB
         StyleDB.report_colors()
 
     EtchaSketch.draw_stuff()

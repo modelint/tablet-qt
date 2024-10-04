@@ -381,7 +381,7 @@ xUML state machine diagram:
     text:
       transition name:
         Text style: p9body
-        Underlay: false
+        Underlay: true
       initial transition name:
         Text style: p9body
         Underlay: false
