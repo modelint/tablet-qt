@@ -21,7 +21,7 @@ You want to draw simple 2D to support model drawings such as UML or SysML
 
 Create or use a python 3.12+ environment.
 
-% pip install tabletqt
+% pip install tablet-qt
 
 #### From your python script
 
