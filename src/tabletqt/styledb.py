@@ -15,10 +15,10 @@ Line_Style = namedtuple('Line_Style', 'pattern width color')
 Text_Style = namedtuple('Text_Style', 'typeface size slant weight color spacing')
 Dash_Pattern = namedtuple('Dash_Pattern', 'solid blank')
 
-config_dir = Path(__file__).parent / "config"
+config_dir = Path(__file__).parent / "configuration"
 # nt - named tuple is defined
 # pre/post - Whether or not the data must be pre or post processed
-PP = namedtuple('PP', 'nt pre post')  # Postprocess config file data
+PP = namedtuple('PP', 'nt pre post')  # Postprocess configuration file data
 
 # yaml file name : load data using this tuple
 config_type = {
@@ -56,7 +56,7 @@ class StyleDB:
     @classmethod
     def load_config_files(cls):
         """
-        Processes the config_type dictionary, loading each yaml config file into either
+        Processes the config_type dictionary, loading each yaml configuration file into either
         a named tuple or a simple key value dictionary if no named tuple is provided
         and then sets the corresponding StyleDB class attribute to that value
         """
@@ -95,7 +95,7 @@ class StyleDB:
         undefined_typefaces = [t.typeface for t in cls.text_style.values() if t.typeface not in cls.typeface]
         if undefined_typefaces:
             _logger.error(f"Undefined typefaces: {undefined_typefaces} encountered in"
-                          f"text styles config file:\n    {config_dir / 'text_styles.yaml'}")
+                          f"text styles configuration file:\n    {config_dir / 'text_styles.yaml'}")
             raise BadConfigData
 
 
@@ -108,7 +108,7 @@ class StyleDB:
             for n in [rgb.r, rgb.g, rgb.b]:
                 if not 0 <= n <= 255:
                     _logger.error(f"Bad color value [{n}] for: {name} in "
-                                  f"config file:\n    {config_dir / 'colors.yaml'}")
+                                  f"configuration file:\n    {config_dir / 'colors.yaml'}")
                     raise BadConfigData
             StyleDB.rgbF[name] = Float_RGB(r=rgb.r, g=rgb.g, b=rgb.b)
 
@@ -120,7 +120,7 @@ class StyleDB:
         undefined_colors = [c for c in cls.color_usage.values() if c not in cls.rgbF]
         if undefined_colors:
             _logger.error(f"Undefined colors: {undefined_colors} encountered in"
-                          f"color usages config file:\n    {config_dir / 'color_usages.yaml'}")
+                          f"color usages configuration file:\n    {config_dir / 'color_usages.yaml'}")
             raise BadConfigData
 
     @classmethod

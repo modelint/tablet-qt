@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 CornerSpec = namedtuple('Corner_Spec', 'radius top bottom')
-config_dir = Path(__file__).parent / "config"
+config_dir = Path(__file__).parent / "configuration"
 
 
 class Presentation:

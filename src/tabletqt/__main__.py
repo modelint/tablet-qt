@@ -28,6 +28,8 @@ def parse(cl_input):
     :return:
     """
     parser = argparse.ArgumentParser(description='Tabletx 2D draw interface to Cairo')
+    parser.add_argument('-CF', '--configuration', action='store_true',
+                        help="Create a new configuration directory in user's tablet home")
     parser.add_argument('-COLORS', '--colors', action='store_true',
                         help='Show the list of background color names')
     parser.add_argument('-T', '--test', action='store_true',
@@ -61,6 +63,18 @@ def main():
         # Just print the database colors and quit
         from tabletqt.styledb import StyleDB
         StyleDB.report_colors()
+
+    if args.configuration:
+        # Copy user startup configuration files to their .flatland/configuration dir
+        # Create that directory if it doesn't yet exist
+        import shutil
+        user_home = Path.home() / '.mi_tablet'
+        user_config_home = user_home / 'configuration'
+        user_config_home.mkdir(parents=True, exist_ok=True)
+        system_config_path = Path(__file__).parent / 'configuration'
+        for f in system_config_path.iterdir():
+            if not (user_config_home / f.name).exists():
+                shutil.copy(f, user_config_home)
 
     EtchaSketch.draw_stuff()
 
