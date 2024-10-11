@@ -12,7 +12,6 @@ from pathlib import Path
 # Tablet
 from tabletqt import version
 from tabletqt.etchasketch import EtchaSketch
-from tabletqt.configuration.tablet_config import TabletConfig
 
 _logpath = Path("tabletqt.log")
 app_name = "Tablet"
@@ -32,8 +31,6 @@ def parse(cl_input):
     :return:
     """
     parser = argparse.ArgumentParser(description='Tabletx 2D draw interface to Cairo')
-    parser.add_argument('-CF', '--configuration', action='store_true',
-                        help="Create a new configuration directory in user's tablet home")
     parser.add_argument('-COLORS', '--colors', action='store_true',
                         help='Show the list of background color names')
     parser.add_argument('-T', '--test', action='store_true',
@@ -67,11 +64,6 @@ def main():
         # Just print the database colors and quit
         from tabletqt.styledb import StyleDB
         StyleDB.report_colors()
-
-    if args.configuration:
-        # Create a user tablet config directory if it does not exist already and
-        # copy the system config files into it
-        TabletConfig.setup()
 
     EtchaSketch.draw_stuff()
 

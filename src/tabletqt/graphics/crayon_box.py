@@ -10,7 +10,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QAbstractGraphicsShapeItem, QGraphicsLineItem
 
 # Tablet
-from tabletqt.styledb import StyleDB, Float_RGB
+from tabletqt.styledb import StyleDB, FloatRGB
 
 _logger = logging.getLogger(__name__)
 class CrayonBox:
@@ -57,7 +57,7 @@ class CrayonBox:
         _logger.info(f"Pen color: [{cname}], width: [{w}], pattern: [{pname}]")
 
     @classmethod
-    def choose_fill_only(cls, item: QAbstractGraphicsShapeItem, fill: Float_RGB):
+    def choose_fill_only(cls, item: QAbstractGraphicsShapeItem, fill: FloatRGB):
         """
         Create and assign a transparent pen (no border) and brush for a given QT graphics item
         with settings found in the StyleDB.

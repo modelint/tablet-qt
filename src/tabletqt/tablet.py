@@ -17,9 +17,9 @@ from tabletqt.geometry_types import Rect_Size, Position
 from tabletqt.styledb import StyleDB
 from tabletqt.layer import Layer
 from tabletqt.scene_view import MainWindow
-from tabletqt.styledb import Float_RGB
+from tabletqt.configuration.styles import FloatRGB
 
-default_background = Float_RGB(255, 255, 255)  # White
+default_background = FloatRGB(255, 255, 255)  # White
 
 class Tablet:
     """
@@ -64,7 +64,7 @@ class Tablet:
     """
 
     def __init__(self, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
-                 layer: str, background_color: Float_RGB = default_background):
+                 layer: str, background_color: FloatRGB = default_background):
         """
         Constructs a new Tablet instance with a single initial predefined Layer
 
@@ -146,7 +146,8 @@ class Tablet:
         self.View.save_as_pdf(self.Output_file)
 
         # Run the Qt GUI event loop
-        sys.exit(self.App.exec())
+        # sys.exit(self.App.exec())
+        self.App.exec()
 
     def to_dc(self, tablet_coord: Position) -> Position:
         """

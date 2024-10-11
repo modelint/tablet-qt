@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 from typing import NamedTuple, Any
 from mi_config.config import Config
+from exceptions import BadConfigData
 from tabletqt.configuration.styles import (ColorCanvas, FloatRGB, LineStyle,
                                            TextStyle, DashPattern)
 
@@ -29,7 +30,8 @@ config_type = {
     'dash_patterns': PP(nt=DashPattern, pre=False, post=False),
     'typefaces': PP(nt=None, pre=False, post=False),
     'text_styles': PP(nt=TextStyle, pre=False, post=True),
-    'color_usages': PP(nt=None, pre=False, post=True)
+    'color_usages': PP(nt=None, pre=False, post=True),
+    'drawing_types': PP(nt=None, pre=False, post=False)
 }
 
 
@@ -52,14 +54,7 @@ class StyleDB:
     line_style = None
     text_style = None
     color_usage = None
-
-    def __init__(self):
-        """
-        Initialize a Style DB
-        """
-        fspecs = {k: v.nt for k,v in config_type}
-        c = Config(app_name='tablet', lib_config_dir=config_dir, fspecs=fspecs)
-
+    config_data = None
 
 
     @classmethod
@@ -70,27 +65,23 @@ class StyleDB:
         and then sets the corresponding StyleDB class attribute to that value
         """
         _logger.info(f"StyleDB loading tabletqt configuration\n---")
-        cf_dict = Config.load()
-        for fname, pp in config_type.items():
+        fspec = {k: v.nt for k,v in config_type.items()}
+        c = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec=fspec)
+        cls.config_data = c.loaded_data
+
+        for fname, cdata in cls.config_data.items():
             config_file_path = config_dir / (fname+".yaml")
             _logger.info(f"loading: {config_file_path}")
-            if pp.nt:
-                # A named tuple is defined for this file, so we use it to load the data
-                attr_val = load_yaml_to_namedtuple(config_file_path, pp.nt)
-            else:
-                # No named tuple, so we just read file into a dictionary
-                with open(config_file_path, 'r') as file:
-                    attr_val = yaml.safe_load(file)
-            if pp.pre:
+            if config_type[fname].pre:
                 # Retrieve the relevant preprocessing method name using the filename suffix
                 method_name = 'preprocess_'+fname
                 method = getattr(cls, method_name, None)
                 # Invoke it on the loaded yaml data
-                method(attr_val)
+                method(cls.config_data[fname])
             attr_name = fname[:-1]  # drop the plural 's' from the file name to get the attribute name
             # Assign the loaded and possibly preprocessed yaml data to the relevant class attribute
-            setattr(cls, attr_name, attr_val)
-            if pp.post:
+            setattr(cls, attr_name, cls.config_data[fname])
+            if config_type[fname].post:
                 method_name = 'postprocess_'+fname  # Keep the plural
                 method = getattr(cls, method_name, None)
                 method()
@@ -120,7 +111,7 @@ class StyleDB:
                     _logger.error(f"Bad color value [{n}] for: {name} in "
                                   f"configuration file:\n    {config_dir / 'colors.yaml'}")
                     raise BadConfigData
-            StyleDB.rgbF[name] = Float_RGB(r=rgb.r, g=rgb.g, b=rgb.b)
+            StyleDB.rgbF[name] = FloatRGB(r=rgb.r, g=rgb.g, b=rgb.b)
 
     @classmethod
     def postprocess_color_usages(cls):
