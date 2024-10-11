@@ -3,47 +3,47 @@ styledb.py - Loads styles common to all Presentations
 """
 import logging
 from pathlib import Path
-import yaml
-from collections import namedtuple
-from tabletqt.exceptions import BadConfigData
+from typing import NamedTuple, Any
+from mi_config.config import Config
+from tabletqt.configuration.styles import (ColorCanvas, FloatRGB, LineStyle,
+                                           TextStyle, DashPattern)
 
 _logger = logging.getLogger(__name__)
 
-Color_Canvas = namedtuple('Color_Canvas', 'r g b canvas')
-Float_RGB = namedtuple('Float_RGB', 'r g b')
-Line_Style = namedtuple('Line_Style', 'pattern width color')
-Text_Style = namedtuple('Text_Style', 'typeface size slant weight color spacing')
-Dash_Pattern = namedtuple('Dash_Pattern', 'solid blank')
 
 config_dir = Path(__file__).parent / "configuration"
 # nt - named tuple is defined
 # pre/post - Whether or not the data must be pre or post processed
-PP = namedtuple('PP', 'nt pre post')  # Postprocess configuration file data
+# PP = namedtuple('PP', 'nt pre post')  # Postprocess configuration file data
+
+class PP(NamedTuple):
+    nt: Any
+    pre: bool
+    post: bool
+
 
 # yaml file name : load data using this tuple
 config_type = {
-    'colors': PP(Color_Canvas, pre=True, post=False),
-    'line_styles': PP(nt=Line_Style, pre=False, post=False ),
-    'dash_patterns': PP(nt=Dash_Pattern, pre=False, post=False),
+    'colors': PP(nt=ColorCanvas, pre=True, post=False),
+    'line_styles': PP(nt=LineStyle, pre=False, post=False ),
+    'dash_patterns': PP(nt=DashPattern, pre=False, post=False),
     'typefaces': PP(nt=None, pre=False, post=False),
-    'text_styles': PP(Text_Style, pre=False, post=True),
-    'color_usages': PP(nt=None, pre=None, post=True)
+    'text_styles': PP(nt=TextStyle, pre=False, post=True),
+    'color_usages': PP(nt=None, pre=False, post=True)
 }
-
-
-def load_yaml_to_namedtuple(file_path, namedtuple_type):
-    with open(file_path, 'r') as file:
-        raw_data = yaml.safe_load(file)
-    if not isinstance(raw_data, dict):
-        raise BadConfigData(f"Expected dict when loading:\n    {file_path}")
-    return {k: namedtuple_type(**v) for k, v in raw_data.items()}
 
 
 class StyleDB:
     """
-    Singleton class interface to the Presentation and Styles in the Flatland database. Created with an initial
-    Presentation and loads all presentation/style data for that Presentation for easy access by
-    the Tablet.
+    Manages a set of graphic and text styles defined for the Drawing Types that will be used
+    with a Tablet. The client app can then refer to these styles rather than explicitly specifying
+    graphics properties like font, line width, color fill and so forth.
+
+    For example, the client app might request a 'state activity compartment' and then obtain
+    all the predefined styles automatically.
+
+    The styles are all defined in a set of yaml files that reference each other's
+    elements.
     """
     styles = {}  # { 'text_style':
     rgbF = {}  # rgb color float representation
@@ -53,6 +53,15 @@ class StyleDB:
     text_style = None
     color_usage = None
 
+    def __init__(self):
+        """
+        Initialize a Style DB
+        """
+        fspecs = {k: v.nt for k,v in config_type}
+        c = Config(app_name='tablet', lib_config_dir=config_dir, fspecs=fspecs)
+
+
+
     @classmethod
     def load_config_files(cls):
         """
@@ -61,6 +70,7 @@ class StyleDB:
         and then sets the corresponding StyleDB class attribute to that value
         """
         _logger.info(f"StyleDB loading tabletqt configuration\n---")
+        cf_dict = Config.load()
         for fname, pp in config_type.items():
             config_file_path = config_dir / (fname+".yaml")
             _logger.info(f"loading: {config_file_path}")

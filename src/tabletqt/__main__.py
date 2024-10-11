@@ -2,13 +2,17 @@
 __main__.py
 """
 
+# System
 import logging
 import logging.config
 import sys
 import argparse
-from tabletqt import version
 from pathlib import Path
+
+# Tablet
+from tabletqt import version
 from tabletqt.etchasketch import EtchaSketch
+from tabletqt.configuration.tablet_config import TabletConfig
 
 _logpath = Path("tabletqt.log")
 app_name = "Tablet"
@@ -65,16 +69,9 @@ def main():
         StyleDB.report_colors()
 
     if args.configuration:
-        # Copy user startup configuration files to their .flatland/configuration dir
-        # Create that directory if it doesn't yet exist
-        import shutil
-        user_home = Path.home() / '.mi_tablet'
-        user_config_home = user_home / 'configuration'
-        user_config_home.mkdir(parents=True, exist_ok=True)
-        system_config_path = Path(__file__).parent / 'configuration'
-        for f in system_config_path.iterdir():
-            if not (user_config_home / f.name).exists():
-                shutil.copy(f, user_config_home)
+        # Create a user tablet config directory if it does not exist already and
+        # copy the system config files into it
+        TabletConfig.setup()
 
     EtchaSketch.draw_stuff()
 
