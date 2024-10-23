@@ -1,2 +1,2 @@
 include src/tabletqt/log.conf
-include src/tabletqt/config/*.yaml
+include src/tabletqt/configuration/*.yaml
