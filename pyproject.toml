@@ -15,7 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 keywords = ["2D", "draw", "graphics", "canvas", "mbse", "xuml", "xtuml", "sysml"]
-dependencies = ['pypdf', 'PyQt6', 'PyYAML', 'tomli; python_version < "3.12"']
+dependencies = ['mi-configurator', 'pypdf', 'PyQt6', 'PyYAML', 'tomli; python_version < "3.12"']
 requires-python = ">=3.12"
 
 [project.optional-dependencies]
