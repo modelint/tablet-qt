@@ -1,11 +1,16 @@
 """
 styledb.py - Loads styles common to all Presentations
 """
+# System
 import logging
 from pathlib import Path
 from typing import NamedTuple, Any
+
+# Modelint
 from mi_config.config import Config
-from exceptions import BadConfigData
+
+# Tablet
+from tabletqt.exceptions import BadConfigData
 from tabletqt.configuration.styles import (ColorCanvas, FloatRGB, LineStyle,
                                            TextStyle, DashPattern)
 

@@ -1,5 +1,6 @@
 """ scene_view.py - create a vector drawing view in QT """
 
+# System
 import logging
 from PyQt6.QtWidgets import QGraphicsView, QVBoxLayout, QGraphicsScene, QWidget
 from PyQt6.QtCore import Qt
