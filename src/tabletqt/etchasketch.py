@@ -23,7 +23,7 @@ class EtchaSketch:
         cls.size = Rect_Size(17 * 72, 22 * 72)  # Ansi C h=1224 x w=1584
         # size = Rect_Size(22*72, 34*72) # Ansi D
         output_path = Path(__file__).parent.parent.parent / "working" / "tabletqt.pdf"
-        cls.tablet = Tablet(size=cls.size, output_file=output_path, drawing_type="xUML state machine diagram",
+        cls.tablet = Tablet(app='tablet', size=cls.size, output_file=output_path, drawing_type="xUML state machine diagram",
                             presentation="default", layer="diagram")
 
     @classmethod
