@@ -34,7 +34,10 @@ class EtchaSketch:
 
         slayer = cls.tablet.add_layer(name='sheet', presentation='default', drawing_type="OS Engineer large frame")
 
-        RectangleSE.add(layer=dlayer, asset='state name only compartment',
+        RectangleSE.add(layer=slayer, asset='Block border',
+                        lower_left=Position(1150, 150), size=Rect_Size(100, 300))
+
+        RectangleSE.add(layer=dlayer, asset='state name compartment',
                         lower_left=Position(50, 700), size=Rect_Size(height=20, width=70))
 
         PolygonSE.add(layer=dlayer, asset='solid arrow', vertices=[
@@ -46,8 +49,8 @@ class EtchaSketch:
         ImageE.add(layer=slayer, resource_path=Path("mint_logo_medium.png"),
                    lower_left=Position(1150, 50), size=Rect_Size(10, 10))
 
-        # RectangleSE.add(layer=dlayer, asset='state name only compartment', lower_left=Position(200, 600),
-        #                                            size=Rect_Size(30, 150))
+        RectangleSE.add(layer=dlayer, asset='state name only compartment', lower_left=Position(200, 900),
+                                                   size=Rect_Size(30, 150))
 
         pad = 0
         # Horizontal top
