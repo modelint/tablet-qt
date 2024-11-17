@@ -46,6 +46,13 @@ OS Engineer large frame:
         Text style: Block Body Large
         Underlay: false
     shape:
+      box:
+        Line style: double
+        Fill: white
+        Corner spec:
+          Radius: 4
+          Top: true
+          Bottom: true
       Block border:
         Line style: double
         Fill: white

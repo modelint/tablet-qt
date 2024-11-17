@@ -139,7 +139,11 @@ class Tablet:
         Renders each populated layer of the Tablet moving up the z axis. Any unpopulated layers are skipped.
         """
         # Create and show the drawing window
-        [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
+        for name in self.layer_order:
+            if self.layers.get(name):
+                self.layers[name].render()
+
+        # [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
         self.Window.show()
 
         # Save the rendered tabletqt as a PDF for alternate viewing

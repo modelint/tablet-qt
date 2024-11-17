@@ -45,15 +45,20 @@ class EtchaSketch:
 
         ImageE.add(layer=slayer, resource_path=Path("mint_logo_medium.png"),
                    lower_left=Position(1150, 50), size=Rect_Size(10, 10))
+        RectangleSE.add(layer=slayer, asset='Block border',
+                        lower_left=Position(1150, 150), size=Rect_Size(100, 300))
 
         # RectangleSE.add(layer=dlayer, asset='state name only compartment', lower_left=Position(200, 600),
         #                                            size=Rect_Size(30, 150))
 
         pad = 0
         # Horizontal top
-        LineSegment.add(layer=dlayer, asset='transition connector',
+        LineSegment.add(layer=slayer, asset='Block border',
                         from_here=Position(pad, cls.size.height),
                         to_there=Position(cls.size.width, cls.size.height))
+        # LineSegment.add(layer=dlayer, asset='transition connector',
+        #                 from_here=Position(pad, cls.size.height),
+        #                 to_there=Position(cls.size.width, cls.size.height))
 
         # Horizontal bottom
         LineSegment.add(layer=dlayer, asset='transition connector',

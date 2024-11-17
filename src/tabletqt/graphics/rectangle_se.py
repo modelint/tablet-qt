@@ -136,12 +136,18 @@ class RectangleSE:
             # Set rectangle extents and draw
             top_radius = r.radius if r.top else 0
             bottom_radius = r.radius if r.bottom else 0
-            path = cls.roundrect(r.upper_left.x, r.upper_left.y, r.size.width, r.size.height, top_radius, bottom_radius)
-            _logger.info(f"> Roundrect at: {r.upper_left}, size: {r.size},"
-                         f"top round: {top_radius}, bottom_round: {bottom_radius}")
+            if not top_radius and not bottom_radius:
+                rect = QRectF(r.upper_left.x, r.upper_left.y, r.size.width, r.size.height)
+                r_item = QGraphicsRectItem(rect)
+                _logger.info(f"> Rectangle at: {r.upper_left}, size: {r.size},"
+                             f"top round: {top_radius}, bottom_round: {bottom_radius}")
+            else:
+                r_item = cls.roundrect(r.upper_left.x, r.upper_left.y, r.size.width, r.size.height, top_radius, bottom_radius)
+                _logger.info(f"> Roundrect at: {r.upper_left}, size: {r.size},"
+                             f"top round: {top_radius}, bottom_round: {bottom_radius}")
             # Set pen and brush
-            CrayonBox.choose_crayons(item=path, border_style=r.border_style, fill=r.fill)
-            layer.Scene.addItem(path)
+            CrayonBox.choose_crayons(item=r_item, border_style=r.border_style, fill=r.fill)
+            layer.Scene.addItem(r_item)
 
     @classmethod
     def render_fillrect(cls, layer: 'Layer', frect: element.FillRect):

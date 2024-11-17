@@ -11,7 +11,8 @@ from pathlib import Path
 
 # Tablet
 from tabletqt import version
-from tabletqt.etchasketch import EtchaSketch
+# from tabletqt.etchasketch import EtchaSketch
+from tabletqt.etch2 import Etch2
 
 _logpath = Path("tabletqt.log")
 app_name = "Tablet"
@@ -65,7 +66,7 @@ def main():
         from tabletqt.styledb import StyleDB
         StyleDB.report_colors()
 
-    EtchaSketch.draw_stuff()
+    Etch2.draw_stuff()
 
     logger.info("No problemo")  # We didn't die on an exception
     print("\nNo problemo")
