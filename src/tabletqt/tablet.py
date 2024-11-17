@@ -63,7 +63,7 @@ class Tablet:
         - Background_color -- The color of the Tablet (visible through all non-opaque layer elements)
     """
 
-    def __init__(self, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
+    def __init__(self, app: str, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
                  layer: str, background_color: FloatRGB = default_background):
         """
         Constructs a new Tablet instance with a single initial predefined Layer
@@ -84,11 +84,12 @@ class Tablet:
         # Establish a system default layer ordering. Not all of them will be used in any given
         # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
+        self.client_app_name = app
         self.background_color = background_color  # This is referenced when filling text underlay rects
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
         self.App = QApplication([])  # QT Application (must be created before any QT widgets)
-        self.Window = MainWindow("Tablet", size, self.background_color)  # QT widget for drawing 2D elements
+        self.Window = MainWindow(self.client_app_name, size, self.background_color)  # QT widget for drawing 2D elements
         self.View = self.Window.graphics_view
 
         if layer not in self.layer_order:
