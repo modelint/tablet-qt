@@ -36,7 +36,6 @@ config_type = {
     'typefaces': PP(nt=None, pre=False, post=False),
     'text_styles': PP(nt=TextStyle, pre=False, post=True),
     'color_usages': PP(nt=None, pre=False, post=True),
-    'drawing_types': PP(nt=None, pre=False, post=False)
 }
 
 

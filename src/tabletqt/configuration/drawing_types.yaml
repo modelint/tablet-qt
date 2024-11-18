@@ -2,7 +2,7 @@
 
 # Pattern, where <> indicates some attribute from the Tablet class model (see project wiki)
 # --
-# <Diagram Type.Name>:
+# <Drawing Type.Name>:
 #   <Presentation.Name>:
 #     <Asset.Form>:
 #       <Asset.Name>:
@@ -14,7 +14,7 @@
 #           text style: <Test Style.Name>
 #           underlay: <Test Style.Underlay>  // true or false
 
-Grid diagnostic: # Diagram type name
+Grid diagnostic: # Drawing type name
   default: # Presentation name
     shape: # Asset form
       column boundary: # Asset name
@@ -28,7 +28,7 @@ Grid diagnostic: # Diagram type name
         text style: coordinate
         underlay: false
 
-OS Engineer large frame:
+Model Integration Large Frame:
   default:
     text:
       # Open field assets
@@ -50,7 +50,7 @@ OS Engineer large frame:
         Line style: double
         Fill: white
 
-OS Engineer medium frame:
+Model Integration Medium Frame:
   default:
     # Open field assets
     Open title:
@@ -71,7 +71,7 @@ OS Engineer medium frame:
         Line style: normal
         Fill: white
 
-OS Engineer medium small:
+Model Integration Small Frame:
   default:
     text:
       # Open field assets

@@ -32,7 +32,7 @@ class EtchaSketch:
 
         dlayer = cls.tablet.layers['diagram']
 
-        slayer = cls.tablet.add_layer(name='sheet', presentation='default', drawing_type="OS Engineer large frame")
+        slayer = cls.tablet.add_layer(name='sheet', presentation='default', drawing_type="Model Integration Large Frame")
 
         RectangleSE.add(layer=slayer, asset='Block border',
                         lower_left=Position(1150, 150), size=Rect_Size(100, 300))

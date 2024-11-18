@@ -7,9 +7,13 @@ from collections import namedtuple
 import yaml
 from pathlib import Path
 
+# Modelint
+from mi_config.config import Config
 
 CornerSpec = namedtuple('Corner_Spec', 'radius top bottom')
 config_dir = Path(__file__).parent / "configuration"
+
+_logger = logging.getLogger(__name__)
 
 
 class Presentation:
@@ -42,13 +46,14 @@ class Presentation:
         """
         Load shape and text assets for my drawing type and presentation
         """
-        file_path = config_dir / "drawing_types.yaml"
-        self.logger.info(f"loading assets in: [{file_path}]")
-        with open(file_path, 'r') as file:
-            raw_data = yaml.safe_load(file)
-        my_data = raw_data[self.Drawing_type][self.Name]
+        _logger.info(f"Loading presentations\n---")
+
+        c = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'drawing_types':None})
+        dtype_data = c.loaded_data['drawing_types']
+        my_data = dtype_data[self.Drawing_type][self.Name]
+
         # Load text presentations
-        for asset_name,v in my_data['text'].items():
+        for asset_name, v in my_data['text'].items():
             self.Text_presentation[asset_name] = v['Text style']
             if v['Underlay']:
                 self.Underlays.add(asset_name)
