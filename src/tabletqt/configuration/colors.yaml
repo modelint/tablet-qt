@@ -1,5 +1,6 @@
 # colors.yaml – System defined colors
-# Name: RGB values and whether or not the color works or is intended as a canvas background
+
+# Descriptive name and RGB values
 
 # Blues
 recycle bin: {r: 131, g: 187, b: 229}
