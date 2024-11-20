@@ -64,7 +64,7 @@ class Tablet:
     """
 
     def __init__(self, app: str, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
-                 layer: str, background_color: str = 'white'):
+                 layer: str, background_color: Optional[str] = 'white'):
         """
         Constructs a new Tablet instance with a single initial predefined Layer
 
