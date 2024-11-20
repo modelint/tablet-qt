@@ -215,7 +215,7 @@ class TextElement:
             t_item = QGraphicsTextItem(t.text)
             style = StyleDB.text_style[t.style]
             text_color_name = StyleDB.text_style[t.style].color
-            text_rgb_color_value = StyleDB.rgbF[text_color_name]
+            text_rgb_color_value = StyleDB.color[text_color_name]
             t_item.setDefaultTextColor(QColor(*text_rgb_color_value))
             font = QFont(StyleDB.typeface[style.typeface], style.size)
             font.setWeight(Qt_font_weight[style.weight])

@@ -2,12 +2,6 @@
 
 from typing import NamedTuple
 
-class ColorCanvas(NamedTuple):
-    r: int
-    g: int
-    b: int
-    canvas : bool
-
 class FloatRGB(NamedTuple):
     r: int
     g: int

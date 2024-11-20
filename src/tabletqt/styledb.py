@@ -11,8 +11,7 @@ from mi_config.config import Config
 
 # Tablet
 from tabletqt.exceptions import BadConfigData
-from tabletqt.configuration.styles import (ColorCanvas, FloatRGB, LineStyle,
-                                           TextStyle, DashPattern)
+from tabletqt.configuration.styles import (FloatRGB, LineStyle, TextStyle, DashPattern)
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +29,7 @@ class PP(NamedTuple):
 
 # yaml file name : load data using this tuple
 config_type = {
-    'colors': PP(nt=ColorCanvas, pre=True, post=False),
+    'colors': PP(nt=FloatRGB, pre=True, post=False),
     'line_styles': PP(nt=LineStyle, pre=False, post=False ),
     'dash_patterns': PP(nt=DashPattern, pre=False, post=False),
     'typefaces': PP(nt=None, pre=False, post=False),
@@ -52,7 +51,7 @@ class StyleDB:
     elements.
     """
     styles = {}  # { 'text_style':
-    rgbF = {}  # rgb color float representation
+    color = {}  # rgb color float representation
     typeface = None
     dash_pattern = None
     line_style = None
@@ -115,14 +114,14 @@ class StyleDB:
                     _logger.error(f"Bad color value [{n}] for: {name} in "
                                   f"configuration file:\n    {config_dir / 'colors.yaml'}")
                     raise BadConfigData
-            StyleDB.rgbF[name] = FloatRGB(r=rgb.r, g=rgb.g, b=rgb.b)
+            StyleDB.color[name] = rgb
 
     @classmethod
     def postprocess_color_usages(cls):
         """
         Validate color names
         """
-        undefined_colors = [c for c in cls.color_usage.values() if c not in cls.rgbF]
+        undefined_colors = [c for c in cls.color_usage.values() if c not in cls.color]
         if undefined_colors:
             _logger.error(f"Undefined colors: {undefined_colors} encountered in"
                           f"color usages configuration file:\n    {config_dir / 'color_usages.yaml'}")

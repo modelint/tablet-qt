@@ -31,7 +31,7 @@ class CrayonBox:
         # Create a pen and set its properties using the StyleDB
         # Color
         cname = StyleDB.line_style[border_style].color
-        c_color = StyleDB.rgbF[cname]
+        c_color = StyleDB.color[cname]
         # Width
         w = StyleDB.line_style[border_style].width
         pen = QPen(QColor(*c_color), w)
@@ -45,7 +45,7 @@ class CrayonBox:
             # item is fillable, not a line item, for example
             if fill:
                 # If a fill is specified, create a corresponding brush
-                fill_rgb_color_value = StyleDB.rgbF[fill]
+                fill_rgb_color_value = StyleDB.color[fill]
                 brush = QBrush(QColor(*fill_rgb_color_value))
                 _logger.info(f"Brush color: [{fill}]")
             else:

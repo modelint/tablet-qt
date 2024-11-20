@@ -64,7 +64,7 @@ class Tablet:
     """
 
     def __init__(self, app: str, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
-                 layer: str, background_color: FloatRGB = default_background):
+                 layer: str, background_color: str = 'white'):
         """
         Constructs a new Tablet instance with a single initial predefined Layer
 
@@ -73,7 +73,7 @@ class Tablet:
         :param drawing_type: Initial layer Drawing Type so we know what kinds text and graphics Assets can be drawn
         :param presentation: Initial layer's Presentation so we know what graphic styles to use for our Assets
         :param layer: The name of the predefined initial Layer to be created on this Tablet (typically 'diagram')
-        :param background_color: RGB tabletqt background color, set to white if none specified
+        :param background_color: Name of background color defined in colors.yaml
         """
         self.logger = logging.getLogger(__name__)
         self.logger.info(f"Tablet init: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
@@ -85,7 +85,7 @@ class Tablet:
         # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
         self.client_app_name = app
-        self.background_color = background_color  # This is referenced when filling text underlay rects
+        self.background_color = StyleDB.color[background_color]  # This is referenced when filling text underlay rects
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
         self.App = QApplication([])  # QT Application (must be created before any QT widgets)
