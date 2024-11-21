@@ -13,6 +13,8 @@ from mi_config.config import Config
 from tabletqt.exceptions import BadConfigData
 from tabletqt.configuration.styles import (FloatRGB, LineStyle, TextStyle, DashPattern)
 
+_image_dir_name = 'images'
+
 _logger = logging.getLogger(__name__)
 
 
@@ -58,6 +60,7 @@ class StyleDB:
     line_style = None
     text_style = None
     color_usage = None
+    raw_config_data = None
     config_data = None
     image = None
 
@@ -71,8 +74,8 @@ class StyleDB:
         """
         _logger.info(f"StyleDB loading tabletqt configuration\n---")
         fspec = {k: v.nt for k,v in config_type.items()}
-        c = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec=fspec)
-        cls.config_data = c.loaded_data
+        cls.raw_config_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec=fspec)
+        cls.config_data = cls.raw_config_data.loaded_data
 
         for fname, cdata in cls.config_data.items():
             config_file_path = config_dir / (fname+".yaml")
@@ -96,7 +99,9 @@ class StyleDB:
     @classmethod
     def postprocess_images(cls):
         """ Assign image file dictionary """
-        cls.image = cls.image['images']
+        image_dict = cls.image['images']
+        root_dir = cls.raw_config_data.user_config_dir
+        cls.image = {k: Path(root_dir / _image_dir_name / v) for k,v in image_dict.items()}
 
     @classmethod
     def postprocess_text_styles(cls):

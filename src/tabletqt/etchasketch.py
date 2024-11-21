@@ -32,7 +32,8 @@ class EtchaSketch:
 
         dlayer = cls.tablet.layers['diagram']
 
-        slayer = cls.tablet.add_layer(name='sheet', presentation='default', drawing_type="Model Integration Diagram Large Frame")
+        slayer = cls.tablet.add_layer(name='sheet', presentation='default',
+                                      drawing_type="Model Integration Diagram Large Frame")
 
         RectangleSE.add(layer=slayer, asset='Block border',
                         lower_left=Position(1150, 150), size=Rect_Size(100, 300))
@@ -46,8 +47,7 @@ class EtchaSketch:
             Position(340, 300)
         ])
 
-        ImageE.add(layer=slayer, resource_path=Path("mint_logo_medium.png"),
-                   lower_left=Position(1150, 50), size=Rect_Size(10, 10))
+        ImageE.add(layer=slayer, name='mint-medium', lower_left=Position(1150, 50), size=Rect_Size(10, 10))
 
         RectangleSE.add(layer=dlayer, asset='state name only compartment', lower_left=Position(200, 900),
                                                    size=Rect_Size(30, 150))

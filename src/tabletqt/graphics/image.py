@@ -2,7 +2,6 @@
 
 # System
 import logging
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 # Qt
@@ -13,6 +12,7 @@ from PyQt6.QtGui import QPixmap
 import tabletqt.element as element
 from tabletqt.geometry_types import Position, Rect_Size
 from tabletqt.exceptions import TabletBoundsExceeded
+from tabletqt.styledb import StyleDB
 
 if TYPE_CHECKING:
     from tabletqt.layer import Layer
@@ -36,29 +36,35 @@ class ImageE:
     - Size -- The actual size of the image in the file
     """
     @classmethod
-    def add(cls, layer: 'Layer', resource_path: Path, lower_left: Position, size: Rect_Size):
+    def add(cls, layer: 'Layer', name: str, lower_left: Position, size: Rect_Size):
         """
         Adds the image to the layer, converting to device coordinates and using the upper
         left corner of the image instead to suit Qt placement
 
         :param layer: Draw on this Layer
-        :param resource_path: Path to an image file
+        :param name: Name of the image resource supplied by the client
         :param size: The actual size of the image in points
         :param lower_left:  Lower left corner of the image in tablet coordinates
         """
+        try:
+            image_path = StyleDB.image[name]
+        except KeyError:
+            _logger.warning(f"Image: {name} not found in StyleDB. Check entry in image.yaml file.")
+            return
+
         # Flip lower left corner to device coordinates
         try:
             ll_dc = layer.Tablet.to_dc(Position(x=lower_left.x, y=lower_left.y))
         except TabletBoundsExceeded:
-            _logger.warning(f"Lower left corner of image [{resource_path.name}] is outside Tablet draw region")
+            _logger.warning(f"Lower left corner of image [{image_path}] is outside Tablet draw region")
             return
 
         # Use upper left corner instead
         ul = Position(x=ll_dc.x, y=ll_dc.y - size.height)
 
         # Add it to the list
-        layer.Images.append(element.Image(resource_path=resource_path, upper_left=ul, size=size))
-        _logger.info(f'View>> Layer {layer.Name} registered resource at: {resource_path}')
+        layer.Images.append(element.Image(resource_path=image_path, upper_left=ul, size=size))
+        _logger.info(f'View>> Layer {layer.Name} registered resource at: {image_path}')
 
     @classmethod
     def render(cls, layer: 'Layer'):
