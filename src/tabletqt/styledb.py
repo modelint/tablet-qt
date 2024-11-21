@@ -35,6 +35,7 @@ config_type = {
     'typefaces': PP(nt=None, pre=False, post=False),
     'text_styles': PP(nt=TextStyle, pre=False, post=True),
     'color_usages': PP(nt=None, pre=False, post=True),
+    'images': PP(nt=None, pre=False, post=True),
 }
 
 
@@ -58,6 +59,7 @@ class StyleDB:
     text_style = None
     color_usage = None
     config_data = None
+    image = None
 
 
     @classmethod
@@ -90,6 +92,11 @@ class StyleDB:
                 method()
 
         _logger.info(f"---\n")
+
+    @classmethod
+    def postprocess_images(cls):
+        """ Assign image file dictionary """
+        cls.image = cls.image['images']
 
     @classmethod
     def postprocess_text_styles(cls):

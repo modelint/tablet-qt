@@ -1,0 +1,9 @@
+# images.yaml – Image files and names by size group
+
+images:
+  mint-large : mint_logo_large.png
+  mint-medium : mint_logo_medium.png
+  mint-small : mint_logo_small.png
+  MIT-large : MIT_boilerplate_large.png
+  MIT-medium : MIT_boilerplate_medium.png
+  MIT-small : MIT_boilerplate_small.png
