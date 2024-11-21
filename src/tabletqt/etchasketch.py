@@ -23,7 +23,7 @@ class EtchaSketch:
         cls.size = Rect_Size(17 * 72, 22 * 72)  # Ansi C h=1224 x w=1584
         # size = Rect_Size(22*72, 34*72) # Ansi D
         output_path = Path(__file__).parent.parent.parent / "working" / "tabletqt.pdf"
-        cls.tablet = Tablet(app='tablet', size=cls.size, output_file=output_path, drawing_type="xUML state machine diagram",
+        cls.tablet = Tablet(app='tablet', size=cls.size, output_file=output_path, drawing_type="xUML State Machine Diagram",
                             presentation="default", layer="diagram", background_color='white')
 
     @classmethod
@@ -35,7 +35,7 @@ class EtchaSketch:
         slayer = cls.tablet.add_layer(name='sheet', presentation='default',
                                       drawing_type="Model Integration Diagram Large Frame")
 
-        RectangleSE.add(layer=slayer, asset='Block border',
+        RectangleSE.add(layer=slayer, asset='block border',
                         lower_left=Position(1150, 150), size=Rect_Size(100, 300))
 
         RectangleSE.add(layer=dlayer, asset='state name compartment',

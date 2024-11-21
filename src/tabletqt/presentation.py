@@ -54,16 +54,16 @@ class Presentation:
 
         # Load text presentations
         for asset_name, v in my_data['text'].items():
-            self.Text_presentation[asset_name] = v['Text style']
-            if v['Underlay']:
+            self.Text_presentation[asset_name] = v['text style']
+            if v['underlay']:
                 self.Underlays.add(asset_name)
         # Load shape presentations
         for asset_name, v in my_data['shape'].items():
-            self.Shape_presentation[asset_name] = v['Line style']
-            fill = v.get('Fill')
+            self.Shape_presentation[asset_name] = v['line style']
+            fill = v.get('fill')
             if fill:
                 self.Closed_shape_fill[asset_name] = fill
-            corner_spec = v.get('Corner spec')
+            corner_spec = v.get('corner spec')
             if corner_spec:
-                self.Corner_spec[asset_name] = CornerSpec(radius=corner_spec['Radius'], top=corner_spec['Top'],
-                                                          bottom=corner_spec['Bottom'])
+                self.Corner_spec[asset_name] = CornerSpec(radius=corner_spec['radius'], top=corner_spec['top'],
+                                                          bottom=corner_spec['bottom'])

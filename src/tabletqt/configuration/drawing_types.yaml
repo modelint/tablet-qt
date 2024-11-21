@@ -358,16 +358,16 @@ xUML State Machine Diagram:
         line style: normal
         fill: white
         corner spec:
-          Radius: 4
-          Top: true
-          Bottom: false
+          radius: 4
+          top: true
+          bottom: false
       state name only compartment:
         line style: normal
         fill: white
         corner spec:
-          Radius: 4
-          Top: true
-          Bottom: true
+          radius: 4
+          top: true
+          bottom: true
       state activity compartment:
         line style: normal
         fill: white
