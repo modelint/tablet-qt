@@ -12,9 +12,10 @@
 #           line style: <Line Style.Name>
 # -- text --
 #           text style: <Test Style.Name>
-#           underlay: <Test Style.Underlay>  // true or false
+#           underlay: <Test Style.underlay>  // true or false
+#
 
-Grid diagnostic: # Drawing type name
+Grid Diagnostic: # Drawing type name
   default: # Presentation name
     shape: # Asset form
       column boundary: # Asset name
@@ -28,372 +29,378 @@ Grid diagnostic: # Drawing type name
         text style: coordinate
         underlay: false
 
-Model Integration Large Frame:
+Model Integration Diagram Large Frame:
   default:
     text:
-      # Open field assets
-      Open title:
-        Text style: Corner Title Large
-        Underlay: false
-      Open copyright notice:
-        Text style: boilerplate
-        Underlay: false
+      # open field assets
+      open title:
+        text style: corner title large
+        underlay: false
+      open copyright notice:
+        text style: boilerplate
+        underlay: false
       # Title block assets
-      Block title:
-        Text style: Block Title Large
-        Underlay: false
-      Block body:
-        Text style: Block Body Large
-        Underlay: false
+      main:
+        text style: block title large
+        underlay: false
+      bottom:
+        text style: block body large
+        underlay: false
+      rtop:
+        text style: block body large
+        underlay: false
+      rbottom:
+        text style: block body large
+        underlay: false
     shape:
-      Block border:
-        Line style: double
-        Fill: white
+      block border:
+        line style: double
+        fill: white
 
-Model Integration Medium Frame:
+Model Integration Diagram Medium Frame:
   default:
-    # Open field assets
-    Open title:
-      Text style: Corner Title Medium
-      Underlay: false
-    Open copyright notice:
-      Text style: boilerplate
-      Underlay: False
+    # open field assets
+    open title:
+      text style: corner title medium
+      underlay: false
+    open copyright notice:
+      text style: boilerplate
+      underlay: False
     # Title block assets
-    Block title:
-      Text style: Block Title Medium
-      Underlay: false
+    block title:
+      text style: block title medium
+      underlay: false
     Block body:
-      Text style: Block Body Medium
-      Underlay: false
+      text style: block body medium
+      underlay: false
     shape:
-      Block border:
-        Line style: normal
-        Fill: white
+      block border:
+        line style: normal
+        fill: white
 
-Model Integration Small Frame:
+Model Integration Diagram small Frame:
   default:
     text:
-      # Open field assets
-      Open title:
-        Text style: Block Title Small
-        Underlay: false
-      Open copyright notice:
-        Text style: boilerplate
-        Underlay: false
-      Open author:
-        Text style: Block Body Small
-        Underlay: false
-      Open modification date:
-        Text style: Block Body Small
-        Underlay: false
-      Open document id:
-        Text style: Block Body Small
-        Underlay: false
-      Open version:
-        Text style: Block Body Small
-        Underlay: false
+      # open field assets
+      open title:
+        text style: block title small
+        underlay: false
+      open copyright notice:
+        text style: boilerplate
+        underlay: false
+      open author:
+        text style: Block body small
+        underlay: false
+      open modification date:
+        text style: Block body small
+        underlay: false
+      open document id:
+        text style: Block body small
+        underlay: false
+      open version:
+        text style: Block body small
+        underlay: false
 
 TRI MBSE large:
   default:
     text:
-      # Open field assets
-      Open title:
-        Text style: Corner Title Large
-        Underlay: false
-      Open copyright notice:
-        Text style: Footer Central
-        Underlay: false
+      # open field assets
+      open title:
+        text style: corner title large
+        underlay: false
+      open copyright notice:
+        text style: Footer Central
+        underlay: false
       # Title block assets
-      Block title:
-        Text style: Block Title Large
-        Underlay: false
-      Block body:
-        Text style: Block Body Large
-        Underlay: false
+      block title:
+        text style: block title large
+        underlay: false
+      block body:
+        text style: block body large
+        underlay: false
     shape:
-      Block border:
-        Line style: double
-        Fill: white
+      block border:
+        line style: double
+        fill: white
 
 TRI MBSE medium:
   default:
     text:
-      # Open field assets
-      Open title:
-        Text style: Corner Title Large
-        Underlay: false
-      Open copyright notice:
-        Text style: Footer Central
-        Underlay: false
+      # open field assets
+      open title:
+        text style: corner title large
+        underlay: false
+      open copyright notice:
+        text style: Footer Central
+        underlay: false
       # Title block assets
-      Block title:
-        Text style: Block Title Large
-        Underlay: false
-      Block body:
-        Text style: Block Body Large
-        Underlay: false
+      block title:
+        text style: block title large
+        underlay: false
+      block body:
+        text style: block body large
+        underlay: false
     shape:
-      Block border:
-        Line style: normal
-        Fill: white
+      block border:
+        line style: normal
+        fill: white
 
 OS TRI MBSE small:
   default:
     text:
-      # Open field assets
-      Open title:
-        Text style: Block Title Small
-        Underlay: false
-      Open copyright notice:
-        Text style: boilerplate
-        Underlay: false
+      # open field assets
+      open title:
+        text style: block title small
+        underlay: false
+      open copyright notice:
+        text style: boilerplate
+        underlay: false
       # Title block assets
-      Open author:
-        Text style: Block Body Small
-        Underlay: false
-      Open modification date:
-        Text style: Block Body Small
-        Underlay: false
-      Open document id:
-        Text style: Block Body Small
-        Underlay: false
-      Open version:
-        Text style: Block Body Small
-        Underlay: false
+      open author:
+        text style: Block body small
+        underlay: false
+      open modification date:
+        text style: Block body small
+        underlay: false
+      open document id:
+        text style: Block body small
+        underlay: false
+      open version:
+        text style: Block body small
+        underlay: false
 
 # xUML class diagram}
 xUML class diagram:
   default:
     shape:
       class name compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       class attribute compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       class method compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       binary association connector:
-        Line style: normal
+        line style: normal
       generalization connector:
-        Line style: normal
+        line style: normal
       associative mult stem:
-        Line style: dashed
+        line style: dashed
       grid:
-        Line style: grid
+        line style: grid
       margin:
-        Line style: margin
+        line style: margin
       imported class compartment:
-        Line style: dashed
-        Fill: white
+        line style: dashed
+        fill: white
     text:
       label:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       binary association name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       generalization name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       class mult name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       see also:
-        Text style: p9italic
-        Underlay: false
+        text style: p9italic
+        underlay: false
       class name:
-        Text style: p12title
-        Underlay: false
+        text style: p12title
+        underlay: false
       attributes:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       methods:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
 
-Shlaer-Mellor class diagram:
+Shlaer-Mellor Class Diagram:
   default:
     shape:
       class name compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       class attribute compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       class method compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       binary association connector:
-        Line style: normal
+        line style: normal
       generalization connector:
-        Line style: normal
+        line style: normal
       associative mult stem:
-        Line style: normal
+        line style: normal
       grid:
-        Line style: grid
+        line style: grid
       margin:
-        Line style: margin
+        line style: margin
       imported class compartment:
-        Line style: dashed
-        Fill: white
+        line style: dashed
+        fill: white
     text:
       label:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       binary association name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       generalization name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       class mult name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       see also:
-        Text style: p9italic
-        Underlay: false
+        text style: p9italic
+        underlay: false
       class name:
-        Text style: p12title
-        Underlay: false
+        text style: p12title
+        underlay: false
       attributes:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       methods:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
 
-Starr class diagram:
+Starr Class Diagram:
   default:
     shape:
       class name compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       class attribute compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       class method compartment:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       binary association connector:
-        Line style: normal
+        line style: normal
       generalization connector:
-        Line style: normal
+        line style: normal
       associative mult stem:
-        Line style: normal
+        line style: normal
       grid:
-        Line style: hide
+        line style: hide
       margin:
-        Line style: hide
+        line style: hide
       imported class name compartment:
-        Line style: dashed
-        Fill: white
+        line style: dashed
+        fill: white
       imported class attribute compartment:
-        Line style: dashed
-        Fill: white
+        line style: dashed
+        fill: white
       # For diagnostics only
       shoot:
-        Line style: dashed
+        line style: dashed
       # Symbols
       solid arrow:
-        Line style: normal
-        Fill: black
+        line style: normal
+        fill: black
       hollow arrow:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       gen arrow:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
     text:
       label:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       binary association name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       generalization name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       class mult name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       see also:
-        Text style: p9italic
-        Underlay: false
+        text style: p9italic
+        underlay: false
       class name:
-        Text style: p12title
-        Underlay: false
+        text style: p12title
+        underlay: false
       class attribute:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       class method:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       imported class name:
-        Text style: p12title
-        Underlay: false
+        text style: p12title
+        underlay: false
       imported class attribute:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
 
-xUML state machine diagram:
+xUML State Machine Diagram:
   default:
     shape:
       transition connector:
-        Line style: normal
+        line style: normal
       initial transition connector:
-        Line style: normal
+        line style: normal
       deletion transition connector:
-        Line style: normal
+        line style: normal
       state name compartment:
-        Line style: normal
-        Fill: white
-        Corner spec:
+        line style: normal
+        fill: white
+        corner spec:
           Radius: 4
           Top: true
           Bottom: false
       state name only compartment:
-        Line style: normal
-        Fill: white
-        Corner spec:
+        line style: normal
+        fill: white
+        corner spec:
           Radius: 4
           Top: true
           Bottom: true
       state activity compartment:
-        Line style: normal
-        Fill: white
-        Corner spec:
-          Radius: 4
-          Top: false
-          Bottom: true
+        line style: normal
+        fill: white
+        corner spec:
+          radius: 4
+          top: false
+          bottom: true
       # Symbols
       solid arrow:
-        Line style: normal
-        Fill: black
+        line style: normal
+        fill: black
       hollow large circle:
-        Line style: normal
-        Fill: white
+        line style: normal
+        fill: white
       solid small dot:
-        Line style: normal
-        Fill: black
+        line style: normal
+        fill: black
     text:
       transition name:
-        Text style: p9body
-        Underlay: true
+        text style: p9body
+        underlay: true
       initial transition name:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       state activity:
-        Text style: p9body
-        Underlay: false
+        text style: p9body
+        underlay: false
       state name:
-        Text style: p12title
-        Underlay: false
+        text style: p12title
+        underlay: false
       state name only:
-        Text style: p12title
-        Underlay: false
+        text style: p12title
+        underlay: false
 
 # Not supported yet
 #Starr domain diagram:
