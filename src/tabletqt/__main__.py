@@ -65,7 +65,7 @@ def main():
         from tabletqt.styledb import StyleDB
         StyleDB.report_colors()
 
-    EtchaSketch.draw_stuff()
+    EtchaSketch.draw_tabloid()
 
     logger.info("No problemo")  # We didn't die on an exception
     print("\nNo problemo")
