@@ -1,0 +1,77 @@
+# symbols.yaml – User defined symbols
+
+flatland: # App name
+
+  starr class: # Symbol group
+    1 mult: # Symbol name
+      - arrow: # Shape
+          triangle: [(0,0), (3,9), (6,0)]
+          border: model thin
+          fill: model dark
+    1c mult:
+      - arrow:
+          triangle: [(0,0), (3,9), (6,0)]
+          border: model thin
+          fill: model light
+    M mult:
+      - inner arrow:
+          triangle: [(0,0), (3,9), (6,0)]
+          border: model thin
+          fill: model dark
+      - outer arrow:
+          triangle: [(0,9), (3,18), (6,9)]
+          border: model thin
+          fill: model dark
+    Mc mult:
+      - inner arrow:
+          triangle: [(0,0), (3,9), (6,0)]
+          border: model thin
+          fill: model light
+      - outer arrow:
+          triangle: [(0,9), (3,18), (6,9)]
+          border: model thin
+          fill: model light
+    superclass:
+      - big arrow:
+          triangle: [(0,0), (4,12), (8,0)]
+          border: model thin
+          fill: model light
+
+  xuml state: # Symbol group
+    target state: # Symbol name
+      - open arrow: # Shape
+          path: [(0,0), (3,9), (6,0)]
+          border: model thin
+    initial pseudo state:
+      - arrow:
+          path: [(4,9), (7,0), (14,9)]
+          border: model thin
+      - line:
+          path: [(7,0), (7,26)]
+          border: model thin
+      - dot:
+          circle:
+            center: 33
+            radius: 7
+          border: model thin
+          fill: model dark
+    final pseudo state:
+      - line:
+          path: [(11,40), (11,22)]
+          border: model thin
+      - arrow:
+          path: [(8,31), (11,22), (14,31)]
+          border: model thin
+      - big circle:
+          circle:
+            center: (11, 11)
+            radius: 11
+          border: model thin
+          fill: model light
+      - dot:
+          circle:
+            center: (11, 11)
+            radius: 7
+          border: model thin
+          fill: model dark
+
