@@ -122,7 +122,7 @@ class TextElement:
     @classmethod
     def add_line(cls, layer: 'Layer', asset: str, lower_left: Position, text: str):
         """
-        Adds a line of text to the Tablet at the specified lower left corner location which will be converted
+        Adds a line of text to the Tablet at the specified lower left corner pin which will be converted
         to device coordinates
 
         :param layer: Draw on this layer

@@ -28,7 +28,7 @@ class SketchSymbols:
         cls.make_a_tablet()
         dlayer = cls.tablet.layers['diagram']
 
-        Symbol.add(app='flatland', layer=dlayer, group='Starr class', name='1 mult', location=Position(700, 700), angle=270)
+        Symbol.add(app='flatland', layer=dlayer, group='Starr class', name='M mult', pin=Position(700, 700), angle=0)
 
         RectangleSE.add(layer=dlayer, asset='class attribute compartment',
                         lower_left=Position(50, 300), size=Rect_Size(height=20, width=70))

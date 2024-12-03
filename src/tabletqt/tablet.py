@@ -35,9 +35,9 @@ class Tablet:
 
     For example, when a Flatland node compartment wants to draw itself, it doesn't worry about line
     widths, dash patterns and colors. It also doesn't worry about flipping to whatever coordinate
-    system the graphics library uses. A compartment would just say "add_shape( asset, size, location )" and
+    system the graphics library uses. A compartment would just say "add_shape( asset, size, pin )" and
     the Tablet will take care of the rest. Here the asset is the name of the model entity 'compartment',
-    the size in points (or whatever units the Flatland app wants to use) and location expressed in Flatland
+    the size in points (or whatever units the Flatland app wants to use) and pin expressed in Flatland
     Canvas coordinates.
 
     When a Tablet is created, it is initialized with a single populated Layer where Assets can be drawn.

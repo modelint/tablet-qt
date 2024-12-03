@@ -130,7 +130,7 @@ class EtchaSketch:
 
         CircleSE.add(layer=dlayer, asset='solid small dot', center=Position(400, 400), radius=20)
 
-        # General location reference
+        # General pin reference
         DiagnosticMarker.add_cross_hair(dlayer, Position(200, 500))
         DiagnosticMarker.add_cross_hair(dlayer, Position(200, 600))
         DiagnosticMarker.add_cross_hair(dlayer, Position(200, 700))
