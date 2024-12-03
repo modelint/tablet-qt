@@ -38,6 +38,7 @@ config_type = {
     'text_styles': PP(nt=TextStyle, pre=False, post=True),
     'color_usages': PP(nt=None, pre=False, post=True),
     'images': PP(nt=None, pre=False, post=True),
+    'symbols': PP(nt=None, pre=False, post=False),
 }
 
 
@@ -63,6 +64,7 @@ class StyleDB:
     raw_config_data = None
     config_data = None
     image = None
+    symbol = None
 
 
     @classmethod
