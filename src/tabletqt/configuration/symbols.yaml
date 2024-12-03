@@ -2,61 +2,61 @@
 
 flatland: # App name
 
-  starr class: # Symbol group
+  Starr class: # Symbol group
     1 mult: # Symbol name
-      - triangle: [(0,0), (3,9), (6,0)]
-        border: model thin
-        fill: model dark
+      - triangle: [[0,0], [3,9], [6,0]]
+        border: normal
+        fill: black
     1c mult:
-      - triangle: [(0,0), (3,9), (6,0)]
-        border: model thin
-        fill: model light
+      - triangle: [[0,0], [3,9], [6,0]]
+        border: normal
+        fill: white
     M mult:
-      - triangle: [(0,0), (3,9), (6,0)]
-        border: model thin
-        fill: model dark
-      - triangle: [(0,9), (3,18), (6,9)]
-        border: model thin
-        fill: model dark
+      - triangle: [[0,0], [3,9], [6,0]]
+        border: normal
+        fill: black
+      - triangle: [[0,9], [3,18], [6,9]]
+        border: normal
+        fill: black
     Mc mult:
-      - triangle: [(0,0), (3,9), (6,0)]
-        border: model thin
-        fill: model light
-      - triangle: [(0,9), (3,18), (6,9)]
-        border: model thin
-        fill: model light
+      - triangle: [[0,0], [3,9], [6,0]]
+        border: normal
+        fill: white
+      - triangle: [[0,9], [3,18], [6,9]]
+        border: normal
+        fill: white
     superclass:
-      - triangle: [(0,0), (4,12), (8,0)]
-        border: model thin
-        fill: model light
+      - triangle: [[0,0], [4,12], [8,0]]
+        border: normal
+        fill: white
 
   xuml state: # Symbol group
     target state: # Symbol name
-      - path: [(0,0), (3,9), (6,0)]
-        border: model thin
+      - path: [[0,0], [3,9], [6,0]]
+        border: normal
     initial pseudo state:
-      - path: [(4,9), (7,0), (14,9)]
-        border: model thin
-      - path: [(7,0), (7,26)]
-        border: model thin
+      - path: [[4,9], [7,0], [14,9]]
+        border: normal
+      - path: [[7,0], [7,26]]
+        border: normal
       - circle:
-          center: (7,33)
+          center: [7,33]
           radius: 7
-        border: model thin
-        fill: model dark
+        border: normal
+        fill: black
     final pseudo state:
-      - path: [(11,40), (11,22)]
-        border: model thin
-      - path: [(8,31), (11,22), (14,31)]
-        border: model thin
+      - path: [[11,40], [11,22]]
+        border: normal
+      - path: [[8,31], [11,22], [14,31]]
+        border: normal
       - circle:
-          center: (11, 11)
+          center: [11, 11]
           radius: 11
-        border: model thin
-        fill: model light
+        border: normal
+        fill: white
       - circle:
-          center: (11, 11)
+          center: [11, 11]
           radius: 7
-        border: model thin
-        fill: model dark
+        border: normal
+        fill: black
 
