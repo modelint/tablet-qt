@@ -53,12 +53,20 @@ class PolygonSE:
         """
         # Flip each position to device coordinates
         device_vertices = [layer.Tablet.to_dc(v) for v in vertices]
+        pverts = [QPointF(*v) for v in device_vertices]
+        polygon = QPolygonF(pverts)
+        poly_item = QGraphicsPolygonItem(polygon)
 
-        layer.Polygons.append(element.Polygon(
-            vertices= device_vertices,
-            border_style=layer.Presentation.Shape_presentation[asset],
-            fill=layer.Presentation.Closed_shape_fill[asset]
-        ))
+        # Set pen and brush
+        border_style = layer.Presentation.Shape_presentation[asset]
+        fill = layer.Presentation.Closed_shape_fill[asset]
+        CrayonBox.choose_crayons(
+            item=poly_item,
+            border_style=border_style,
+            fill=fill)
+
+        # Add polygon item to layer
+        layer.Polygons.append(poly_item)
 
     @classmethod
     def add_open(cls, layer: 'Layer', asset: str, vertices: List[Position]):
@@ -82,13 +90,6 @@ class PolygonSE:
         :param layer: Draw on this layer
         """
         for p in layer.Polygons:
-            _logger.info(f"> Polygon at: [{p.vertices}]")
+            # _logger.info(f"> Polygon at: [{p.vertices}]")
 
-            pverts = [QPointF(*x) for x in p.vertices]
-            polygon = QPolygonF(pverts)
-            poly_item = QGraphicsPolygonItem(polygon)
-
-            # Set pen and brush
-            CrayonBox.choose_crayons(item=poly_item, border_style=p.border_style, fill=p.fill)
-
-            layer.Scene.addItem(poly_item)
+            layer.Scene.addItem(p)

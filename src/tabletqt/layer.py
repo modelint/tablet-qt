@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, List
 
 # Qt
 from PyQt6.QtWidgets import QGraphicsRectItem, QGraphicsLineItem
+from PyQt6.QtWidgets import QGraphicsPolygonItem
 
 # Tablet
 import tabletqt.element as element
@@ -58,7 +59,7 @@ class Layer:
         # Stuff we will draw on the Layer
         self.Line_segments: List[element.Line_Segment] = []
         self.Circles: List[element.Circle] = []
-        self.Polygons: List[element.Polygon] = []
+        self.Polygons: List[QGraphicsPolygonItem] = []
         self.Rectangles: List[element.Rectangle] = []
         self.RawRectangles: List[QGraphicsRectItem] = []
         self.RawLines: List[QGraphicsLineItem] = []

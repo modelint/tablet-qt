@@ -300,13 +300,16 @@ Starr Class Diagram:
       imported class attribute compartment:
         line style: dashed
         fill: white
-      # For diagnostics only
-      shoot:
+      shoot: # For diagnostics only
         line style: dashed
       # Symbols
-      solid arrow:
-        line style: normal
-        fill: black
+      1 mult:
+        symbol:
+          - triangle: [[0,0], [3,9], [6,0]]
+
+#      solid arrow:
+#        line style: normal
+#        fill: black
       hollow arrow:
         line style: normal
         fill: white
