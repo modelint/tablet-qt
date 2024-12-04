@@ -4,7 +4,7 @@ from pathlib import Path
 from tabletqt.tablet import Tablet
 from tabletqt.geometry_types import Rect_Size, Position
 from tabletqt.graphics.rectangle_se import RectangleSE
-from tabletqt.symbol import Symbol
+from tabletqt.graphics.symbol import Symbol
 
 points_in_mm = 2.83465
 points_in_cm = 28.3465
@@ -28,7 +28,8 @@ class SketchSymbols:
         cls.make_a_tablet()
         dlayer = cls.tablet.layers['diagram']
 
-        Symbol.add(app='flatland', layer=dlayer, group='Xuml state', name='target state', pin=Position(400, 600), angle=90)
+        s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult', pin=Position(400, 600), angle=90)
+        # s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='target state', pin=Position(400, 600), angle=90)
 
         RectangleSE.add(layer=dlayer, asset='class attribute compartment',
                         lower_left=Position(50, 300), size=Rect_Size(height=20, width=70))

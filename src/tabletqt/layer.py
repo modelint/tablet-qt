@@ -12,13 +12,13 @@ from PyQt6.QtWidgets import (QGraphicsRectItem, QGraphicsLineItem, QGraphicsPoly
 # Tablet
 import tabletqt.element as element
 from tabletqt.presentation import Presentation
-from tabletqt.graphics.group_se import GroupSE
 from tabletqt.graphics.circle_se import CircleSE
 from tabletqt.graphics.polygon_se import PolygonSE
 from tabletqt.graphics.line_segment import LineSegment
 from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.graphics.text_element import TextElement
 from tabletqt.graphics.image import ImageE
+from tabletqt.graphics.symbol import Symbol
 from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
 
@@ -59,7 +59,7 @@ class Layer:
 
         # Stuff we will draw on the Layer
         self.Line_segments: List[element.Line_Segment] = []
-        self.Groups: List[QGraphicsItemGroup] = []
+        self.Symbols: List[QGraphicsItemGroup] = []
         self.Circles: List[element.Circle] = []
         self.Polygons: List[QGraphicsPolygonItem] = []
         self.Rectangles: List[element.Rectangle] = []
@@ -86,7 +86,7 @@ class Layer:
 
         # Rendering order determines what can potentially overlap on this Layer, so order matters
         LineSegment.render(self)
-        GroupSE.render(self)
+        Symbol.render(self)
         CircleSE.render(self)
         RectangleSE.render(self)
         PolygonSE.render(self)
