@@ -17,7 +17,7 @@ class SketchSymbols:
 
     @classmethod
     def make_a_tablet(cls):
-        cls.size = Rect_Size(17*72, 22*72)  # Ansi C portrait
+        cls.size = Rect_Size(round(210*points_in_mm), round(297*points_in_mm))  # Ansi C portrait
         dtype = "Starr Class Diagram"
         output_path = Path(__file__).parent.parent.parent / "working" / "tabletqt.pdf"
         cls.tablet = Tablet(app='flatland', size=cls.size, output_file=output_path, drawing_type=dtype,
@@ -28,10 +28,11 @@ class SketchSymbols:
         cls.make_a_tablet()
         dlayer = cls.tablet.layers['diagram']
 
-        s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult', pin=Position(400, 600), angle=90)
-        # s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='target state', pin=Position(400, 600), angle=90)
+        # s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult', pin=Position(300, 300), angle=90)
+        s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='initial pseudo state',
+                   pin=Position(300, 300), angle=270)
 
         RectangleSE.add(layer=dlayer, asset='class attribute compartment',
-                        lower_left=Position(50, 300), size=Rect_Size(height=20, width=70))
+                        lower_left=Position(50, 100), size=Rect_Size(height=20, width=70))
         cls.tablet.render()
 

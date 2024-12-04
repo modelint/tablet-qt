@@ -1,8 +1,8 @@
 """ symbol.py - Draw a predefined symbol """
 
 # System
-from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsLineItem, QGraphicsItemGroup
-from PyQt6.QtCore import QPointF, QLineF
+from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsLineItem, QGraphicsItemGroup, QGraphicsEllipseItem
+from PyQt6.QtCore import QPointF, QLineF, QRectF
 from PyQt6.QtGui import QPolygonF
 from typing import TYPE_CHECKING, Callable, Dict
 
@@ -71,7 +71,31 @@ class Symbol:
         self.layer.Symbols.append(self.symbol_item)
 
     def add_circle(self, shape):
-        pass
+        """
+
+        :param shape:
+        """
+        center_canvas = Position(self.pin[0], shape['circle']['center'][1]+self.pin[1])
+        # Flip lower left corner to device coordinates
+        center_dc = self.layer.Tablet.to_dc(center_canvas)
+        radius = shape['circle']['radius']
+        diameter = radius * 2
+
+        # Determine the bounding box size of the composite_shape
+        self.width = max(self.width, diameter)
+        self.height = max(self.height, diameter)
+
+        # Create circle item
+        circle_item = QGraphicsEllipseItem(QRectF(center_dc.x, center_dc.y, diameter, diameter))
+
+        # Set pen and brush (border/fill) styles
+        CrayonBox.choose_crayons(
+            item=circle_item,
+            border_style=shape['border'],
+            fill=shape['fill'])
+
+        # Add it to the supplied layer to be rendered in the correct stack order later
+        self.symbol_item.addToGroup(circle_item)
 
     def add_path(self, shape):
         """

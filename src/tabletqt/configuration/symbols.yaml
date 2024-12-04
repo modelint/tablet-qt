@@ -35,13 +35,13 @@ flatland: # App name
       - path: [[0,0], [3,9], [6,0]]
         border: normal
     initial pseudo state:
-      - path: [[4,9], [7,0], [14,9]]
+      - path: [[0,5], [3,0], [6,5]]
         border: normal
-      - path: [[7,0], [7,26]]
+      - path: [[3,0], [3,25]]
         border: normal
       - circle:
-          center: [7,33]
-          radius: 7
+          center: [3,28]
+          radius: 3
         border: normal
         fill: black
     final pseudo state:
