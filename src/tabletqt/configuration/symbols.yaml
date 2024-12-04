@@ -26,11 +26,11 @@ flatland: # App name
         border: normal
         fill: white
     superclass:
-      - triangle: [[0,0], [4,12], [8,0]]
+      - triangle: [[0,0], [8,12], [16,0]]
         border: normal
         fill: white
 
-  xuml state: # Symbol group
+  Xuml state: # Symbol group
     target state: # Symbol name
       - path: [[0,0], [3,9], [6,0]]
         border: normal

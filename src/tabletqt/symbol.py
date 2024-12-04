@@ -1,9 +1,10 @@
 """ symbol.py - Draw a predefined symbol """
 
 # System
-from PyQt6.QtWidgets import QGraphicsPolygonItem
-from PyQt6.QtCore import QPointF
+from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsLineItem, QGraphicsItemGroup
+from PyQt6.QtCore import QPointF, QLineF
 from PyQt6.QtGui import QPolygonF
+from PyQt6.QtCore import Qt
 from typing import TYPE_CHECKING
 
 # Tablet
@@ -37,13 +38,16 @@ class Symbol:
         :param angle: Degrees clockwise with 0, 90, 180, and 270 at 12, 3, 6, and 9 o'clock respectively
         :return: The size of the total symbol bounding box
         """
+        # Convert pin to device coordinates
+        device_pin = layer.Tablet.to_dc(pin)
+
         # Look up the symbol
         width = 0
         height = 0
         shape_elements = StyleDB.symbol[app][group][name]
+
         for shape in shape_elements :
             if shape.get('triangle'):
-
                 # Convert each vertex to a Position namedtuple
                 canvas_vertices = [Position(v[0] + pin[0], v[1] + pin[1]) for v in shape['triangle']]
 
@@ -52,9 +56,6 @@ class Symbol:
                 max_y = max(v[1] for v in shape['triangle'])
                 width = max(width, max_x)
                 height = max(height, max_y)
-
-                # Convert pin to device coordinates
-                device_pin = layer.Tablet.to_dc(pin)
 
                 # Flip each vertex tablet Position to device coordinates
                 device_vertices = [layer.Tablet.to_dc(v) for v in canvas_vertices]
@@ -74,5 +75,38 @@ class Symbol:
 
                 # Add it to the supplied layer to be rendered in the correct stack order later
                 layer.Polygons.append(poly_item)
+            elif shape.get('path'):
+                # Convert each vertex to a Position namedtuple
+                canvas_vertices = [Position(v[0] + pin[0], v[1] + pin[1]) for v in shape['path']]
+
+                # Determine the bounding box size of the symbol
+                max_x = max(v[0] for v in shape['path'])
+                max_y = max(v[1] for v in shape['path'])
+                width = max(width, max_x)
+                height = max(height, max_y)
+
+                # Flip each vertex tablet Position to device coordinates
+                device_vertices = [layer.Tablet.to_dc(v) for v in canvas_vertices]
+
+                group_item = QGraphicsItemGroup()
+                for v in range(len(device_vertices) - 1):
+                    start_point = device_vertices[v]
+                    end_point = device_vertices[v + 1]
+
+                    # Create a line item connecting the points
+                    line = QGraphicsLineItem(QLineF(*start_point, *end_point))
+                    # Set line style
+                    CrayonBox.choose_crayons(
+                        item=line,
+                        border_style=shape['border'])
+                    group_item.addToGroup(line)
+
+                # Apply the rotation transform rotating on the pin position
+                group_item.setTransformOriginPoint(device_pin.x, device_pin.y)
+                group_item.setRotation(angle)
+
+                # Add it to the supplied layer to be rendered in the correct stack order later
+                layer.Groups.append(group_item)
+                pass
 
         return Rect_Size(height=height,width=width)
