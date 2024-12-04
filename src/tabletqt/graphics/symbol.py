@@ -75,7 +75,8 @@ class Symbol:
 
         :param shape:
         """
-        center_canvas = Position(self.pin[0], shape['circle']['center'][1]+self.pin[1])
+        center_canvas = Position(self.pin[0],
+                                 self.pin[1]+shape['circle']['center'][1])
         # Flip lower left corner to device coordinates
         center_dc = self.layer.Tablet.to_dc(center_canvas)
         radius = shape['circle']['radius']
@@ -86,7 +87,7 @@ class Symbol:
         self.height = max(self.height, diameter)
 
         # Create circle item
-        circle_item = QGraphicsEllipseItem(QRectF(center_dc.x, center_dc.y, diameter, diameter))
+        circle_item = QGraphicsEllipseItem(QRectF(center_dc.x-radius, center_dc.y-radius, diameter, diameter))
 
         # Set pen and brush (border/fill) styles
         CrayonBox.choose_crayons(
