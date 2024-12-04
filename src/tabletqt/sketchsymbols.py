@@ -5,6 +5,7 @@ from tabletqt.tablet import Tablet
 from tabletqt.geometry_types import Rect_Size, Position
 from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.graphics.symbol import Symbol
+from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
 points_in_mm = 2.83465
 points_in_cm = 28.3465
@@ -28,6 +29,7 @@ class SketchSymbols:
         cls.make_a_tablet()
         dlayer = cls.tablet.layers['diagram']
 
+        DiagnosticMarker.add_cross_hair(dlayer, Position(300, 300))
         s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='superclass', pin=Position(300, 300), angle=0)
         # s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='target state',
         #            pin=Position(300, 300), angle=0)

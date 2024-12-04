@@ -1,19 +1,54 @@
 # symbols.yaml – User defined symbols
 
-flatland: # App name
+# A symbol is a bounding box containing any combination of shape elements
+# such as circles, paths, and triangles. For example, you can define an xUML
+# final psuedo-state symbols consisting of a path for the stem consisting of two
+# colinear points, a path for the arrow head consisting of three points, one at the
+# arrow head and the other two above it, and then a large and smaller circle sharing
+# the same center with the arrow pointing into it. The bigger circle has a white fill
+# with the smaller having a black fill.
 
-  Starr class: # Symbol group
-    1 mult: # Symbol name
-      - triangle: [[-3,0], [0,9], [3,0]]
-        border: normal
-        fill: black
+# A common use case for symbols, in fact the motivating use case, is to support
+# decorations at the end of connectors in the flatland application. So when we want
+# to decorate the end of a transition in a state machine with an arrow head, the client
+# application can provide a location and an angle so that the arrow head nicely lines up
+# with the end of the transition connector path. The same principle works for any decorations
+# on associations, generalizations, and any other kind of connector path.
+
+# To define a symbol, we specify the coordinates of each shape element within a symbol
+# bounding box. # The box should shrink wrap all the content with the origin at the
+# bottom center of the bounding box. When the client app requests a symbol at some
+# tablet location, the origin will be positioned there and rotated to a requested angle.
+#  You can imagine a thumbtack at the origin that gets pushed into the
+# requested location with the symbol rotated as desired.
+
+# So let's say you want to define a simple solid arrow head with a filled in triangle.
+
+# pointing upward. The size of the bounding box is the width of the arrow base and the height
+# up to the arrow point. The center of the base will be at 0,0 with the nose at say 0,5 for
+# a five point length arrow head. Now if the app askes to place that arrow head at say
+# 300,300 in tablet coordinates, rotated at 90 degrees, the arrow will point to the right
+# with its base center at 300,300 where, presumably, the app will end its connector path to
+# meet the base center. Keep in mind that all of this is in tablet coordinates where the
+# lower left corner of the tablet is 0,0. We always specify in tablet coordinates and let
+# Tablet do any device coordinate conversions for us depending on whatever graphics library it
+# is built on.
+
+flatland: # App name (indented below all symbols defined for use in this app)
+
+  # Class diagram with Starr notation
+  Starr class: # Symbol group  (for flatland this is the <notation name> <diagram type> )
+    1 mult: # Symbol name (client app will ask for this symbol and provide a tablet position and any rotation)
+      - triangle: [[-3,0], [0,9], [3,0]] # Local to symbol bounding box
+        border: normal  # name of a line style in line_styles.yaml
+        fill: black  # name of a color in colors.yaml
     1c mult:
       - triangle: [[-3,0], [0,9], [3,0]]
         border: normal
         fill: white
     M mult:
-      - triangle: [[-3,0], [0,9], [3,0]]
-        border: normal
+      - triangle: [[-3,0], [0,9], [3,0]] # Shape elements are drawn in the list order so you can stack them on top
+        border: normal                   # of one another on the z axis. The first shape is underneath all the rest.
         fill: black
       - triangle: [[-3,9], [0,18], [3,9]]
         border: normal
@@ -30,11 +65,12 @@ flatland: # App name
         border: normal
         fill: white
 
-  Xuml state: # Symbol group
-    target state: # Symbol name
+  # State machine diagram with xUML notation (subset of UML state machine notation)
+  Xuml state: # Symbol group (different notation and diagram type)
+    target state:  # Open arrow head pointing to a destination state
       - path: [[-3,5], [0,0], [3,0]]
         border: normal
-    initial pseudo state:
+    initial pseudo state:  # Solid dot with fixed length stem ending in a hollow arrow head
       - path: [[-3,5], [0,0], [3,5]]
         border: normal
       - path: [[0,0], [0,25]]
@@ -44,7 +80,7 @@ flatland: # App name
           radius: 3
         border: normal
         fill: black
-    final pseudo state:
+    final pseudo state:  # Large white circle containing solid dot emitting stem ending in open arrow head
       - path: [[0,10], [0,32]]
         border: normal
       - path: [[-4,15], [0,10], [4,15]]
