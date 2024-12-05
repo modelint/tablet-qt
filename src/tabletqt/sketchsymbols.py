@@ -3,7 +3,6 @@
 from pathlib import Path
 from tabletqt.tablet import Tablet
 from tabletqt.geometry_types import Rect_Size, Position
-from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.graphics.symbol import Symbol
 from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 

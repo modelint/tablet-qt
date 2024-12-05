@@ -1,6 +1,8 @@
 """ symbol.py - Draw a predefined symbol """
 
 # System
+import logging
+import sys
 from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsLineItem, QGraphicsItemGroup, QGraphicsEllipseItem
 from PyQt6.QtCore import QPointF, QLineF, QRectF
 from PyQt6.QtGui import QPolygonF
@@ -37,6 +39,7 @@ class Symbol:
         the pin location.
         :param angle: Degrees clockwise with 0, 90, 180, and 270 at 12, 3, 6, and 9 o'clock respectively
         """
+        self.logger = logging.getLogger(__name__)
         self.app = app
         self.layer = layer
         self.group = group
@@ -45,7 +48,12 @@ class Symbol:
         self.angle = angle
         self.width = 0
         self.height = 0
-        self.shape_elements = StyleDB.symbol[app][group][name]
+        try:
+            self.shape_elements = StyleDB.symbol[app][group][name]
+        except KeyError:
+            self.logger.exception(f"StyleDB has no entry for: [{app}][{group}][{name}]")
+            return
+
         self.symbol_item = QGraphicsItemGroup()
 
         # These are the shape elements currently supported
