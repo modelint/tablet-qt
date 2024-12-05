@@ -21,7 +21,7 @@ class DiagnosticMarker:
     ch_radius = 3  # Cross hair radius
 
     @classmethod
-    def add_cross_hair(cls, layer: 'Layer', location: Position, color: str = 'black'):
+    def add_cross_hair(cls, layer: 'Layer', location: Position, color: str = 'purple'):
         """
         Place a diagnostic cross hair at the requested point in the Scene.
         This method is not intended for client application use.

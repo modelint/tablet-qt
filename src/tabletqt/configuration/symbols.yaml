@@ -68,7 +68,7 @@ flatland: # App name (indented below all symbols defined for use in this app)
   # State machine diagram with xUML notation (subset of UML state machine notation)
   Xuml state: # Symbol group (different notation and diagram type)
     target state:  # Open arrow head pointing to a destination state
-      - path: [[-3,5], [0,0], [3,0]]
+      - path: [[-3,5], [0,0], [3,5]]
         border: normal
     initial pseudo state:  # Solid dot with fixed length stem ending in a hollow arrow head
       - path: [[-3,5], [0,0], [3,5]]
@@ -81,17 +81,17 @@ flatland: # App name (indented below all symbols defined for use in this app)
         border: normal
         fill: black
     final pseudo state:  # Large white circle containing solid dot emitting stem ending in open arrow head
-      - path: [[0,10], [0,32]]
+      - path: [[0,0], [0,16]]  # Stem
         border: normal
-      - path: [[-4,15], [0,10], [4,15]]
+      - path: [[-4,11], [0,16], [4,11]] # Open arrow
         border: normal
       - circle:
-          center: [0, 5]
+          center: [0, 21]
           radius: 5
         border: normal
         fill: white
       - circle:
-          center: [0, 5]
+          center: [0, 21]
           radius: 3
         border: normal
         fill: black

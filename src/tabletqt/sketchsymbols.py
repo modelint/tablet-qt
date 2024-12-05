@@ -29,12 +29,10 @@ class SketchSymbols:
         cls.make_a_tablet()
         dlayer = cls.tablet.layers['diagram']
 
-        DiagnosticMarker.add_cross_hair(dlayer, Position(300, 300))
-        s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='superclass', pin=Position(300, 300), angle=0)
-        # s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='target state',
-        #            pin=Position(300, 300), angle=0)
+        # s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='superclass', pin=Position(300, 300), angle=0)
+        s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult',
+                   pin=Position(300, 300), angle=270)
 
-        RectangleSE.add(layer=dlayer, asset='class attribute compartment',
-                        lower_left=Position(50, 100), size=Rect_Size(height=20, width=70))
+        DiagnosticMarker.add_cross_hair(dlayer, Position(300, 300))
         cls.tablet.render()
 
