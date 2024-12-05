@@ -10,7 +10,6 @@ from PyQt6.QtCore import QPointF
 from PyQt6.QtGui import QPolygonF
 
 # Tablet
-import tabletqt.element as element
 from tabletqt.geometry_types import Position
 from tabletqt.graphics.crayon_box import CrayonBox
 from tabletqt.graphics.line_segment import LineSegment
