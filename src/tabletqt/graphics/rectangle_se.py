@@ -88,6 +88,8 @@ class RectangleSE:
         :param bottom_r: Bottom corner radius
         """
         rect = QRectF(x, y, width, height)
+        lbox = QRectF(x,y, top_r*2, bottom_r*2)
+        rrect = QRectF(x + width - top_r, y, width, height)
         path = QPainterPath()
 
         if top_r and bottom_r:
@@ -95,14 +97,13 @@ class RectangleSE:
 
         if top_r and not bottom_r:
             path.moveTo(rect.topLeft() + QPointF(top_r, 0))
-            path.arcTo(rect.left(), rect.top(), top_r * 2, top_r * 2, 90, 90)
-            path.moveTo(rect.topLeft() + QPointF(top_r, 0))
             path.lineTo(rect.right() - top_r * 2, rect.top())
             path.arcTo(rect.right() - top_r * 2, rect.top(), top_r * 2, top_r * 2, 90, -90)
             path.moveTo(rect.right(), rect.top() + top_r)
             path.lineTo(rect.bottomRight())
             path.lineTo(rect.bottomLeft())
             path.lineTo(rect.left(), rect.top() + top_r)
+            path.arcTo(rect.left(), rect.top(), top_r * 2, top_r * 2, 180, -90)
 
         if bottom_r and not top_r:
             path.moveTo(rect.left(), rect.bottom() - bottom_r)
