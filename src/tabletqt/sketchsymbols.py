@@ -28,9 +28,9 @@ class SketchSymbols:
         cls.make_a_tablet()
         dlayer = cls.tablet.layers['diagram']
 
-        s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='final pseudo state', pin=Position(300, 300), angle=0)
-        # s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult',
-        #            pin=Position(300, 300), angle=270)
+        # s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='final pseudo state', pin=Position(300, 300), angle=0)
+        s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult',
+                   pin=Position(300, 300), angle=0)
 
         DiagnosticMarker.add_cross_hair(dlayer, Position(300, 300))
         cls.tablet.render()

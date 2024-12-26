@@ -23,7 +23,7 @@ Grid Diagnostic: # Drawing type name
       row boundary:
         line style: grid
       grid boundary:
-        line style: grid
+        line style: diagram
     text:
       grid label: # Asset name
         text style: coordinate
@@ -32,11 +32,11 @@ Grid Diagnostic: # Drawing type name
 Model Integration Diagram Large Frame:
   default:
     text:
-      # open field assets
-      open title:
-        text style: corner title large
+      # free field assets
+      title:
+        text style: free title large
         underlay: false
-      open copyright notice:
+      copyright notice:
         text style: boilerplate
         underlay: false
       # Title block assets
@@ -59,11 +59,11 @@ Model Integration Diagram Large Frame:
 
 Model Integration Diagram Medium Frame:
   default:
-    # open field assets
-    open title:
-      text style: corner title medium
+    # free field assets
+    title:
+      text style: free title medium
       underlay: false
-    open copyright notice:
+    copyright notice:
       text style: boilerplate
       underlay: False
     # Title block assets
@@ -78,38 +78,38 @@ Model Integration Diagram Medium Frame:
         line style: normal
         fill: white
 
-Model Integration Diagram small Frame:
+Model Integration Diagram Small Frame:
   default:
     text:
-      # open field assets
-      open title:
+      # free field assets
+      title:
         text style: block title small
         underlay: false
-      open copyright notice:
+      copyright notice:
         text style: boilerplate
         underlay: false
-      open author:
+      author:
         text style: Block body small
         underlay: false
-      open modification date:
+      modification date:
         text style: Block body small
         underlay: false
-      open document id:
+      document id:
         text style: Block body small
         underlay: false
-      open version:
+      version:
         text style: Block body small
         underlay: false
 
 TRI MBSE large:
   default:
     text:
-      # open field assets
-      open title:
-        text style: corner title large
+      # free field assets
+      title:
+        text style: free title large
         underlay: false
-      open copyright notice:
-        text style: Footer Central
+      copyright notice:
+        text style: footer central
         underlay: false
       # Title block assets
       block title:
@@ -126,15 +126,15 @@ TRI MBSE large:
 TRI MBSE medium:
   default:
     text:
-      # open field assets
-      open title:
-        text style: corner title large
+      # free field assets
+      title:
+        text style: free title large
         underlay: false
-      open copyright notice:
-        text style: Footer Central
+      copyright notice:
+        text style: footer central
         underlay: false
       # Title block assets
-      block title:
+      title:
         text style: block title large
         underlay: false
       block body:
@@ -148,24 +148,24 @@ TRI MBSE medium:
 OS TRI MBSE small:
   default:
     text:
-      # open field assets
-      open title:
+      # free field assets
+      title:
         text style: block title small
         underlay: false
-      open copyright notice:
+      copyright notice:
         text style: boilerplate
         underlay: false
       # Title block assets
-      open author:
+      author:
         text style: Block body small
         underlay: false
-      open modification date:
+      modification date:
         text style: Block body small
         underlay: false
-      open document id:
+      document id:
         text style: Block body small
         underlay: false
-      open version:
+      version:
         text style: Block body small
         underlay: false
 
@@ -186,7 +186,7 @@ xUML class diagram:
         line style: normal
       generalization connector:
         line style: normal
-      associative mult stem:
+      association stem:
         line style: dashed
       grid:
         line style: grid
@@ -205,7 +205,7 @@ xUML class diagram:
       generalization name:
         text style: p9body
         underlay: false
-      class mult name:
+      class face name:
         text style: p9body
         underlay: false
       see also:
@@ -237,7 +237,7 @@ Shlaer-Mellor Class Diagram:
         line style: normal
       generalization connector:
         line style: normal
-      associative mult stem:
+      association stem:
         line style: normal
       grid:
         line style: grid
@@ -256,7 +256,7 @@ Shlaer-Mellor Class Diagram:
       generalization name:
         text style: p9body
         underlay: false
-      class mult name:
+      class face name:
         text style: p9body
         underlay: false
       see also:
@@ -288,7 +288,7 @@ Starr Class Diagram:
         line style: normal
       generalization connector:
         line style: normal
-      associative mult stem:
+      association stem:
         line style: normal
       grid:
         line style: hide
@@ -300,16 +300,13 @@ Starr Class Diagram:
       imported class attribute compartment:
         line style: dashed
         fill: white
-      shoot: # For diagnostics only
+      # For diagnostics only
+      shoot:
         line style: dashed
       # Symbols
-      1 mult:
-        symbol:
-          - triangle: [[0,0], [3,9], [6,0]]
-
-#      solid arrow:
-#        line style: normal
-#        fill: black
+      solid arrow:
+        line style: normal
+        fill: black
       hollow arrow:
         line style: normal
         fill: white
@@ -326,7 +323,7 @@ Starr Class Diagram:
       generalization name:
         text style: p9body
         underlay: false
-      class mult name:
+      class face name:
         text style: p9body
         underlay: false
       see also:
