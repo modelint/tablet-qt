@@ -170,7 +170,7 @@ OS TRI MBSE small:
         underlay: false
 
 # xUML class diagram}
-xUML class diagram:
+xUML Class Diagram:
   default:
     shape:
       class name compartment:
@@ -192,17 +192,20 @@ xUML class diagram:
         line style: grid
       margin:
         line style: margin
-      imported class compartment:
+      imported class name compartment:
+        line style: dashed
+        fill: white
+      imported class attribute compartment:
         line style: dashed
         fill: white
     text:
       label:
         text style: p9body
         underlay: false
-      binary association name:
+      binary association:
         text style: p9body
         underlay: false
-      generalization name:
+      generalization:
         text style: p9body
         underlay: false
       class face name:
@@ -214,10 +217,16 @@ xUML class diagram:
       class name:
         text style: p12title
         underlay: false
-      attributes:
+      class attribute:
         text style: p9body
         underlay: false
-      methods:
+      class method:
+        text style: p9body
+        underlay: false
+      imported class name:
+        text style: p12title
+        underlay: false
+      imported class attribute:
         text style: p9body
         underlay: false
 
@@ -250,10 +259,10 @@ Shlaer-Mellor Class Diagram:
       label:
         text style: p9body
         underlay: false
-      binary association name:
+      binary association:
         text style: p9body
         underlay: false
-      generalization name:
+      generalization:
         text style: p9body
         underlay: false
       class face name:
@@ -317,10 +326,10 @@ Starr Class Diagram:
       label:
         text style: p9body
         underlay: false
-      binary association name:
+      binary association:
         text style: p9body
         underlay: false
-      generalization name:
+      generalization:
         text style: p9body
         underlay: false
       class face name:
@@ -361,7 +370,7 @@ xUML State Machine Diagram:
           radius: 4
           top: true
           bottom: false
-      state name only compartment:
+      state name only name compartment:
         line style: normal
         fill: white
         corner spec:
@@ -386,10 +395,10 @@ xUML State Machine Diagram:
         line style: normal
         fill: black
     text:
-      transition name:
+      transition:
         text style: p9body
         underlay: true
-      initial transition name:
+      initial transition:
         text style: p9body
         underlay: false
       state activity:
@@ -398,7 +407,7 @@ xUML State Machine Diagram:
       state name:
         text style: p12title
         underlay: false
-      state name only:
+      state name only name:
         text style: p12title
         underlay: false
 

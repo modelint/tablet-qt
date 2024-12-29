@@ -36,6 +36,12 @@
 
 flatland: # App name (indented below all symbols defined for use in this app)
 
+  xUML class:
+    superclass:
+      - triangle: [[-8,12], [0,0], [8,12]]
+        border: normal
+        fill: white
+
   # Class diagram with Starr notation
   Starr class: # Symbol group  (for flatland this is the <notation name> <diagram type> )
     ordinal:
@@ -72,17 +78,17 @@ flatland: # App name (indented below all symbols defined for use in this app)
         fill: white
 
   # State machine diagram with xUML notation (subset of UML state machine notation)
-  Xuml state: # Symbol group (different notation and diagram type)
+  xUML state machine: # Symbol group (different notation and diagram type)
     target state:  # Open arrow head pointing to a destination state
       - path: [[-3,5], [0,0], [3,5]]
         border: normal
     initial pseudo state:  # Solid dot with fixed length stem ending in a hollow arrow head
       - path: [[-3,5], [0,0], [3,5]]
         border: normal
-      - path: [[0,0], [0,25]]
+      - path: [[0,0], [0,60]]
         border: normal
       - circle:
-          center: [0,28]
+          center: [0,57]
           radius: 3
         border: normal
         fill: black
