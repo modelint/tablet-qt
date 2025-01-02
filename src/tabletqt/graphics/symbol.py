@@ -2,7 +2,6 @@
 
 # System
 import logging
-import sys
 from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsLineItem, QGraphicsItemGroup, QGraphicsEllipseItem
 from PyQt6.QtCore import QPointF, QLineF, QRectF
 from PyQt6.QtGui import QPolygonF
@@ -10,7 +9,7 @@ from typing import TYPE_CHECKING, Callable, Dict
 
 # Tablet
 from tabletqt.styledb import StyleDB
-from tabletqt.geometry_types import Rect_Size, Position
+from tabletqt.geometry_types import Position
 from tabletqt.graphics.crayon_box import CrayonBox
 
 if TYPE_CHECKING:
@@ -81,6 +80,7 @@ class Symbol:
         # Add it the transformed group to the Symbols list in the specified layer of the tablet
         # for later rendering
         self.layer.Symbols.append(self.symbol_item)
+
 
     def add_circle(self, shape: Dict):
         """

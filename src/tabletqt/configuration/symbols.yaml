@@ -36,12 +36,6 @@
 
 flatland: # App name (indented below all symbols defined for use in this app)
 
-  xUML class:
-    superclass:
-      - triangle: [[-8,12], [0,0], [8,12]]
-        border: normal
-        fill: white
-
   # Class diagram with Starr notation
   Starr class: # Symbol group  (for flatland this is the <notation name> <diagram type> )
     ordinal:

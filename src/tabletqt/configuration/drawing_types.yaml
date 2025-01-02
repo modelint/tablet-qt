@@ -123,27 +123,27 @@ TRI MBSE large:
         line style: double
         fill: white
 
-TRI MBSE medium:
-  default:
-    text:
-      # free field assets
-      title:
-        text style: free title large
-        underlay: false
-      copyright notice:
-        text style: footer central
-        underlay: false
-      # Title block assets
-      title:
-        text style: block title large
-        underlay: false
-      block body:
-        text style: block body large
-        underlay: false
-    shape:
-      block border:
-        line style: normal
-        fill: white
+#TRI MBSE medium:
+#  default:
+#    text:
+#      # free field assets
+#      title:
+#        text style: free title large
+#        underlay: false
+#      copyright notice:
+#        text style: footer central
+#        underlay: false
+#      # Title block assets
+#      title:
+#        text style: block title large
+#        underlay: false
+#      block body:
+#        text style: block body large
+#        underlay: false
+#    shape:
+#      block border:
+#        line style: normal
+#        fill: white
 
 OS TRI MBSE small:
   default:
