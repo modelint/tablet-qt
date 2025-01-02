@@ -3,14 +3,15 @@
 
 flatland: # App name (indented below all symbols defined for use in this app)
 
-  xUML class:
-    class face name:
-      1 mult: '1'
+  xUML Class Diagram:  # Drawing type
+    class face name: # Asset
+      1 mult: '1'  # Sticker name
       1c mult: '0..1'
       M mult: '1..*'
       Mc mult: '0..*'
+    generalization: # Asset
       superclass: '{disjoint, complete}'
 
-  Shlaer-Mellor:
-    class face name:
+  Shlaer-Mellor Class Diagram:
+    generalization:
       superclass: 'is a'
