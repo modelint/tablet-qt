@@ -3,9 +3,9 @@
 from pathlib import Path
 from tabletqt.tablet import Tablet
 from tabletqt.geometry_types import Rect_Size, Position
-# from tabletqt.graphics.symbol import Symbol
+from tabletqt.graphics.symbol import Symbol
 from tabletqt.graphics.sticker import Sticker
-# from tabletqt.graphics.rectangle_se import RectangleSE
+from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
 points_in_mm = 2.83465
@@ -41,9 +41,9 @@ class SketchSymbols:
 
         # r = RectangleSE.add(layer=dlayer, asset="state name compartment", lower_left=Position(100, 100),
         #                     size=Rect_Size(height=27, width=253))
-        # s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='final pseudo state', pin=Position(300, 300), angle=0)
-        # s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult',
-        #            pin=Position(300, 300), angle=0)
+        s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='final pseudo state', pin=Position(300, 300), angle=0)
+        s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult',
+                   pin=Position(400, 300), angle=0)
 
         DiagnosticMarker.add_cross_hair(dlayer, Position(300, 300))
         cls.tablet.render()
