@@ -2,11 +2,16 @@
 
 # System
 import logging
+from pathlib import Path
+from enum import Enum
 from typing import TYPE_CHECKING, List
 
 # Qt
 from PyQt6.QtWidgets import QGraphicsTextItem
 from PyQt6.QtGui import QFont, QFontMetrics, QColor
+
+# Modelint
+from mi_config.config import Config
 
 # Tablet
 import tabletqt.element as element
@@ -17,8 +22,10 @@ from tabletqt.exceptions import TabletBoundsExceeded
 
 if TYPE_CHECKING:
     from tabletqt.layer import Layer
+    from tabletqt.presentation import Presentation
 
 logger = logging.getLogger(__name__)
+config_dir = Path(__file__).parent / "configuration"
 
 # Constants
 tbox_xoffset = 4  # QT distance from text item origin (setPos) to lower left corner of text bounding box
@@ -33,6 +40,12 @@ underlay_offset_y = 3
 Qt_font_weight = {'normal': QFont.Weight.Normal, 'bold': QFont.Weight.Bold}
 """Maps an application style to a Qt specific font weight"""
 
+class TextBlockCorner(Enum):
+    """ Text Block corners """
+    UL = "upper left"
+    UR = "upper right"
+    LL = "lower left"
+    LR = "lower right"
 
 class TextElement:
     """
@@ -48,17 +61,62 @@ class TextElement:
     - Lower left -- Position in tablet coordinates of the entire text block
     - Text style {R16} -- Typeface, color, and other display properties to be applied
     """
+
+
+    stickers = None
+
     @classmethod
-    def line_size(cls, layer: 'Layer', asset: str, text_line: str) -> Rect_Size:
+    def load_stickers(cls):
+        """
+        Load all predefined sticker text from the stickers.yaml file
+        """
+        sticker_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'stickers':None})
+        cls.names = sticker_data.loaded_data['stickers']
+
+    @classmethod
+    def lower_left_pin(cls, asset: str, text_block: List[str], pin: Position, corner: TextBlockCorner) -> Position:
+        """
+        Given a text block and the position of one of its corners, return the position of its lower left corner
+
+        :param asset:  Defines the style properties for rendering the text
+        :param text_block:  Name of the sticker to be applied
+        :param pin: Location of some corner (like a thumbtack pin) in Tablet coordinates
+        :param corner: The corner to be pinned (upper left, lower right, ...)
+        :return: The position of the lower left corner, also in Tablet coordinates
+        """
+        # First we need the size of the text block with asset specified styling applied
+        tblock_size = cls.text_block_size(layer)
+        pass
+
+    @classmethod
+    def add_sticker(cls, layer: 'Layer', asset: str, name: str, pin: Position, corner: TextBlockCorner):
+        """
+        Place a Sticker at the requested location. The client app will provide a corner and a position, along with
+        the name of the Sticker, its style properties (asset) and the Layer where the Sticker will be added.
+
+        A sticker is always a singe line of text, so we don't need alignment specified
+
+        :param layer:  Place sticker on this layer
+        :param asset:  Defines the style properties for rendering the text
+        :param name:  Name of the sticker to be applied
+        :param pin: Location of some corner (like a thumbtack pin)
+        :param corner: The corner to be pinned (upper left, lower right, ...)
+        :return:
+        """
+        # Resolve position
+        pass
+
+    @classmethod
+    def line_size(cls, presentation: 'Presentation', asset: str, text_line: str) -> Rect_Size:
         """
         Returns the size of a line of text when rendered with the asset's text style
 
-        :param layer: Text is drawn on this Layer
+        :param presentation:  The Presentation
         :param asset: Determines text display style
         :param text_line: Line of text
         :return: Size of the text line ink area
         """
-        style_name = layer.Presentation.Text_presentation[asset]  # Look up the text style for this asset
+        style_name = presentation.Text_presentation[asset]  # Look up the text style for this asset
         style = StyleDB.text_style[style_name]
         font_name = StyleDB.typeface[style.typeface]
 
@@ -72,16 +130,16 @@ class TextElement:
         return Rect_Size(height=bound_rect.height(), width=bound_rect.width())
 
     @classmethod
-    def text_block_size(cls, layer: 'Layer', asset: str, text_block: List[str]) -> Rect_Size:
+    def text_block_size(cls, presentation: 'Presentation', asset: str, text_block: List[str]) -> Rect_Size:
         """
         Determines the dimensions of a rectangle bounding the text to be drawn.
 
-        :param layer: Text in block is drawn on this layer
+        :param presentation:
         :param asset: Name of the text asset to get display style properties
         :param text_block: A list of text lines to be displayed
         :return:  The display size of the text block
         """
-        style_name = layer.Presentation.Text_presentation[asset]  # Look up the text style for this asset
+        style_name = presentation.Text_presentation[asset]  # Look up the text style for this asset
         style = StyleDB.text_style[style_name]
         font_height = style.size
         spacing = font_height*style.spacing
@@ -90,9 +148,9 @@ class TextElement:
         num_lines = len(text_block)
         assert num_lines > 0, "Text block size requested for empty text block"
         # The text block is the width of its widest ink render extent
-        widths = [cls.line_size(layer=layer, asset=asset, text_line=line).width for line in text_block]
+        widths = [cls.line_size(presentation=presentation, asset=asset, text_line=line).width for line in text_block]
         widest_line = text_block[widths.index(max(widths))]
-        block_width = cls.line_size(layer=layer, asset=asset, text_line=widest_line).width
+        block_width = cls.line_size(presentation=presentation, asset=asset, text_line=widest_line).width
         block_height = num_lines*spacing - inter_line_spacing  # Deduct that one unneeded line of spacing on the top
 
         return Rect_Size(width=block_width, height=block_height)
@@ -133,7 +191,7 @@ class TextElement:
         # Qt positions using the upper left corner
         # We need to determine the height of the text bounding box to determine the upper left corner
         ll_dc = layer.Tablet.to_dc(Position(x=lower_left.x, y=lower_left.y))  # Convert to device coordinates
-        tl_size = cls.line_size(layer=layer, asset=asset, text_line=text)  # Get height of bounding box
+        tl_size = cls.line_size(presentation=layer.Presentation, asset=asset, text_line=text)  # Get height of bounding box
         # Compute upper left corner using experimentally observed offset
         ul = Position(x=ll_dc.x-tbox_xoffset, y=ll_dc.y - tl_size.height - tbox_yoffset)
 
@@ -152,6 +210,11 @@ class TextElement:
         except TabletBoundsExceeded:
             logger.warning(f"Asset: [{asset}] Text: [{text}] outside of tabletlib draw area")
             return
+
+    @classmethod
+    def add_xblock(cls, layer: 'Layer', asset: str, lower_left: Position, text: List[str],
+                  align: HorizAlign = HorizAlign.LEFT):
+        pass
 
 
     @classmethod
@@ -181,15 +244,15 @@ class TextElement:
         if align != HorizAlign.LEFT:
             # We'll need the total width of the block as a reference point
             longest_line = max(text, key=len)
-            block_width = cls.line_size(layer=layer, asset=asset, text_line=longest_line).width
+            block_width = cls.line_size(presentation=layer.Presentation, asset=asset, text_line=longest_line).width
         for line in text[::-1]:  # Reverse order since we are positioning lines from the bottom up
             # always zero indent from xpos when left aligned
             if align == HorizAlign.RIGHT:
                 assert block_width, "block_width not set"
-                line_width = cls.line_size(layer=layer, asset=asset, text_line=line).width
+                line_width = cls.line_size(presentation=layer.Presentation, asset=asset, text_line=line).width
                 x_indent = block_width - line_width  # indent past xpos by the difference
             if align == HorizAlign.CENTER:
-                line_width = cls.line_size(layer=layer, asset=asset, text_line=line).width
+                line_width = cls.line_size(presentation=layer.Presentation, asset=asset, text_line=line).width
                 x_indent = (block_width - line_width) / 2  # indent 1/2 of non text span
             cls.add_line(layer=layer, asset=asset, lower_left=Position(xpos+x_indent, ypos), text=line)
             ypos += spacing

@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import QApplication
 from tabletqt.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
 from tabletqt.geometry_types import Rect_Size, Position
 from tabletqt.styledb import StyleDB
-from tabletqt.graphics.sticker import Sticker
+from tabletqt.graphics.text_element import TextElement
 from tabletqt.layer import Layer
 from tabletqt.scene_view import MainWindow
 from tabletqt.configuration.styles import FloatRGB
@@ -82,7 +82,7 @@ class Tablet:
         # Load all of the common font, color, etc. styles used by all Presentations from yaml files
         StyleDB.load_config_files()
         # Load all of the sticker names
-        Sticker.load_names()
+        TextElement.load_stickers()
 
         # Establish a system default layer ordering. Not all of them will be used in any given
         # View, but this is the draw order from bottom-most layer upward
