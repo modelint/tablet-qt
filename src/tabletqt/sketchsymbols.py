@@ -4,7 +4,7 @@ from pathlib import Path
 from tabletqt.tablet import Tablet
 from tabletqt.geometry_types import Rect_Size, Position
 from tabletqt.graphics.symbol import Symbol
-from tabletqt.graphics.sticker import Sticker
+from tabletqt.graphics.text_element import TextElement, TextBlockCorner
 from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
@@ -36,8 +36,10 @@ class SketchSymbols:
         # asset = state name compartment
         # size = 27h, 253w
 
-        Sticker.add(layer=dlayer, asset='class face name', name='1c mult', pin=Position(300, 300))
-        Sticker.add(layer=dlayer, asset='generalization', name='superclass', pin=Position(300, 275))
+        TextElement.add_sticker(layer=dlayer, asset='class face name', name='1c mult',
+                                pin=Position(300, 300), corner=TextBlockCorner.LR)
+        TextElement.add_sticker(layer=dlayer, asset='generalization', name='superclass',
+                                pin=Position(300, 275), corner=TextBlockCorner.LL)
 
         # r = RectangleSE.add(layer=dlayer, asset="state name compartment", lower_left=Position(100, 100),
         #                     size=Rect_Size(height=27, width=253))
@@ -46,5 +48,6 @@ class SketchSymbols:
                    pin=Position(400, 300), angle=0)
 
         DiagnosticMarker.add_cross_hair(dlayer, Position(300, 300))
+        DiagnosticMarker.add_cross_hair(dlayer, Position(300, 275))
         cls.tablet.render()
 

@@ -94,11 +94,11 @@ class TextElement:
 
         # Compute from the other three possible corners
         if corner == TextBlockCorner.UL:  # upper left
-            return Position(pin.x, pin.y+tblock_size.height)
+            return Position(pin.x, pin.y-tblock_size.height)
         if corner == TextBlockCorner.LR:  # lower right
-            return Position(pin.x+tblock_size.width, pin.y)
+            return Position(pin.x-tblock_size.width, pin.y)
         if corner == TextBlockCorner.UR:  # upper right
-            return Position(pin.x+tblock_size.width, pin.y+tblock_size.height)
+            return Position(pin.x-tblock_size.width, pin.y-tblock_size.height)
 
     @classmethod
     def add_sticker(cls, layer: 'Layer', asset: str, name: str, pin: Position, corner: TextBlockCorner):
@@ -115,9 +115,16 @@ class TextElement:
         :param corner: The corner to be pinned (upper left, lower right, ...)
         :return:
         """
+        # Get the text block
+        app = layer.Tablet.client_app_name
+        sticker_text = cls.names[app][layer.Drawing_type][asset][name]
 
         # Resolve position
-        pass
+        ll_corner = cls.lower_left_pin(presentation=layer.Presentation, asset=asset, text_block=[sticker_text],
+                                       pin=pin, corner=corner)
+
+        # Add the sticker content as a line of text (sticker's are always a single line of text)
+        cls.add_line(layer=layer, asset=asset, lower_left=ll_corner, text=sticker_text)
 
     @classmethod
     def line_size(cls, presentation: 'Presentation', asset: str, text_line: str) -> Rect_Size:
