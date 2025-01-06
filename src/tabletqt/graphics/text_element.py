@@ -40,12 +40,14 @@ underlay_offset_y = 3
 Qt_font_weight = {'normal': QFont.Weight.Normal, 'bold': QFont.Weight.Bold}
 """Maps an application style to a Qt specific font weight"""
 
+
 class TextBlockCorner(Enum):
     """ Text Block corners """
     UL = "upper left"
     UR = "upper right"
     LL = "lower left"
     LR = "lower right"
+
 
 class TextElement:
     """
@@ -62,7 +64,6 @@ class TextElement:
     - Text style {R16} -- Typeface, color, and other display properties to be applied
     """
 
-
     stickers = None
 
     @classmethod
@@ -70,11 +71,12 @@ class TextElement:
         """
         Load all predefined sticker text from the stickers.yaml file
         """
-        sticker_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'stickers':None})
+        sticker_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'stickers': None})
         cls.names = sticker_data.loaded_data['stickers']
 
     @classmethod
-    def lower_left_pin(cls, presentation: 'Presentation', asset: str, text_block: List[str], pin: Position, corner: TextBlockCorner) -> Position:
+    def lower_left_pin(cls, presentation: 'Presentation', asset: str, text_block: List[str], pin: Position,
+                       corner: TextBlockCorner) -> Position:
         """
         Given a text block and the position of one of its corners, return the position of its lower left corner
 
@@ -94,11 +96,11 @@ class TextElement:
 
         # Compute from the other three possible corners
         if corner == TextBlockCorner.UL:  # upper left
-            return Position(pin.x, pin.y-tblock_size.height)
+            return Position(pin.x, pin.y - tblock_size.height)
         if corner == TextBlockCorner.LR:  # lower right
-            return Position(pin.x-tblock_size.width, pin.y)
+            return Position(pin.x - tblock_size.width, pin.y)
         if corner == TextBlockCorner.UR:  # upper right
-            return Position(pin.x-tblock_size.width, pin.y-tblock_size.height)
+            return Position(pin.x - tblock_size.width, pin.y - tblock_size.height)
 
     @classmethod
     def add_sticker(cls, layer: 'Layer', asset: str, name: str, pin: Position, corner: TextBlockCorner):
@@ -162,7 +164,7 @@ class TextElement:
         style_name = presentation.Text_presentation[asset]  # Look up the text style for this asset
         style = StyleDB.text_style[style_name]
         font_height = style.size
-        spacing = font_height*style.spacing
+        spacing = font_height * style.spacing
         inter_line_spacing = spacing - font_height  # Space between two lines
 
         num_lines = len(text_block)
@@ -171,7 +173,7 @@ class TextElement:
         widths = [cls.line_size(presentation=presentation, asset=asset, text_line=line).width for line in text_block]
         widest_line = text_block[widths.index(max(widths))]
         block_width = cls.line_size(presentation=presentation, asset=asset, text_line=widest_line).width
-        block_height = num_lines*spacing - inter_line_spacing  # Deduct that one unneeded line of spacing on the top
+        block_height = num_lines * spacing - inter_line_spacing  # Deduct that one unneeded line of spacing on the top
 
         return Rect_Size(width=block_width, height=block_height)
 
@@ -211,14 +213,16 @@ class TextElement:
         # Qt positions using the upper left corner
         # We need to determine the height of the text bounding box to determine the upper left corner
         ll_dc = layer.Tablet.to_dc(Position(x=lower_left.x, y=lower_left.y))  # Convert to device coordinates
-        tl_size = cls.line_size(presentation=layer.Presentation, asset=asset, text_line=text)  # Get height of bounding box
+        tl_size = cls.line_size(presentation=layer.Presentation, asset=asset,
+                                text_line=text)  # Get height of bounding box
         # Compute upper left corner using experimentally observed offset
-        ul = Position(x=ll_dc.x-tbox_xoffset, y=ll_dc.y - tl_size.height - tbox_yoffset)
+        ul = Position(x=ll_dc.x - tbox_xoffset, y=ll_dc.y - tl_size.height - tbox_yoffset)
 
         if asset in layer.Presentation.Underlays:
             # Compute a rectangle slightly larger than the text area to underlay the text
-            underlay_size = Rect_Size(height=tl_size.height+underlay_margin_v, width=tl_size.width+underlay_margin_h)
-            underlay_pos = Position(lower_left.x-underlay_offset_x, lower_left.y-underlay_offset_y)
+            underlay_size = Rect_Size(height=tl_size.height + underlay_margin_v,
+                                      width=tl_size.width + underlay_margin_h)
+            underlay_pos = Position(lower_left.x - underlay_offset_x, lower_left.y - underlay_offset_y)
             cls.add_underlay(layer=layer, lower_left=underlay_pos, size=underlay_size)
         try:
             layer.Text.append(
@@ -232,14 +236,28 @@ class TextElement:
             return
 
     @classmethod
-    def add_xblock(cls, layer: 'Layer', asset: str, lower_left: Position, text: List[str],
-                  align: HorizAlign = HorizAlign.LEFT):
-        pass
+    def pin_block(cls, layer: 'Layer', asset: str, text: List[str], pin: Position,
+                  corner: TextBlockCorner, align: HorizAlign = HorizAlign.LEFT):
+        """
+        Pin a text block to a Layer specifying any of the four block corners. This simplifies
+        box placement computations for the user.
 
+        :param layer:
+        :param asset:
+        :param lower_left:
+        :param text:
+        :param pin:
+        :param corner:
+        :param align:
+        """
+        # Resolve position
+        ll_corner = cls.lower_left_pin(presentation=layer.Presentation, asset=asset, text_block=text,
+                                       pin=pin, corner=corner)
+        cls.add_block(layer=layer, asset=asset, lower_left=ll_corner, text=text, align=align)
 
     @classmethod
     def add_block(cls, layer: 'Layer', asset: str, lower_left: Position, text: List[str],
-                       align: HorizAlign = HorizAlign.LEFT):
+                  align: HorizAlign = HorizAlign.LEFT):
         """
         Add all lines in this block of text to the Tablet.
 
@@ -255,7 +273,7 @@ class TextElement:
         style_name = layer.Presentation.Text_presentation[asset]  # Look up the text style for this asset
         style = StyleDB.text_style[style_name]
         font_height = style.size
-        spacing = font_height*style.spacing
+        spacing = font_height * style.spacing
 
         # Get height of one line (any will do since they all use the same text style)
         xpos, ypos = lower_left  # Initialize at lower left corner
@@ -274,7 +292,7 @@ class TextElement:
             if align == HorizAlign.CENTER:
                 line_width = cls.line_size(presentation=layer.Presentation, asset=asset, text_line=line).width
                 x_indent = (block_width - line_width) / 2  # indent 1/2 of non text span
-            cls.add_line(layer=layer, asset=asset, lower_left=Position(xpos+x_indent, ypos), text=line)
+            cls.add_line(layer=layer, asset=asset, lower_left=Position(xpos + x_indent, ypos), text=line)
             ypos += spacing
 
     @classmethod
