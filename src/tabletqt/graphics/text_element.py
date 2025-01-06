@@ -74,19 +74,31 @@ class TextElement:
         cls.names = sticker_data.loaded_data['stickers']
 
     @classmethod
-    def lower_left_pin(cls, asset: str, text_block: List[str], pin: Position, corner: TextBlockCorner) -> Position:
+    def lower_left_pin(cls, presentation: 'Presentation', asset: str, text_block: List[str], pin: Position, corner: TextBlockCorner) -> Position:
         """
         Given a text block and the position of one of its corners, return the position of its lower left corner
 
-        :param asset:  Defines the style properties for rendering the text
+        :param presentation: The target layer's Presentation
+        :param asset:  Name of asset that defines the style properties for rendering the text
         :param text_block:  Name of the sticker to be applied
         :param pin: Location of some corner (like a thumbtack pin) in Tablet coordinates
         :param corner: The corner to be pinned (upper left, lower right, ...)
         :return: The position of the lower left corner, also in Tablet coordinates
         """
+        # Check the simple case first
+        if corner == TextBlockCorner.LL:
+            return pin  # No need to compute, we already have a lower left corner
+
         # First we need the size of the text block with asset specified styling applied
-        tblock_size = cls.text_block_size(layer)
-        pass
+        tblock_size = cls.text_block_size(presentation=presentation, asset=asset, text_block=text_block)
+
+        # Compute from the other three possible corners
+        if corner == TextBlockCorner.UL:  # upper left
+            return Position(pin.x, pin.y+tblock_size.height)
+        if corner == TextBlockCorner.LR:  # lower right
+            return Position(pin.x+tblock_size.width, pin.y)
+        if corner == TextBlockCorner.UR:  # upper right
+            return Position(pin.x+tblock_size.width, pin.y+tblock_size.height)
 
     @classmethod
     def add_sticker(cls, layer: 'Layer', asset: str, name: str, pin: Position, corner: TextBlockCorner):
@@ -103,6 +115,7 @@ class TextElement:
         :param corner: The corner to be pinned (upper left, lower right, ...)
         :return:
         """
+
         # Resolve position
         pass
 
