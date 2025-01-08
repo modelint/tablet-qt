@@ -2,7 +2,6 @@
 tabletqt.py – A multi-layered drawing surface implemented on top of the Qt GUI framework
 """
 # System
-import sys  # For fatal error exit
 import logging
 from datetime import datetime  # For initial log entry
 from pathlib import Path

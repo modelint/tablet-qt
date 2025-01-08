@@ -211,6 +211,9 @@ xUML Class Diagram:
       class face name:
         text style: p9body
         underlay: false
+      association name:
+        text style: p9body
+        underlay: false
       superclass face name:
         text style: p9body
         underlay: true

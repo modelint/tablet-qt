@@ -35,19 +35,22 @@ class SketchSymbols:
         # llc = 1153.1, 1101.5
         # asset = state name compartment
         # size = 27h, 253w
+
         vphrase = ["draws", "boundary with"]
 
-        TextElement.pin_block(layer=dlayer, asset='class face name', pin=Position(300,300), text=vphrase,
-                              corner=TextBlockCorner.UR, align=HorizAlign.RIGHT)
+        # TextElement.pin_block(layer=dlayer, asset='class face name', pin=Position(300,300), text=vphrase,
+        #                       corner=TextBlockCorner.UR, align=HorizAlign.RIGHT)
 
-        # TextElement.add_sticker(layer=dlayer, asset='class face name', name='1c mult',
-        #                         pin=Position(300, 300), corner=TextBlockCorner.LR)
-        # TextElement.add_sticker(layer=dlayer, asset='generalization', name='superclass',
-        #                         pin=Position(300, 275), corner=TextBlockCorner.UL)
+        TextElement.add_sticker(layer=dlayer, asset='class face name', name='1c mult',
+                                pin=Position(300, 300), corner=TextBlockCorner.LL)
+        # TextElement.add_sticker(layer=dlayer, asset='superclass face name', name='superclass',
+        #                         pin=Position(300, 275), corner=TextBlockCorner.LL)
+        TextElement.add_sticker(layer=dlayer, asset='association name', name='1 mult',
+                                pin=Position(300, 275), corner=TextBlockCorner.LL)
 
         # r = RectangleSE.add(layer=dlayer, asset="state name compartment", lower_left=Position(100, 100),
         #                     size=Rect_Size(height=27, width=253))
-        s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='final pseudo state', pin=Position(300, 300), angle=0)
+        # s = Symbol(app='flatland', layer=dlayer, group='Xuml state', name='final pseudo state', pin=Position(300, 300), angle=0)
         s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult',
                    pin=Position(400, 300), angle=0)
 

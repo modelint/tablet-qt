@@ -4,7 +4,6 @@ presentation.py – Presentation class in View domain
 # System
 import logging
 from collections import namedtuple
-import yaml
 from pathlib import Path
 
 # Modelint
@@ -50,7 +49,11 @@ class Presentation:
 
         c = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'drawing_types':None})
         dtype_data = c.loaded_data['drawing_types']
-        my_data = dtype_data[self.Drawing_type][self.Name]
+        try:
+            my_data = dtype_data[self.Drawing_type][self.Name]
+        except KeyError:
+            _logger.error(f"No presentation [{self.Name}] defined for drawing type [{self.Drawing_type}]")
+            raise
 
         # Load text presentations
         for asset_name, v in my_data['text'].items():

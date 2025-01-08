@@ -118,8 +118,19 @@ class TextElement:
         :return:
         """
         # Get the text block
-        app = layer.Tablet.client_app_name
-        sticker_text = cls.names[app][layer.Drawing_type][asset][name]
+        try:
+            app = layer.Tablet.client_app_name
+        except KeyError:
+            logger.error(f"No diagram type [{layer.Drawing_type} defined for application "
+                             f"{layer.Tablet.client_app_name}")
+            raise
+
+        drawing_type = cls.names[app][layer.Drawing_type]
+        try:
+            sticker_text = drawing_type[asset][name]
+        except KeyError:
+            # No sticker defined for this asset and name
+            return
 
         # Resolve position
         ll_corner = cls.lower_left_pin(presentation=layer.Presentation, asset=asset, text_block=[sticker_text],
