@@ -79,6 +79,7 @@ class Layer:
             self.Presentation = Presentation(name=presentation, drawing_type=self.Drawing_type)
             self.Tablet.Presentations[pres_index] = self.Presentation
 
+
     def render(self):
         """Renders all Elements on this Layer"""
 

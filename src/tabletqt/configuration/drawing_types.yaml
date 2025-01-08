@@ -211,6 +211,9 @@ xUML Class Diagram:
       class face name:
         text style: p9body
         underlay: false
+      superclass face name:
+        text style: p9body
+        underlay: true
       see also:
         text style: p9italic
         underlay: false
@@ -331,7 +334,7 @@ Starr Class Diagram:
         underlay: false
       generalization:
         text style: p9body
-        underlay: false
+        underlay: true
       class face name:
         text style: p9body
         underlay: false

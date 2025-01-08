@@ -9,7 +9,9 @@ flatland: # App name (indented below all symbols defined for use in this app)
       1c mult: '0..1'
       M mult: '1..*'
       Mc mult: '0..*'
-    generalization: # Asset
+    association name:
+      M mult: '{M}'
+    superclass face name: # Asset
       superclass: '{disjoint, complete}'
 
   Shlaer-Mellor Class Diagram:
