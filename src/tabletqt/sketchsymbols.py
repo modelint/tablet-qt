@@ -24,7 +24,7 @@ class SketchSymbols:
         # dtype = "xUML State Machine Diagram"
         output_path = Path(__file__).parent.parent.parent / "working" / "tabletqt.pdf"
         cls.tablet = Tablet(app='flatland', size=cls.size, output_file=output_path, drawing_type=dtype,
-                            presentation="default", layer="diagram", show_window=True, background_color='blue steel')
+                            presentation="default", layer="diagram", show_window=False, background_color='blue steel')
 
     @classmethod
     def sketch(cls):
@@ -54,7 +54,9 @@ class SketchSymbols:
         s = Symbol(app='flatland', layer=dlayer, group='Starr class', name='M mult',
                    pin=Position(400, 300), angle=0)
 
-        DiagnosticMarker.add_cross_hair(dlayer, Position(300, 300))
+        DiagnosticMarker.add_raw_rectangle(layer=dlayer, upper_left=Position(10, 580),
+                                           size=Rect_Size(width=800,height=580))
+        DiagnosticMarker.add_cross_hair(dlayer, Position(10, 580))
         # DiagnosticMarker.add_cross_hair(dlayer, Position(300, 275))
         cls.tablet.render()
 

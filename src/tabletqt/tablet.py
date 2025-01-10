@@ -144,8 +144,7 @@ class Tablet:
         """
         # Create and show the drawing window
         [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
-        if self.show_window:
-            self.Window.show()
+        self.Window.show()
 
         # Save the rendered tabletqt as a PDF for alternate viewing
         self.View.save_as_pdf(self.Output_file)
