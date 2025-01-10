@@ -64,7 +64,7 @@ class Tablet:
     """
 
     def __init__(self, app: str, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
-                 layer: str, background_color: Optional[str] = 'white'):
+                 layer: str, show_window: bool = False, background_color: Optional[str] = 'white'):
         """
         Constructs a new Tablet instance with a single initial predefined Layer
 
@@ -87,6 +87,7 @@ class Tablet:
         # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
         self.client_app_name = app
+        self.show_window = show_window
         self.background_color = StyleDB.color[background_color]  # This is referenced when filling text underlay rects
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
@@ -143,14 +144,16 @@ class Tablet:
         """
         # Create and show the drawing window
         [self.layers[name].render() for name in self.layer_order if self.layers.get(name)]
-        self.Window.show()
+        if self.show_window:
+            self.Window.show()
 
         # Save the rendered tabletqt as a PDF for alternate viewing
         self.View.save_as_pdf(self.Output_file)
 
         # Run the Qt GUI event loop
         # sys.exit(self.App.exec())
-        self.App.exec()
+        if self.show_window:
+            self.App.exec()
 
     def to_dc(self, tablet_coord: Position) -> Position:
         """
