@@ -26,6 +26,7 @@ class SketchSymbols:
         cls.tablet = Tablet(app='flatland', size=cls.size, output_file=output_path, drawing_type=dtype,
                             presentation="default", layer="diagram", show_window=False, background_color='blue steel')
 
+
     @classmethod
     def sketch(cls):
 

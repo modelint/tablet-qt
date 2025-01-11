@@ -21,6 +21,9 @@ from tabletqt.configuration.styles import FloatRGB
 
 default_background = FloatRGB(255, 255, 255)  # White
 
+gui_app = QApplication([]) # Declare it here so it is not garbage collected on repeated instantiation of Tablet
+# We create a Qt App instance just once on the import and then keep using the same one
+
 class Tablet:
     """
     The Tablet class is part of the Drawing domain which provides a service to an application
@@ -91,7 +94,7 @@ class Tablet:
         self.background_color = StyleDB.color[background_color]  # This is referenced when filling text underlay rects
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
-        self.App = QApplication([])  # QT Application (must be created before any QT widgets)
+        self.App = gui_app  # QT Application (must be created before any QT widgets)
         self.Window = MainWindow(self.client_app_name, size, self.background_color)  # QT widget for drawing 2D elements
         self.View = self.Window.graphics_view
 
