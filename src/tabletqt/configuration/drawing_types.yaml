@@ -29,6 +29,30 @@ Grid Diagnostic: # Drawing type name
         text style: coordinate
         underlay: false
 
+Model Integration Snippet Small Frame:
+  default:
+    text:
+      # free field assets
+      title:
+        text style: block title medium
+        underlay: false
+#      document id:
+#        text style: block body small
+#        underlay: false
+    shape:
+      block border:
+        line style: normal
+        fill: white
+  blueprint:
+    text:
+      title:
+        text style: bp block title medium
+        underlay: false
+    shape:
+      block border:
+        line style: normal
+        fill: white
+
 Model Integration Diagram Large Frame:
   default:
     text:
@@ -56,27 +80,61 @@ Model Integration Diagram Large Frame:
       block border:
         line style: double
         fill: white
+  blueprint:
+    text:
+      # free field assets
+      title:
+        text style: bp free title large
+        underlay: false
+      copyright notice:
+        text style: bp boilerplate
+        underlay: false
+      # Title block assets
+      main:
+        text style: bp block title large
+        underlay: false
+      bottom:
+        text style: bp block body large
+        underlay: false
+      rtop:
+        text style: bp block body large
+        underlay: false
+      rbottom:
+        text style: bp block body large
+        underlay: false
+    shape:
+      block border:
+        line style: bp double
+        fill: blueprint
 
 Model Integration Diagram Medium Frame:
   default:
-    # free field assets
-    title:
-      text style: free title medium
-      underlay: false
-    copyright notice:
-      text style: boilerplate
-      underlay: False
-    # Title block assets
-    block title:
-      text style: block title medium
-      underlay: false
-    Block body:
-      text style: block body medium
-      underlay: false
+    text:
+      # free field assets
+      title:
+        text style: free title large
+        underlay: false
+      copyright notice:
+        text style: boilerplate
+        underlay: false
+      # Title block assets
+      main:
+        text style: block title medium
+        underlay: false
+      bottom:
+        text style: block body medium
+        underlay: false
+      rtop:
+        text style: block body medium
+        underlay: false
+      rbottom:
+        text style: block body medium
+        underlay: false
     shape:
       block border:
         line style: normal
         fill: white
+
 
 Model Integration Diagram Small Frame:
   default:
@@ -358,6 +416,77 @@ Starr Class Diagram:
         underlay: false
       imported class attribute:
         text style: p9body
+        underlay: false
+  blueprint:
+    shape:
+      class name compartment:
+        line style: bp normal
+        fill: blueprint
+      class attribute compartment:
+        line style: bp normal
+        fill: blueprint
+      class method compartment:
+        line style: bp normal
+        fill: blueprint
+      binary association connector:
+        line style: bp normal
+      generalization connector:
+        line style: bp normal
+      association stem:
+        line style: bp normal
+      grid:
+        line style: hide
+      margin:
+        line style: hide
+      imported class name compartment:
+        line style: bp dashed
+        fill: blueprint
+      imported class attribute compartment:
+        line style: bp dashed
+        fill: blueprint
+      # For diagnostics only
+      shoot:
+        line style: bp dashed
+      # Symbols
+      solid arrow:
+        line style: bp normal
+        fill: blueprint
+      hollow arrow:
+        line style: bp normal
+        fill: blueprint
+      gen arrow:
+        line style: bp normal
+        fill: blueprint
+    text:
+      label:
+        text style: bp p9body
+        underlay: false
+      binary association:
+        text style: bp p9body
+        underlay: false
+      generalization:
+        text style: bp p9body
+        underlay: true
+      class face name:
+        text style: bp p9body
+        underlay: false
+      see also:
+        text style: bp p9italic
+        underlay: false
+      class name:
+        text style: bp p12title
+        underlay: false
+      class attribute:
+        text style: bp p9body
+        underlay: false
+      class method:
+        text style: bp p9body
+        underlay: false
+      imported class name:
+        text style: bp p12title
+        underlay: false
+      imported class attribute:
+        text style: bp p9body
         underlay: false
 
 xUML State Machine Diagram:
