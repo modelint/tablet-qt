@@ -1,0 +1,25 @@
+// Tablet Domain / Render Subsystem Class Diagram
+diagram class
+notation Starr
+presentation default
+orientation landscape
+color harolds purple crayon
+sheet C
+padding l300 b175
+frame Model Integration Diagram
+frame_presentation default
+nodes
+    Configuration 10,4
+    Display Element 3,4-5
+    Layer 6,2
+    Linear Display Element/2 3-4,6
+    Rectangular Display Element/2 2,6
+    Render Level 3,2
+    Tablet 9,2
+connectors
+    +R100 : +/2 b|Tablet : +/2 t*|Layer
+    -OR101.2 : -/1 l+1|Layer : -/2 t-2|Layer : L1 L7R-1
+    -OR102.2 : -/1 l+1|Render Level : -/2 t-2|Render Level : L1 L4R-1
+    +R103 : -/1 r|Render Level : -/1 l*|Display Element
+    +R104 : r|Display Element { l|Linear Display Element, l|Rectangular Display Element }
+    +R105 : +/1 b|Layer : +/1 t*|Render Level

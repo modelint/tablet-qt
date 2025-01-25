@@ -1,0 +1,87 @@
+metadata
+    Title : Render Subsystem Class Diagram / Tablet Domain
+    Author : Leon Starr
+    Document ID : mint.tablet.td.1a
+    Version : 0.2.0
+    Modification date : January 24, 2025
+    Organization : Model Integration, LLC / www.modelint.com
+    Copyright notice > MIT
+    Organization logo > mint
+domain Tablet, TAB
+subsystem Render, R 100-149
+class Configuration
+attributes
+    ID : Configuration ID {I}
+    Image path : Path
+    Config path : Path
+    App name : Application Name
+--
+class Display Element
+attributes
+    ID : Display Element ID {I}
+    Render level : Render Level Name {R103}
+    Layer : Layer Name {R103}
+    Tablet : Tablet ID {R103}
+--
+class Layer
+attributes
+    Name : Layer Name {I}
+    Tablet : Tablet ID {I, I2, R100}
+    Z coord : Ordinal {I2, OR101}
+    Presentation : Name {R2}
+    Drawing type : Drawing Type Name {R2}
+--
+class Linear Display Element
+attributes
+    ID : Display Element ID {I, R104}
+    From here : Position
+    To here : Position
+--
+class Rectangular Display Element
+attributes
+    ID : Display Element ID {I, R104}
+    Lower left corner : Position
+    Size : Rect_Size
+--
+class Render Level
+attributes
+    Name : Render Level Name {I}
+    Layer : Layer Name {I, I2, R105}
+    Tablet : Tablet ID {I, I2, R105}
+    Draw order : Ordinal {I2, OR102}
+--
+class Tablet
+attributes
+    ID : Tablet ID {I}
+    Size : Rect_Size
+--
+relationships
+    R100
+    organizes content on z axis with, M Layer
+    holds z axis coordinate content of, 1 Tablet
+    Layer.Tablet -> Tablet.ID
+--
+    OR101
+    rendered below / rendered above, Layer
+    Z coord : I2
+--
+    OR102
+    rendered below / rendered above, Render Level
+    Draw order : I2
+--
+    R103
+    is rendered on, 1 Render Level
+    renders, Mc Display Element
+    Display Element.(Layer, Tablet) -> Render Level.(Layer, Tablet)
+--
+    R104
+    Display Element +
+        Linear Display Element
+        Rectangular Display Element
+    <subclass>.ID -> Display Element.ID
+--
+    R105
+    renders content on, 1 Layer
+    renders content by, M Render Level
+    Render Level.(Layer, Tablet) -> Layer.(Name, Tablet)
+--

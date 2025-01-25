@@ -1,0 +1,67 @@
+// Drawing Domain / Tablet Subsystem Class Diagram
+// Model layout sheet
+
+diagram class
+notation Starr
+presentation default
+orientation landscape
+color olive
+sheet D
+padding l300 b270
+frame Model Integration Diagram
+frame_presentation default
+nodes
+    Asset 5,3
+    Asset Presentation 6,4
+    Circle 11,9
+    Closed Path 13,9
+    Component 9-10,8
+    Component Style 8,10
+    Color Usage 3,9
+    Corner Spec 2,7
+    Drawing Type 7,1
+    Drawn Asset 3-4,2
+    Image 11,2
+    Layer 8-9,3
+    Line Presentation/2 4-5,5-6
+    Line Style 6,10
+    Open Path 13,7
+    Path 11,7-8
+    Presentation 7,3
+    Rectangle Presentation/2 4-5,7
+    Shape 11-12,11
+    Shape Fill 9,12
+    Shape Presentation/2 6,6
+    Sticker 1-2,3-4
+    Symbol Presentation/2 7-8,5-6
+    Symbol 9-10,5-6
+    Text Asset 3-4,3-4
+    Text Presentation/2 1,5-6
+    Text Style 1,8
+    Typeface 1,10-11
+    Usage Fill 4-5,10
+    Vertex 11,5
+connectors
+    +R1 : -/2 r|Drawing Type : -/2 l*|Presentation
+    -R2 : +/1 b*|Layer : +/1 t|Presentation
+    -R3 : +/2 b|Drawing Type : +/1 l|Asset
+    -R4 : +/1 t|Asset : +/1 b*|Presentation, l|Asset Presentation
+    +R5 : r|Asset Presentation { l-1|Symbol Presentation, l|Shape Presentation, l|Text Presentation }
+    +R6 : b|Shape Presentation { t|Line Presentation, t|Rectangle Presentation }
+    +R7 : -/2 r|Text Presentation : -/2 l*|Text Style
+    +R11 : -/1 r|Text Style : -/1 l*|Typeface
+    +R12 : t|Path { b|Open Path, b|Closed Path }
+    -R14 : +/2 b|Component Style : +/2 t*|Line Style
+    +R15 : +/2 r+1|Shape Presentation : +/2 l*|Line Style
+    +R17 : -/2 l|Path : -/1 r*|Vertex
+    -R18 : +/2 t*|Corner Spec : +/2 b|Rectangle Presentation
+    -R20 : +/2 b|Text Asset : +/2 t*|Sticker
+    +R23.2 : +/1 r-2|Shape Presentation : -/1 t|Color Usage, l|Usage Fill
+    -R25 : +/1 t|Symbol Presentation : +/1 b*|Symbol
+    -R26 : +/2 r|Symbol : +/1 l*|Component
+    -R27 : -/1 r|Symbol Presentation : +/2 b|Component, l|Component Style
+    +R28.2 : +/2 t|Drawing Type : -/1 l|Symbol
+    +R29 : t|Component { b|Path, b|Circle }
+    +R30 : l|Shape { r|Closed Path, r|Circle }
+    -R31 : +/1 b|Shape : -/1 r|Component Style, l|Shape Fill
+    +R32 : b|Asset { t|Drawn Asset, t|Text Asset }

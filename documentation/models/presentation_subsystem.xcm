@@ -1,0 +1,336 @@
+metadata
+    Title : Presentation Subsystem Class Diagram / Tablet Domain
+    Author : Leon Starr
+    Document ID : mint.tablet.td.2a
+    Version : 0.2.0
+    Modification date : January 24, 2025
+    Organization : Model Integration, LLC / www.modelint.com
+    Copyright notice > MIT
+    Organization logo > mint
+domain Tablet, TAB
+subsystem Presentation, PRES 1-99
+class Asset
+attributes
+    Name : Asset Name {I}
+    Drawing type : Drawing Type Name {I, R3}
+    Form : Text_Shape_Symbol
+--
+class Asset Presentation
+attributes
+    Asset : Asset Name {I, R4}
+    Presentation : Name {I, R4}
+    Drawing type : Drawing Type Name {I, R4}
+--
+class Circle
+attributes
+    Name : Component Name {I, R22}
+    Symbol : Symbol Name {I, R22}
+    Drawing type : Drawing Type Name {I, R22}
+    Radius : Points
+    Center : Position
+--
+class Closed Path
+attributes
+    Name : Component Name {I, R12}
+    Symbol : Symbol Name {I, R12}
+    Drawing type : Drawing Type Name {I, R12}
+--
+class Component
+attributes
+    Name : Component Name {I}
+    Symbol : Symbol Name {I, R26}
+    Drawing type : Drawing Type Name {I, R26}
+--
+class Component Style
+attributes
+    Component : Component Name {I, R27}
+    Symbol : Symbol Name {I, R27}
+    Asset : Asset Name {I, R27}
+    Presentation : Presentation Name {I, R27}
+    Drawing type : Drawing Type Name {I, R27}
+    Line style : Style Name {R14}
+--
+class Color Usage
+attributes
+    Name : Usage Name {I}
+    Fill Color : Color
+--
+class Corner Spec
+attributes
+    Asset : Asset Name {I, R18}
+    Presentation : Name {I, R18}
+    Drawing type : Drawing Type Name {I, R18}
+    Radius : Distance
+    Top : Boolean
+    Bottom : Boolean
+--
+class Drawing Type
+attributes
+    Name : Name {I}
+--
+class Drawn Asset
+attributes
+    Name : Asset Name {I, R32}
+    Drawing type : Drawing Type Name {I, R32}
+    Form : Shape_Symbol
+--
+class Image
+attributes
+    Name : Image Name {I}
+    Path : Path
+--
+class Layer <import:Render>
+attributes
+    Name {I}
+--
+class Line Presentation
+attributes
+    Asset : Asset Name {I, R6}
+    Presentation : Name {I, R6}
+    Drawing type : Drawing Type Name {I, R6}
+--
+class Line Style
+attributes
+    Name : Style Name {I}
+    Width : Distance
+    Pattern : Line Pattern
+    Color : Color
+--
+class Open Path
+attributes
+    Name : Component Name {I, R12}
+    Symbol : Symbol Name {I, R12}
+    Drawing type : Drawing Type Name {I, R12}
+--
+class Path
+attributes
+    Name : Component Name {I}
+    Symbol : Symbol Name {I, R26}
+    Drawing type : Drawing Type Name {I, R26}
+--
+class Presentation
+attributes
+    Name : Presentation Name {I}
+    Drawing type : Drawing Type Name {I, R1}
+--
+class Rectangle Presentation
+attributes
+    Asset : Asset Name {I, R6}
+    Presentation : Name {I, R6}
+    Drawing type : Drawing Type Name {I, R6}
+    Fill Color : Color
+--
+class Shape
+attributes
+    Name : Component Name {I}
+    Symbol : Symbol Name {I}
+    Drawing type : Drawing Type Name {I}
+--
+class Shape Fill
+attributes
+    Shape : Component Name {I, R31}
+    Symbol : Symbol Name {I, R31}
+    Asset : Asset Name {I, R31}
+    Presentation : Presentation Name {I, R31}
+    Drawing type : Drawing Type Name {I, R31}
+    Color : Color
+--
+class Shape Presentation
+attributes
+    Asset : Asset Name {I, R5}
+    Presentation : Name {I, R5}
+    Drawing type : Drawing Type Name {I, R5}
+    Line style : Style Name {R15}
+--
+class Sticker
+attributes
+    Name : Sticker Name {I}
+    Content : Sticker Text
+    Asset : Asset Name {I, R20}
+    Drawing type : Drawing Type Name {I, R20}
+--
+class Symbol Presentation
+attributes
+    Asset : Asset Name {I, R5}
+    Presentation : Name {I, R5}
+    Drawing type : Drawing Type Name {I, R5, R28}
+    Symbol : Symbol Name {R25}
+--
+class Symbol
+attributes
+    Name : Symbol Name {I}
+    Drawing type : Drawing Type Name {I, R28}
+--
+class Text Asset
+attributes
+    Name : Asset Name {I, R32}
+    Drawing type : Drawing Type Name {I, R32}
+--
+class Text Presentation
+attributes
+    Asset : Asset Name {I, R5}
+    Presentation : Name {I, R5}
+    Drawing type : Drawing Type Name {I, R5}
+    Text style : Style Name {R7}
+--
+class Text Style
+attributes
+    Name : Text Style Name {I}
+    Size : Points
+    Slant : Font Slant
+    Weight : Font Weight
+    Leading : Points
+    Typeface : Typeface Name {R11}
+    Color : Color
+--
+class Typeface
+attributes
+    Alias : Name {I}
+    Name : Font Family {I2}
+--
+class Usage Fill
+attributes
+    Shape asset : Asset Name {I, R23}
+    Presentation : Presentation Name {I, R23}
+    Drawing type : Drawing Type Name {I, R23}
+    Usage : Usage Name {R23}
+--
+class Vertex
+attributes
+    Sequence : Ordinal {I, OR30}
+    Path : Component Name {I, R17}
+    Symbol : Symbol Name {I, R17}
+    Drawing type : Drawing Type Name {I, R17}
+    Position : Tablet Coord
+--
+relationships
+    R1
+    defines appearance of, 1 Drawing Type
+    appears as defined by, M Presentation
+    Presentation.Drawing type -> Drawing type.Name
+--
+    R2
+    styles content of, Mc Layer
+    content is styled by, 1 Presentation
+    Layer.(Presentation, Drawing type) -> Presentation.(Name, Drawing type)
+--
+    R3
+    can be drawn on, 1 Drawing Type
+    can draw, M Asset
+    Asset.Drawing type -> Drawing type.Name
+--
+    R4
+    stylizes, M Asset
+    is styled by, M Presentation
+    1 Asset Presentation
+    Asset Presentation.(Presentation, Drawing type) -> Presentation.(Name, Drawing type)
+    Asset Presentation.(Asset, Drawing type) -> Asset.(Name, Drawing type)
+--
+    R5
+    Asset Presentation +
+        Symbol Presentation
+        Shape Presentation
+        Text Presentation
+    <subclass>.(Asset, Presentation, Drawing type) -> Asset Presentation.(Asset, Presentation, Drawing type)
+--
+    R6
+    Shape Presentation +
+        Rectangle Presentation
+        Line Presentation
+    <subclass>.(Asset, Presentation, Drawing type) -> Shape Presentation.(Asset, Presentation, Drawing type)
+--
+    R7
+    sets text characteristics for, Mc Text Presentation
+    text characteristics are defined by, 1 Text Style
+    Text Presentation.Text style -> Text Style.Name
+--
+    R11
+    is styled by, Mc Text Style
+    styles, 1 Typeface
+    Text Style.Typeface -> Typeface.Alias
+--
+    R12
+    Path +
+        Open Path
+        Closed Path
+    <subclass>.(Name, Symbol, Drawing type) -> Path.(Name, Symbol, Drawing type)
+--
+    R14
+    draws boundary with, 1 Line Style
+    is used to draw boundary for, Mc Component Style
+    Component Style.Line Style -> Line Style.Name
+--
+    R15
+    draws boundary with, 1 Line Style
+    is used to draw boundary for, Mc Shape Presentation
+    Shape Presentation.Line Style -> Line Style.Name
+--
+    R17
+    defines, 1 Path
+    is defined by, M Vertex
+    Vertex.(Path, Symbol, Drawing Type) -> Path.(Name, Symbol, Drawing Type)
+--
+    R18
+    rounds corners of, 1 Shape Presentation
+    has corners rounded by, 1c Corner Spec
+    Corner Spec.(Asset, Presentation, Drawing type) -> Shape Presentation.(Asset, Presentation, Drawing type)
+--
+    R20
+    defines text displayed by, 1 Text Asset
+    can be displayed with, Mc Sticker
+    Sticker.(Asset, Drawing type) -> Text Asset.(Name, Drawing type)
+--
+    R23
+    applies, 1c Color Usage
+    is applied to, Mc Shape Presentation
+    1 Usage Fill
+    Usage Fill.(Shape asset, Presentation, Drawing type) -> Shape Presentation.(Asset, Presentation, Drawing type)
+    Usage Fill.Usage -> Color Usage.Name
+--
+    R25
+    is represented by, 1 Symbol
+    represents, M Shape Asset Presentation
+    Shape Asset Presentation.Symbol -> Symbol.Name
+--
+    R26
+    is drawn as, M Path
+    is drawn component of, 1 Symbol
+    Component.(Symbol, Drawing type) -> Symbol.(Name, Drawing type)
+--
+    R27
+    has style selected by, M Component
+    selects style for, M Symbol Presentation
+    1 Component Style
+    Component Style.(Component, Symbol, Drawing Type) -> Component.(Name, Symbol, Drawing Type)
+    Component Style.(Asset, Presentation, Drawing Type, Symbol) -> Symbol Presentation.(Asset, Presentation, Drawing Type, Symbol)
+--
+    R28
+    is defined for use on, 1 Drawing Type
+    defines, Mc Symbol
+    Symbol.Drawing type -> Drawing Type.Name
+--
+    R29
+    Component +
+        Path
+        Circle
+    <subclass>.(Name, Symbol, Drawing type) -> Component.(Name, Symbol, Drawing type)
+--
+    R30
+    Shape +
+        Closed Path
+        Circle
+    <subclass>.(Name, Symbol, Drawing type) -> Shape.(Name, Symbol, Drawing type)
+--
+    R31
+    selects fill for, 1 Shape
+    has fill selected by, M Component Style
+    1 Shape Fill
+    Shape Fill.Symbol -> Symbol.Name
+    Shape Fill.(Asset, Presentation, Drawing Type) -> Shape Presentation.(Asset, Presentation, Drawing Type)
+--
+    R32
+    Asset +
+        Text Asset
+        Drawn Asset
+    <subclass>.(Name, Drawing type) -> Asset.(Name, Drawing type)
+--
