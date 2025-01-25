@@ -36,73 +36,61 @@
 
 xUML class diagram: # Drawing type (matches name in drawing_types.yaml)
   superclass: # Symbol name
-    - polygon: [[-8,12], [0,0], [8,12]]
-      border: normal
-      fill: white
+    # Components of type: polyline, polygon, or circle
+    superclass arrow: # Component name
+      polygon: [[-8,12], [0,0], [8,12]]
 
 # Class diagram with Starr notation
-Starr class diagram: # Symbol group  (for flatland this is the <notation name> <diagram type> )
+Starr class diagram:
   ordinal:
-    - circle:
+    circle stem:
+      circle:
         center: [1, 1]
         radius: 2
-      border: normal
-      fill: white
-  1 mult: # Symbol name (client app will ask for this symbol and provide a tablet position and any rotation)
-    - polygon: [[-3,9], [0,0], [3,9]] # Local to symbol bounding box
-      border: normal  # name of a line style in line_styles.yaml
-      fill: black  # name of a color in colors.yaml
+  1 mult:
+    solid arrow:
+      polygon: [[-3,9], [0,0], [3,9]]
   1c mult:
-    - polygon: [[-3,9], [0,0], [3,9]]
-      border: normal
-      fill: white
+    hollow arrow:
+      polygon: [[-3,9], [0,0], [3,9]]
   M mult:
-    - polygon: [[-3,9], [0,0], [3,9]] # Shape elements are drawn in the list order so you can stack them on top
-      border: normal                   # of one another on the z axis. The first shape is underneath all the rest.
-      fill: black
-    - polygon: [[-3,18], [0,9], [3,18]]
-      border: normal
-      fill: black
+    solid arrow inner:
+      polygon: [[-3,9], [0,0], [3,9]]
+    hollow arrow outer:
+      polygon: [[-3,18], [0,9], [3,18]]
   Mc mult:
-    - polygon: [[-3,9], [0,0], [3,9]]
-      border: normal
-      fill: white
-    - polygon: [[-3,18], [0,9], [3,18]]
-      border: normal
-      fill: white
+    hollow arrow inner:
+      polygon: [[-3,9], [0,0], [3,9]]
+    hollow arrow outer:
+      polygon: [[-3,18], [0,9], [3,18]]
   superclass:
-    - polygon: [[-8,12], [0,0], [8,12]]
-      border: normal
-      fill: white
+    superclass arrow:
+      polygon: [[-8,12], [0,0], [8,12]]
 
 # State machine diagram with xUML notation (subset of UML state machine notation)
 xUML state machine diagram: # Symbol group (different notation and diagram type)
   target state:  # Open arrow head pointing to a destination state
-    - path: [[-3,5], [0,0], [3,5]]
-      border: normal
+    open arrow:
+      polyline: [[-3,5], [0,0], [3,5]]
   initial pseudo state:  # Solid dot with fixed length stem ending in a hollow arrow head
-    - path: [[-3,5], [0,0], [3,5]]
-      border: normal
-    - path: [[0,0], [0,60]]
-      border: normal
-    - circle:
+    open arrow:
+      polyline: [[-3,5], [0,0], [3,5]]
+    stem:
+      polyline: [[0,0], [0,60]]
+    psuedo state:
+      circle:
         center: [0,57]
         radius: 3
-      border: normal
-      fill: black
   final pseudo state:  # Large white circle containing solid dot emitting stem ending in open arrow head
-    - path: [[0,0], [0,16]]  # Stem
-      border: normal
-    - path: [[-4,11], [0,16], [4,11]] # Open arrow
-      border: normal
-    - circle:
+    stem:
+      polyline: [[0,0], [0,16]]
+    open arrow:
+      polyline: [[-4,11], [0,16], [4,11]]
+    big circle:
+      circle:
         center: [0, 21]
         radius: 5
-      border: normal
-      fill: white
-    - circle:
+    center dot:
+      circle:
         center: [0, 21]
         radius: 3
-      border: normal
-      fill: black
-

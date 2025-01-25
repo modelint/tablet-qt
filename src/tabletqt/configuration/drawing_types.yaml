@@ -18,12 +18,13 @@
 Grid Diagnostic: # Drawing type name
   default: # Presentation name
     shape: # Asset form
-      column boundary: # Asset name
-        line style: grid
-      row boundary:
-        line style: grid
-      grid boundary:
-        line style: diagram
+      line:
+        column boundary: # Asset name
+          line style: grid
+        row boundary:
+          line style: grid
+        grid boundary:
+          line style: diagram
     text:
       grid label: # Asset name
         text style: coordinate
@@ -40,18 +41,20 @@ Model Integration Snippet Small Frame:
 #        text style: block body small
 #        underlay: false
     shape:
-      block border:
-        line style: normal
-        fill: white
+      rectangle:
+        block border:
+          line style: normal
+          fill: white
   blueprint:
     text:
       title:
         text style: bp block title medium
         underlay: false
     shape:
-      block border:
-        line style: normal
-        fill: white
+      rectangle:
+        block border:
+          line style: normal
+          fill: white
 
 Model Integration Diagram Large Frame:
   default:
@@ -77,9 +80,10 @@ Model Integration Diagram Large Frame:
         text style: block body large
         underlay: false
     shape:
-      block border:
-        line style: double
-        fill: white
+      rectangle:
+        block border:
+          line style: double
+          fill: white
   blueprint:
     text:
       # free field assets
@@ -103,9 +107,10 @@ Model Integration Diagram Large Frame:
         text style: bp block body large
         underlay: false
     shape:
-      block border:
-        line style: bp double
-        fill: blueprint
+      rectangle:
+        block border:
+          line style: bp double
+          fill: blueprint
 
 Model Integration Diagram Medium Frame:
   default:
@@ -131,9 +136,10 @@ Model Integration Diagram Medium Frame:
         text style: block body medium
         underlay: false
     shape:
-      block border:
-        line style: normal
-        fill: white
+      rectangle:
+        block border:
+          line style: normal
+          fill: white
 
 
 Model Integration Diagram Small Frame:
@@ -159,27 +165,27 @@ Model Integration Diagram Small Frame:
         text style: Block body small
         underlay: false
 
-TRI MBSE large:
-  default:
-    text:
-      # free field assets
-      title:
-        text style: free title large
-        underlay: false
-      copyright notice:
-        text style: footer central
-        underlay: false
-      # Title block assets
-      block title:
-        text style: block title large
-        underlay: false
-      block body:
-        text style: block body large
-        underlay: false
-    shape:
-      block border:
-        line style: double
-        fill: white
+#TRI MBSE large:
+#  default:
+#    text:
+#      # free field assets
+#      title:
+#        text style: free title large
+#        underlay: false
+#      copyright notice:
+#        text style: footer central
+#        underlay: false
+#      # Title block assets
+#      block title:
+#        text style: block title large
+#        underlay: false
+#      block body:
+#        text style: block body large
+#        underlay: false
+#    shape:
+#      block border:
+#        line style: double
+#        fill: white
 
 #TRI MBSE medium:
 #  default:
@@ -203,60 +209,66 @@ TRI MBSE large:
 #        line style: normal
 #        fill: white
 
-OS TRI MBSE small:
-  default:
-    text:
-      # free field assets
-      title:
-        text style: block title small
-        underlay: false
-      copyright notice:
-        text style: boilerplate
-        underlay: false
-      # Title block assets
-      author:
-        text style: Block body small
-        underlay: false
-      modification date:
-        text style: Block body small
-        underlay: false
-      document id:
-        text style: Block body small
-        underlay: false
-      version:
-        text style: Block body small
-        underlay: false
+#OS TRI MBSE small:
+#  default:
+#    text:
+#      # free field assets
+#      title:
+#        text style: block title small
+#        underlay: false
+#      copyright notice:
+#        text style: boilerplate
+#        underlay: false
+#      # Title block assets
+#      author:
+#        text style: Block body small
+#        underlay: false
+#      modification date:
+#        text style: Block body small
+#        underlay: false
+#      document id:
+#        text style: Block body small
+#        underlay: false
+#      version:
+#        text style: Block body small
+#        underlay: false
 
 # xUML class diagram}
-xUML class diagram:
-  default:
-    shape:
-      class name compartment:
+xUML class diagram: # Drawing type name
+  default: # Presentation name
+    symbol: # Symbol presentations
+      superclass arrow:
         line style: normal
         fill: white
-      class attribute compartment:
-        line style: normal
-        fill: white
-      class method compartment:
-        line style: normal
-        fill: white
-      binary association connector:
-        line style: normal
-      generalization connector:
-        line style: normal
-      association stem:
-        line style: dashed
-      grid:
-        line style: grid
-      margin:
-        line style: margin
-      imported class name compartment:
-        line style: dashed
-        fill: white
-      imported class attribute compartment:
-        line style: dashed
-        fill: white
-    text:
+    shape: # Shape presentations
+      rectangle:
+        class name compartment:
+          line style: normal
+          fill: white
+        class attribute compartment:
+          line style: normal
+          fill: white
+        class method compartment:
+          line style: normal
+          fill: white
+        imported class name compartment:
+          line style: dashed
+          fill: white
+        imported class attribute compartment:
+          line style: dashed
+          fill: white
+      line:
+        binary association connector:
+          line style: normal
+        generalization connector:
+          line style: normal
+        association stem:
+          line style: dashed
+        grid:
+          line style: grid
+        margin:
+          line style: margin
+    text: # Text presentations
       label:
         text style: p9body
         underlay: false
@@ -294,98 +306,114 @@ xUML class diagram:
         text style: p9body
         underlay: false
 
-Shlaer-Mellor class diagram:
-  default:
-    shape:
-      class name compartment:
-        line style: normal
-        fill: white
-      class attribute compartment:
-        line style: normal
-        fill: white
-      class method compartment:
-        line style: normal
-        fill: white
-      binary association connector:
-        line style: normal
-      generalization connector:
-        line style: normal
-      association stem:
-        line style: normal
-      grid:
-        line style: grid
-      margin:
-        line style: margin
-      imported class compartment:
-        line style: dashed
-        fill: white
-    text:
-      label:
-        text style: p9body
-        underlay: false
-      binary association:
-        text style: p9body
-        underlay: false
-      generalization:
-        text style: p9body
-        underlay: false
-      class face name:
-        text style: p9body
-        underlay: false
-      see also:
-        text style: p9italic
-        underlay: false
-      class name:
-        text style: p12title
-        underlay: false
-      attributes:
-        text style: p9body
-        underlay: false
-      methods:
-        text style: p9body
-        underlay: false
+#Shlaer-Mellor class diagram:
+#  default:
+#    shape:
+#      class name compartment:
+#        line style: normal
+#        fill: white
+#      class attribute compartment:
+#        line style: normal
+#        fill: white
+#      class method compartment:
+#        line style: normal
+#        fill: white
+#      binary association connector:
+#        line style: normal
+#      generalization connector:
+#        line style: normal
+#      association stem:
+#        line style: normal
+#      grid:
+#        line style: grid
+#      margin:
+#        line style: margin
+#      imported class compartment:
+#        line style: dashed
+#        fill: white
+#    text:
+#      label:
+#        text style: p9body
+#        underlay: false
+#      binary association:
+#        text style: p9body
+#        underlay: false
+#      generalization:
+#        text style: p9body
+#        underlay: false
+#      class face name:
+#        text style: p9body
+#        underlay: false
+#      see also:
+#        text style: p9italic
+#        underlay: false
+#      class name:
+#        text style: p12title
+#        underlay: false
+#      attributes:
+#        text style: p9body
+#        underlay: false
+#      methods:
+#        text style: p9body
+#        underlay: false
 
 Starr Class diagram:
   default:
+    symbol:
+      ordinal:
+        circle stem:
+          line style: normal
+          fill: white
+      1 mult:
+        solid arrow:
+          line style: normal
+          fill: black
+      1c mult:
+        hollow arrow:
+          line style: normal
+          fill: white
+      M mult:
+        solid arrow inner:
+          line style: normal
+          fill: black
+        solid arrow outer:
+          line style: normal
+          fill: black
+      Mc mult:
+        hollow arrow inner:
+          line style: normal
+          fill: white
+        hollow arrow outer:
+          line style: normal
+          fill: white
     shape:
-      class name compartment:
-        line style: normal
-        fill: white
-      class attribute compartment:
-        line style: normal
-        fill: white
-      class method compartment:
-        line style: normal
-        fill: white
-      binary association connector:
-        line style: normal
-      generalization connector:
-        line style: normal
-      association stem:
-        line style: normal
-      grid:
-        line style: hide
-      margin:
-        line style: hide
-      imported class name compartment:
-        line style: dashed
-        fill: white
-      imported class attribute compartment:
-        line style: dashed
-        fill: white
-      # For diagnostics only
-      shoot:
-        line style: dashed
-      # Symbols
-      solid arrow:
-        line style: normal
-        fill: black
-      hollow arrow:
-        line style: normal
-        fill: white
-      gen arrow:
-        line style: normal
-        fill: white
+      rectangle:
+        class name compartment:
+          line style: normal
+          fill: white
+        class attribute compartment:
+          line style: normal
+          fill: white
+        class method compartment:
+          line style: normal
+          fill: white
+        imported class name compartment:
+          line style: dashed
+          fill: white
+        imported class attribute compartment:
+          line style: dashed
+          fill: white
+      line:
+        binary association connector:
+          line style: normal
+        generalization connector:
+          line style: normal
+        association stem:
+          line style: normal
+        grid:
+          line style: hide
+        margin:
+          line style: hide
     text:
       label:
         text style: p9body
@@ -418,45 +446,61 @@ Starr Class diagram:
         text style: p9body
         underlay: false
   blueprint:
+    symbol:
+      ordinal:
+        circle stem:
+          line style: white
+          fill: blueprint
+      1 mult:
+        solid arrow:
+          line style: white
+          fill: white
+      1c mult:
+        hollow arrow:
+          line style: white
+          fill: blueprint
+      M mult:
+        solid arrow inner:
+          line style: white
+          fill: white
+        solid arrow outer:
+          line style: white
+          fill: white
+      Mc mult:
+        hollow arrow inner:
+          line style: white
+          fill: blueprint
+        hollow arrow outer:
+          line style: white
+          fill: blueprint
     shape:
-      class name compartment:
-        line style: bp normal
-        fill: blueprint
-      class attribute compartment:
-        line style: bp normal
-        fill: blueprint
-      class method compartment:
-        line style: bp normal
-        fill: blueprint
-      binary association connector:
-        line style: bp normal
-      generalization connector:
-        line style: bp normal
-      association stem:
-        line style: bp normal
-      grid:
-        line style: hide
-      margin:
-        line style: hide
-      imported class name compartment:
-        line style: bp dashed
-        fill: blueprint
-      imported class attribute compartment:
-        line style: bp dashed
-        fill: blueprint
-      # For diagnostics only
-      shoot:
-        line style: bp dashed
-      # Symbols
-      solid arrow:
-        line style: bp normal
-        fill: blueprint
-      hollow arrow:
-        line style: bp normal
-        fill: blueprint
-      gen arrow:
-        line style: bp normal
-        fill: blueprint
+      rectangle:
+        class name compartment:
+          line style: bp normal
+          fill: blueprint
+        class attribute compartment:
+          line style: bp normal
+          fill: blueprint
+        class method compartment:
+          line style: bp normal
+          fill: blueprint
+        imported class name compartment:
+          line style: bp dashed
+          fill: blueprint
+        imported class attribute compartment:
+          line style: bp dashed
+          fill: blueprint
+      line:
+        binary association connector:
+          line style: bp normal
+        generalization connector:
+          line style: bp normal
+        association stem:
+          line style: bp normal
+        grid:
+          line style: hide
+        margin:
+          line style: hide
     text:
       label:
         text style: bp p9body
@@ -491,44 +535,59 @@ Starr Class diagram:
 
 xUML state machine diagram:
   default:
+    symbol:
+      target state:
+        open arrow:
+          line style: normal
+      initial psuedo state:
+        open arrow:
+          line style: normal
+        stem:
+          line style: normal
+        psuedo state:
+          line style: normal
+          fill: black
+      final psuedo state:
+        stem:
+          line style: normal
+        open arrow:
+          line style: normal
+        big circle:
+          line style: normal
+          fill: white
+        center dot:
+          line style: normal
+          fill: black
     shape:
-      transition connector:
-        line style: normal
-      initial transition connector:
-        line style: normal
-      deletion transition connector:
-        line style: normal
-      state name compartment:
-        line style: normal
-        fill: white
-        corner spec:
-          radius: 4
-          top: true
-          bottom: false
-      state name only name compartment:
-        line style: normal
-        fill: white
-        corner spec:
-          radius: 4
-          top: true
-          bottom: true
-      state activity compartment:
-        line style: normal
-        fill: white
-        corner spec:
-          radius: 4
-          top: false
-          bottom: true
-      # Symbols
-      solid arrow:
-        line style: normal
-        fill: black
-      hollow large circle:
-        line style: normal
-        fill: white
-      solid small dot:
-        line style: normal
-        fill: black
+      rectangle:
+        state name compartment:
+          line style: normal
+          fill: white
+          corner spec:
+            radius: 4
+            top: true
+            bottom: false
+        state name only name compartment:
+          line style: normal
+          fill: white
+          corner spec:
+            radius: 4
+            top: true
+            bottom: true
+        state activity compartment:
+          line style: normal
+          fill: white
+          corner spec:
+            radius: 4
+            top: false
+            bottom: true
+      line:
+        transition connector:
+          line style: normal
+        initial transition connector:
+          line style: normal
+        deletion transition connector:
+          line style: normal
     text:
       transition:
         text style: p9body
