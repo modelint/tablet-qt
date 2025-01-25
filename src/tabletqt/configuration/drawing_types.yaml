@@ -228,7 +228,7 @@ OS TRI MBSE small:
         underlay: false
 
 # xUML class diagram}
-xUML Class Diagram:
+xUML class diagram:
   default:
     shape:
       class name compartment:
@@ -294,7 +294,7 @@ xUML Class Diagram:
         text style: p9body
         underlay: false
 
-Shlaer-Mellor Class Diagram:
+Shlaer-Mellor class diagram:
   default:
     shape:
       class name compartment:
@@ -345,7 +345,7 @@ Shlaer-Mellor Class Diagram:
         text style: p9body
         underlay: false
 
-Starr Class Diagram:
+Starr Class diagram:
   default:
     shape:
       class name compartment:
@@ -489,7 +489,7 @@ Starr Class Diagram:
         text style: bp p9body
         underlay: false
 
-xUML State Machine Diagram:
+xUML state machine diagram:
   default:
     shape:
       transition connector:

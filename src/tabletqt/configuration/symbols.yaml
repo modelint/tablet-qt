@@ -1,7 +1,7 @@
 # symbols.yaml – User defined symbols
 
 # A symbol is a bounding box containing any combination of shape elements
-# such as circles, paths, and triangles. For example, you can define an xUML
+# such as circles, paths, and polygons. For example, you can define an xUML
 # final psuedo-state symbols consisting of a path for the stem consisting of two
 # colinear points, a path for the arrow head consisting of three points, one at the
 # arrow head and the other two above it, and then a large and smaller circle sharing
@@ -22,7 +22,7 @@
 #  You can imagine a thumbtack at the origin that gets pushed into the
 # requested location with the symbol rotated as desired.
 
-# So let's say you want to define a simple solid arrow head with a filled in triangle.
+# So let's say you want to define a simple solid arrow head with a filled in polygon.
 
 # pointing upward. The size of the bounding box is the width of the arrow base and the height
 # up to the arrow point. The center of the base will be at 0,0 with the nose at say 0,5 for
@@ -34,77 +34,75 @@
 # Tablet do any device coordinate conversions for us depending on whatever graphics library it
 # is built on.
 
-flatland: # App name (indented below all symbols defined for use in this app)
+xUML class diagram: # Drawing type (matches name in drawing_types.yaml)
+  superclass: # Symbol name
+    - polygon: [[-8,12], [0,0], [8,12]]
+      border: normal
+      fill: white
 
-  xUML class:
-    superclass:
-      - triangle: [[-8,12], [0,0], [8,12]]
-        border: normal
-        fill: white
+# Class diagram with Starr notation
+Starr class diagram: # Symbol group  (for flatland this is the <notation name> <diagram type> )
+  ordinal:
+    - circle:
+        center: [1, 1]
+        radius: 2
+      border: normal
+      fill: white
+  1 mult: # Symbol name (client app will ask for this symbol and provide a tablet position and any rotation)
+    - polygon: [[-3,9], [0,0], [3,9]] # Local to symbol bounding box
+      border: normal  # name of a line style in line_styles.yaml
+      fill: black  # name of a color in colors.yaml
+  1c mult:
+    - polygon: [[-3,9], [0,0], [3,9]]
+      border: normal
+      fill: white
+  M mult:
+    - polygon: [[-3,9], [0,0], [3,9]] # Shape elements are drawn in the list order so you can stack them on top
+      border: normal                   # of one another on the z axis. The first shape is underneath all the rest.
+      fill: black
+    - polygon: [[-3,18], [0,9], [3,18]]
+      border: normal
+      fill: black
+  Mc mult:
+    - polygon: [[-3,9], [0,0], [3,9]]
+      border: normal
+      fill: white
+    - polygon: [[-3,18], [0,9], [3,18]]
+      border: normal
+      fill: white
+  superclass:
+    - polygon: [[-8,12], [0,0], [8,12]]
+      border: normal
+      fill: white
 
-  # Class diagram with Starr notation
-  Starr class: # Symbol group  (for flatland this is the <notation name> <diagram type> )
-    ordinal:
-      - circle:
-          center: [1, 1]
-          radius: 2
-        border: normal
-        fill: white
-    1 mult: # Symbol name (client app will ask for this symbol and provide a tablet position and any rotation)
-      - triangle: [[-3,9], [0,0], [3,9]] # Local to symbol bounding box
-        border: normal  # name of a line style in line_styles.yaml
-        fill: black  # name of a color in colors.yaml
-    1c mult:
-      - triangle: [[-3,9], [0,0], [3,9]]
-        border: normal
-        fill: white
-    M mult:
-      - triangle: [[-3,9], [0,0], [3,9]] # Shape elements are drawn in the list order so you can stack them on top
-        border: normal                   # of one another on the z axis. The first shape is underneath all the rest.
-        fill: black
-      - triangle: [[-3,18], [0,9], [3,18]]
-        border: normal
-        fill: black
-    Mc mult:
-      - triangle: [[-3,9], [0,0], [3,9]]
-        border: normal
-        fill: white
-      - triangle: [[-3,18], [0,9], [3,18]]
-        border: normal
-        fill: white
-    superclass:
-      - triangle: [[-8,12], [0,0], [8,12]]
-        border: normal
-        fill: white
-
-  # State machine diagram with xUML notation (subset of UML state machine notation)
-  xUML state machine: # Symbol group (different notation and diagram type)
-    target state:  # Open arrow head pointing to a destination state
-      - path: [[-3,5], [0,0], [3,5]]
-        border: normal
-    initial pseudo state:  # Solid dot with fixed length stem ending in a hollow arrow head
-      - path: [[-3,5], [0,0], [3,5]]
-        border: normal
-      - path: [[0,0], [0,60]]
-        border: normal
-      - circle:
-          center: [0,57]
-          radius: 3
-        border: normal
-        fill: black
-    final pseudo state:  # Large white circle containing solid dot emitting stem ending in open arrow head
-      - path: [[0,0], [0,16]]  # Stem
-        border: normal
-      - path: [[-4,11], [0,16], [4,11]] # Open arrow
-        border: normal
-      - circle:
-          center: [0, 21]
-          radius: 5
-        border: normal
-        fill: white
-      - circle:
-          center: [0, 21]
-          radius: 3
-        border: normal
-        fill: black
+# State machine diagram with xUML notation (subset of UML state machine notation)
+xUML state machine diagram: # Symbol group (different notation and diagram type)
+  target state:  # Open arrow head pointing to a destination state
+    - path: [[-3,5], [0,0], [3,5]]
+      border: normal
+  initial pseudo state:  # Solid dot with fixed length stem ending in a hollow arrow head
+    - path: [[-3,5], [0,0], [3,5]]
+      border: normal
+    - path: [[0,0], [0,60]]
+      border: normal
+    - circle:
+        center: [0,57]
+        radius: 3
+      border: normal
+      fill: black
+  final pseudo state:  # Large white circle containing solid dot emitting stem ending in open arrow head
+    - path: [[0,0], [0,16]]  # Stem
+      border: normal
+    - path: [[-4,11], [0,16], [4,11]] # Open arrow
+      border: normal
+    - circle:
+        center: [0, 21]
+        radius: 5
+      border: normal
+      fill: white
+    - circle:
+        center: [0, 21]
+        radius: 3
+      border: normal
+      fill: black
 
