@@ -1,19 +1,25 @@
 # stickers.yaml – User defined stickers
 
+# A Sticker is a predefiend string of text that can be 'stuck' somewhere on a Layer
+# associated with a Text Asset
 
-flatland: # App name (indented below all symbols defined for use in this app)
+# See the Text Asset and Sticker classes in the Presentation Subsystem class model for more details
 
-  xUML Class Diagram:  # Drawing type
-    class face name: # Asset
-      1 mult: '1'  # Sticker name
-      1c mult: '0..1'
-      M mult: '1..*'
-      Mc mult: '0..*'
-    association name:
-      M mult: '{M}'
-    superclass face name: # Asset
-      superclass: '{disjoint, complete}'
+# UML diagrams rely heavily on predefined text with a few added xUML tags
+xUML Class Diagram:  # Drawing Type name
+  class face name: # Text Asset name
+    1 mult: '1'  # Sticker name : text
+    1c mult: '0..1'
+    M mult: '1..*'
+    Mc mult: '0..*'
+  association name:
+    M mult: '{M}'
+  superclass face name:
+    superclass: '{disjoint, complete}'
 
-  Shlaer-Mellor Class Diagram:
-    generalization:
-      superclass: 'is a'
+# Note that Starr class diagrams don't use any Stickers at all (to highlight the subject matter, not the notation)
+
+# The Shlaer-Mellor class diagram notation specifies just one
+Shlaer-Mellor Class Diagram:
+  generalization:
+    superclass: 'is a'
