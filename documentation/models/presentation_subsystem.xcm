@@ -2,8 +2,10 @@ metadata
     Title : Presentation Subsystem Class Diagram / Tablet Domain
     Author : Leon Starr
     Document ID : mint.tablet.td.2a
-    Version : 0.2.0
-    Modification date : January 24, 2025
+    Version : 0.2.1
+    // Note : Split out from deprecated Tablet Subsystem
+    // Creation date : January 24, 2025
+    Modification date : January 25, 2025
     Organization : Model Integration, LLC / www.modelint.com
     Copyright notice > MIT
     Organization logo > mint
@@ -29,7 +31,7 @@ attributes
     Radius : Points
     Center : Position
 --
-class Closed Path
+class Polygon
 attributes
     Name : Component Name {I, R12}
     Symbol : Symbol Name {I, R12}
@@ -252,7 +254,7 @@ relationships
     R12
     Path +
         Open Path
-        Closed Path
+        Polygon
     <subclass>.(Name, Symbol, Drawing type) -> Path.(Name, Symbol, Drawing type)
 --
     R14
@@ -317,7 +319,7 @@ relationships
 --
     R30
     Shape +
-        Closed Path
+        Polygon
         Circle
     <subclass>.(Name, Symbol, Drawing type) -> Shape.(Name, Symbol, Drawing type)
 --
