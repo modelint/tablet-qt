@@ -12,7 +12,7 @@ from mi_config.config import Config
 # Tablet
 from tabletqt.exceptions import BadConfigData
 from tabletqt.configuration.styles import (FloatRGB, LineStyle, TextStyle, DashPattern)
-from tabletqt.paths import config_dir
+from tabletqt.tablet_config import config_dir
 
 _logger = logging.getLogger(__name__)
 
