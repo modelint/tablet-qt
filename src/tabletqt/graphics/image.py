@@ -4,6 +4,9 @@
 import logging
 from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from tabletqt.layer import Layer
+
 # Qt
 from PyQt6.QtWidgets import QGraphicsPixmapItem
 from PyQt6.QtGui import QPixmap
@@ -13,9 +16,6 @@ import tabletqt.element as element
 from tabletqt.geometry_types import Position, Rect_Size
 from tabletqt.exceptions import TabletBoundsExceeded
 from tabletqt.styledb import StyleDB
-
-if TYPE_CHECKING:
-    from tabletqt.layer import Layer
 
 _logger = logging.getLogger(__name__)
 
@@ -35,6 +35,16 @@ class ImageE:
     - Lower left -- Position of the lower left image corner in tablet coordinates
     - Size -- The actual size of the image in the file
     """
+    image_paths = {}
+
+    @classmethod
+    def build_image_paths(cls):
+        """ Assign image file dictionary """
+        image_dict = cls.image_paths['images']
+        root_dir = cls.raw_config_data.user_config_dir
+        cls.image = {k: Path(root_dir / _image_dir_name / v) for k,v in image_dict.items()}
+
+
     @classmethod
     def add(cls, layer: 'Layer', name: str, lower_left: Position, size: Rect_Size):
         """

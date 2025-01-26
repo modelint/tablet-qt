@@ -1,4 +1,4 @@
-""" text_element.py -- Text Element """
+""" paths.py -- Configuration class """
 
 # System
 import logging
@@ -25,43 +25,15 @@ from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.exceptions import TabletBoundsExceeded
 
 logger = logging.getLogger(__name__)
+
 config_dir = Path(__file__).parent / "configuration"
-
-# Constants
-tbox_xoffset = 4  # QT distance from text item origin (setPos) to lower left corner of text bounding box
-tbox_yoffset = 4  # For now, determined experimentally, not sure how to compute it from QFontMetrics
-
-underlay_margin_h = 5  # Horizontal and vertical distances from text to outer edge of underlay
-underlay_margin_v = 5
-
-underlay_offset_x = 2  # Lower left corner offsets from lower left origin of text item origin
-underlay_offset_y = 3
-
-Qt_font_weight = {'normal': QFont.Weight.Normal, 'bold': QFont.Weight.Bold}
-"""Maps an application style to a Qt specific font weight"""
+image_dir = config_dir / "images"
 
 
-class TextBlockCorner(Enum):
-    """ Text Block corners """
-    UL = "upper left"
-    UR = "upper right"
-    LL = "lower left"
-    LR = "lower right"
-
-
-class TextElement:
+class Configuration:
     """
-    Manage the defnition and rendering of Text Elements (blocks of text)
+    Manages configuration paths
 
-    Attributes and relationships defined on the class model
-
-    Subclass of Element on class model (R15)
-
-    - ID {I} -- Element ID, unique within a Layer, implemented as object reference
-    - Layer {I, R22} -- Element drawn on this Layer via R22/R12/R15/Element/R19/Layer
-    - Content -- One or more lines of text, implemented here as a list of strings
-    - Lower left -- Position in tablet coordinates of the entire text block
-    - Text style {R16} -- Typeface, color, and other display properties to be applied
     """
 
     stickers = None

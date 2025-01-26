@@ -7,19 +7,24 @@ from PyQt6.QtCore import QPointF, QLineF, QRectF
 from PyQt6.QtGui import QPolygonF
 from typing import TYPE_CHECKING, Callable, Dict
 
+if TYPE_CHECKING:
+    from tabletqt.tablet import Layer
+
+# Modelint
+from mi_config.config import Config
+
 # Tablet
 from tabletqt.styledb import StyleDB
 from tabletqt.geometry_types import Position
 from tabletqt.graphics.crayon_box import CrayonBox
 
-if TYPE_CHECKING:
-    from tabletqt.tablet import Layer
-
+config_dir = Path(__file__).parent / "configuration"
 
 class Symbol:
     """
     A composite group of shapes that can be rotated and placed anywhere on the Tablet on a specified Layer.
     """
+    symbol_defs = None
 
     def __init__(self, layer: 'Layer', name: str, pin: Position, angle: int = 0):
         """
@@ -46,9 +51,9 @@ class Symbol:
         self.width = 0
         self.height = 0
         try:
-            self.shape_elements = StyleDB.symbol[group][name]
+            self.shape_elements = StyleDB.symbol[name]
         except KeyError:
-            self.logger.exception(f"StyleDB has no entry for: [{app}][{group}][{name}]")
+            self.logger.exception(f"StyleDB has no entry for symbol: [{name}]")
             return
 
         self.symbol_item = QGraphicsItemGroup()
@@ -79,6 +84,14 @@ class Symbol:
         # for later rendering
         self.layer.Symbols.append(self.symbol_item)
 
+
+    @classmethod
+    def load_symbol_defs(cls, dtype: str):
+        """
+        Load all symbol definitions defined for the Tablet's drawing type
+        """
+        sticker_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'stickers': None})
+        cls.stickers = sticker_data.loaded_data['stickers']
 
     def add_circle(self, shape: Dict):
         """

@@ -17,7 +17,7 @@ from tabletqt.styledb import StyleDB
 from tabletqt.graphics.text_element import TextElement
 from tabletqt.layer import Layer
 from tabletqt.scene_view import MainWindow
-from tabletqt.configuration.styles import FloatRGB
+from tabletqt.paths.styles import FloatRGB
 
 default_background = FloatRGB(255, 255, 255)  # White
 

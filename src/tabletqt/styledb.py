@@ -12,13 +12,10 @@ from mi_config.config import Config
 # Tablet
 from tabletqt.exceptions import BadConfigData
 from tabletqt.configuration.styles import (FloatRGB, LineStyle, TextStyle, DashPattern)
-
-_image_dir_name = 'images'
+from tabletqt.paths import config_dir
 
 _logger = logging.getLogger(__name__)
 
-
-config_dir = Path(__file__).parent / "configuration"
 # nt - named tuple is defined
 # pre/post - Whether or not the data must be pre or post processed
 # PP = namedtuple('PP', 'nt pre post')  # Postprocess configuration file data
