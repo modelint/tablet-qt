@@ -62,13 +62,13 @@ class RectangleSE:
         try:
             fill = rect_style['fill']
         except KeyError:
-            _logger.exception(f"No fill specified for rectangle asset: [{asset}")
+            _logger.exception(f"No fill specified in rectangle presentation for asset: [{asset}")
             raise MissingConfigData
 
         try:
             border = rect_style['line style']
         except KeyError:
-            _logger.exception(f"No line style specified for rectangle asset: [{asset}")
+            _logger.exception(f"No line style specified in rectangle presentation for asset: [{asset}")
             raise MissingConfigData
 
         # If there is an overriding color usage use it instead
@@ -81,7 +81,11 @@ class RectangleSE:
         # Set the corner spec, if any
         cspec = rect_style.get('corner spec')
         # If no corner spec, assume 0 radius corners
-        radius, top, bottom = (0, False, False) if not cspec else (cspec.radius, cspec.top, cspec.bottom)
+        try:
+            radius, top, bottom = (0, False, False) if not cspec else (cspec['radius'], cspec['top'], cspec['bottom'])
+        except KeyError:
+            _logger.exception(f"Missing data in rectangle presentation corner spec defined for asset: [{asset}")
+            raise MissingConfigData
 
         layer.Rectangles.append(element.Rectangle(
             upper_left=ul, size=size, border_style=border, fill=fill,

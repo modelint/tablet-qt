@@ -4,6 +4,9 @@
 import logging
 from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from tabletqt.layer import Layer
+
 # Qt
 from PyQt6.QtWidgets import QGraphicsLineItem
 from PyQt6.QtCore import QLineF
@@ -12,9 +15,7 @@ from PyQt6.QtCore import QLineF
 import tabletqt.element as element
 from tabletqt.geometry_types import Position
 from tabletqt.graphics.crayon_box import CrayonBox
-
-if TYPE_CHECKING:
-    from tabletqt.layer import Layer
+from tabletqt.exceptions import MissingConfigData
 
 _logger = logging.getLogger(__name__)
 class LineSegment:
@@ -41,9 +42,15 @@ class LineSegment:
         :param from_here: In tablet coordinates
         :param to_there: In tablet coordinates
         """
+        try:
+            line_style = layer.Presentation.Line_presentation[asset]['line style']
+        except KeyError:
+            _logger.exception(f"No line style specified in line presentation for asset: [{asset}")
+            raise MissingConfigData
+
         layer.Line_segments.append(
             element.Line_Segment(from_here=layer.Tablet.to_dc(from_here), to_there=layer.Tablet.to_dc(to_there),
-                                 style=layer.Presentation.Shape_presentation[asset])
+                                 style=line_style)
         )
 
     @classmethod
