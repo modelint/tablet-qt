@@ -8,6 +8,9 @@ class TabletException(Exception):
 class BadConfigData(TabletException):
     pass
 
+class MissingConfigData(TabletException):
+    pass
+
 class NonSystemInitialLayer(TabletException):
     pass
 

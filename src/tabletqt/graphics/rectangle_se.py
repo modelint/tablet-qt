@@ -4,6 +4,9 @@
 import logging
 from typing import TYPE_CHECKING, Optional
 
+if TYPE_CHECKING:
+    from tabletqt.layer import Layer
+
 # Qt
 from PyQt6.QtWidgets import QGraphicsPathItem, QGraphicsRectItem
 from PyQt6.QtCore import QRectF, QPointF
@@ -14,9 +17,7 @@ import tabletqt.element as element
 from tabletqt.geometry_types import Rect_Size, Position
 from tabletqt.styledb import StyleDB
 from tabletqt.graphics.crayon_box import CrayonBox
-
-if TYPE_CHECKING:
-    from tabletqt.layer import Layer
+from tabletqt.exceptions import MissingConfigData
 
 _logger = logging.getLogger(__name__)
 
@@ -54,10 +55,23 @@ class RectangleSE:
         # Use upper left corner instead
         ul = Position(x=ll_dc.x, y=ll_dc.y - size.height)
 
-        # If a fill is predefined for this presentation/shape asset, get it
-        fill = layer.Presentation.Closed_shape_fill.get(asset)
+        # Get the rectangle style info
+        rect_style = layer.Presentation.Rectangle_presentation[asset]
 
-        # Now see if there is an overriding color usage, if so use the corresponding color instead
+        # Get the fill is defined for this rectangle asset in the layer's presentation
+        try:
+            fill = rect_style['fill']
+        except KeyError:
+            _logger.exception(f"No fill specified for rectangle asset: [{asset}")
+            raise MissingConfigData
+
+        try:
+            border = rect_style['line style']
+        except KeyError:
+            _logger.exception(f"No line style specified for rectangle asset: [{asset}")
+            raise MissingConfigData
+
+        # If there is an overriding color usage use it instead
         if color_usage:
             try:
                 fill = StyleDB.color_usage[color_usage]  # Overrides any closed shape fill
@@ -65,12 +79,12 @@ class RectangleSE:
                 _logger.warning(f'No color defined for usage [{color_usage}]')
 
         # Set the corner spec, if any
-        cspec = layer.Presentation.Corner_spec.get(asset)
+        cspec = rect_style.get('corner spec')
         # If no corner spec, assume 0 radius corners
         radius, top, bottom = (0, False, False) if not cspec else (cspec.radius, cspec.top, cspec.bottom)
 
         layer.Rectangles.append(element.Rectangle(
-            upper_left=ul, size=size, border_style=layer.Presentation.Shape_presentation[asset], fill=fill,
+            upper_left=ul, size=size, border_style=border, fill=fill,
             radius=radius, top=top, bottom=bottom
         ))
 
