@@ -12,7 +12,7 @@ from pathlib import Path
 # Tablet
 from tabletqt import version
 # from tabletqt.etchasketch import EtchaSketch
-from tabletqt.sketchsymbols import SketchSymbols
+# from tabletqt.sketchsymbols import SketchSymbols
 
 _logpath = Path("tabletqt.log")
 app_name = "Tablet"
@@ -32,8 +32,10 @@ def parse(cl_input):
     :return:
     """
     parser = argparse.ArgumentParser(description='Tabletx 2D draw interface to Cairo')
+    parser.add_argument('-demo', action='store',
+                        help='name of demo module')
     parser.add_argument('-COLORS', '--colors', action='store_true',
-                        help='Show the list of background color names')
+                        help='Show the list of background color stickers')
     parser.add_argument('-T', '--test', action='store_true',
                         help='Run some test features')
     parser.add_argument('-D', '--debug', action='store_true',
@@ -57,6 +59,10 @@ def main():
         print(f'{app_name} version: {version}')
         sys.exit(0)
 
+    if args.demo:
+        spath = Path(__file__).parent / f'demo/{args.demo}.py'
+        sys.exit(0)
+
     if args.test:
         from tabletqt.styledb import StyleDB
         StyleDB.load_config_files()
@@ -65,9 +71,6 @@ def main():
         # Just print the database colors and quit
         from tabletqt.styledb import StyleDB
         StyleDB.report_colors()
-
-    SketchSymbols.sketch()
-    # EtchaSketch.draw_tabloid()
 
     logger.info("No problemo")  # We didn't die on an exception
     print("\nNo problemo")

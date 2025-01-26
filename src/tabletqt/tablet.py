@@ -66,7 +66,7 @@ class Tablet:
         - Background_color -- The color of the Tablet (visible through all non-opaque layer elements)
     """
 
-    def __init__(self, app: str, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
+    def __init__(self, size: Rect_Size, output_file: Path, drawing_type: str, presentation: str,
                  layer: str, show_window: bool = False, background_color: Optional[str] = 'white'):
         """
         Constructs a new Tablet instance with a single initial predefined Layer
@@ -80,22 +80,22 @@ class Tablet:
         """
         self.logger = logging.getLogger(__name__)
         self.logger.info(f"Tablet init: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        self.app_name = "tablet"
 
         # Load all of the common font, color, etc. styles used by all Presentations from yaml files
         StyleDB.load_config_files()
-        # Load all of the sticker names
+        # Load all of the sticker stickers
         TextElement.load_stickers()
 
         # Establish a system default layer ordering. Not all of them will be used in any given
         # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
-        self.client_app_name = app
         self.show_window = show_window
         self.background_color = StyleDB.color[background_color]  # This is referenced when filling text underlay rects
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
         self.App = gui_app  # QT Application (must be created before any QT widgets)
-        self.Window = MainWindow(self.client_app_name, size, self.background_color)  # QT widget for drawing 2D elements
+        self.Window = MainWindow(title=self.app_name, size=size, background=self.background_color)  # QT widget for drawing 2D elements
         self.View = self.Window.graphics_view
 
         if layer not in self.layer_order:
@@ -127,7 +127,7 @@ class Tablet:
         If a layer name is supplied that does not correspond to any of the predefined layers, it will be stacked
         after the last predefined layer and, thus, rendered last.
 
-        :param name: One of the standard layer names or a custom layer name
+        :param name: One of the standard layer stickers or a custom layer name
         :param presentation: The Presentation name associated with this Layer
         :param drawing_type: The Drawing Type defining this Presentation
         :return: A reference to the newly created layer

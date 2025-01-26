@@ -72,7 +72,7 @@ class TextElement:
         Load all predefined sticker text from the stickers.yaml file
         """
         sticker_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'stickers': None})
-        cls.names = sticker_data.loaded_data['stickers']
+        cls.stickers = sticker_data.loaded_data['stickers']
 
     @classmethod
     def lower_left_pin(cls, presentation: 'Presentation', asset: str, text_block: List[str], pin: Position,
@@ -117,15 +117,8 @@ class TextElement:
         :param corner: The corner to be pinned (upper left, lower right, ...)
         :return:
         """
-        # Get the text block
-        try:
-            app = layer.Tablet.client_app_name
-        except KeyError:
-            logger.error(f"No diagram type [{layer.Drawing_type} defined for application "
-                             f"{layer.Tablet.client_app_name}")
-            raise
 
-        drawing_type = cls.names[app][layer.Drawing_type]
+        drawing_type = cls.stickers[layer.Drawing_type]
         try:
             sticker_text = drawing_type[asset][name]
         except KeyError:
@@ -150,7 +143,7 @@ class TextElement:
         :return: Size of the text line ink area
         """
         style_name = presentation.Text_presentation[asset]  # Look up the text style for this asset
-        style = StyleDB.text_style[style_name]
+        style = StyleDB.text_style[style_name['text style']]
         font_name = StyleDB.typeface[style.typeface]
 
         font = QFont(font_name, style.size)
@@ -325,8 +318,8 @@ class TextElement:
         """
         for t in layer.Text:
             t_item = QGraphicsTextItem(t.text)
-            style = StyleDB.text_style[t.style]
-            text_color_name = StyleDB.text_style[t.style].color
+            style = StyleDB.text_style[t.style['text style']]
+            text_color_name = StyleDB.text_style[t.style['text style']].color
             text_rgb_color_value = StyleDB.color[text_color_name]
             t_item.setDefaultTextColor(QColor(*text_rgb_color_value))
             font = QFont(StyleDB.typeface[style.typeface], style.size)

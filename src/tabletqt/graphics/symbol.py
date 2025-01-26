@@ -21,7 +21,7 @@ class Symbol:
     A composite group of shapes that can be rotated and placed anywhere on the Tablet on a specified Layer.
     """
 
-    def __init__(self, app: str, layer: 'Layer', group: str, name: str, pin: Position, angle: int = 0):
+    def __init__(self, layer: 'Layer', name: str, pin: Position, angle: int = 0):
         """
         Creates a Symbol that builds itself up from data specified in symbols.yaml and
             builds a PyQt group which is added to the layer's list of Symbols
@@ -39,16 +39,14 @@ class Symbol:
         :param angle: Degrees clockwise with 0, 90, 180, and 270 at 12, 3, 6, and 9 o'clock respectively
         """
         self.logger = logging.getLogger(__name__)
-        self.app = app
         self.layer = layer
-        self.group = group
         self.name = name
         self.pin = pin
         self.angle = angle
         self.width = 0
         self.height = 0
         try:
-            self.shape_elements = StyleDB.symbol[app][group][name]
+            self.shape_elements = StyleDB.symbol[group][name]
         except KeyError:
             self.logger.exception(f"StyleDB has no entry for: [{app}][{group}][{name}]")
             return

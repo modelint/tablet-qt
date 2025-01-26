@@ -357,7 +357,7 @@ xUML class diagram: # Drawing type name
 #        text style: p9body
 #        underlay: false
 
-Starr Class diagram:
+Starr class diagram:
   default:
     symbol:
       ordinal:

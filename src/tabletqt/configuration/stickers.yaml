@@ -6,7 +6,7 @@
 # See the Text Asset and Sticker classes in the Presentation Subsystem class model for more details
 
 # UML diagrams rely heavily on predefined text with a few added xUML tags
-xUML Class Diagram:  # Drawing Type name
+xUML class diagram:  # Drawing Type name
   class face name: # Text Asset name
     1 mult: '1'  # Sticker name : text
     1c mult: '0..1'
@@ -20,6 +20,6 @@ xUML Class Diagram:  # Drawing Type name
 # Note that Starr class diagrams don't use any Stickers at all (to highlight the subject matter, not the notation)
 
 # The Shlaer-Mellor class diagram notation specifies just one
-Shlaer-Mellor Class Diagram:
+Shlaer-Mellor class diagram:
   generalization:
     superclass: 'is a'

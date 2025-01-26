@@ -133,7 +133,7 @@ class StyleDB:
     @classmethod
     def postprocess_color_usages(cls):
         """
-        Validate color names
+        Validate color stickers
         """
         undefined_colors = [c for c in cls.color_usage.values() if c not in cls.color]
         if undefined_colors:
