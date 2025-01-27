@@ -3,6 +3,10 @@
 # System
 from pathlib import Path
 
-config_dir = Path(__file__).parent / "configuration"
-image_dir = config_dir / "images"
-app_name = "mi-tablet"
+class TabletConfig:
+    """
+
+    """
+    config_path = Path(__file__).parent / "configuration"
+    image_path = config_path / "images"
+    app_name = "mi-tablet"

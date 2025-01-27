@@ -7,7 +7,7 @@ from tabletqt.graphics.circle_se import CircleSE
 from tabletqt.graphics.polygon_se import PolygonSE
 from tabletqt.graphics.line_segment import LineSegment
 from tabletqt.graphics.rectangle_se import RectangleSE
-from tabletqt.graphics.image import ImageE
+from tabletqt.graphics.image import ImageDE
 from tabletqt.graphics.text_element import TextElement
 from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
@@ -97,7 +97,7 @@ class EtchaSketch:
             Position(340, 300)
         ])
 
-        ImageE.add(layer=slayer, name='mint-medium', lower_left=Position(1150, 50), size=Rect_Size(10, 10))
+        ImageDE.add(layer=slayer, name='mint-medium', lower_left=Position(1150, 50), size=Rect_Size(10, 10))
 
         RectangleSE.add(layer=dlayer, asset='state name only compartment', lower_left=Position(200, 900),
                                                    size=Rect_Size(30, 150))

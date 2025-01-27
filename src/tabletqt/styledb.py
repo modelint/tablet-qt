@@ -12,7 +12,7 @@ from mi_config.config import Config
 # Tablet
 from tabletqt.exceptions import BadConfigData
 from tabletqt.configuration.styles import (FloatRGB, LineStyle, TextStyle, DashPattern)
-from tabletqt.tablet_config import config_dir
+from tabletqt.tablet_config import TabletConfig
 
 _logger = logging.getLogger(__name__)
 
@@ -34,7 +34,6 @@ config_type = {
     'typefaces': PP(nt=None, pre=False, post=False),
     'text_styles': PP(nt=TextStyle, pre=False, post=True),
     'color_usages': PP(nt=None, pre=False, post=True),
-    'images': PP(nt=None, pre=False, post=True),
     'symbols': PP(nt=None, pre=False, post=False),
 }
 
@@ -60,7 +59,6 @@ class StyleDB:
     color_usage = None
     raw_config_data = None
     config_data = None
-    image = None
     symbol = None
 
 
@@ -73,11 +71,11 @@ class StyleDB:
         """
         _logger.info(f"StyleDB loading tabletqt configuration\n---")
         fspec = {k: v.nt for k,v in config_type.items()}
-        cls.raw_config_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec=fspec)
+        cls.raw_config_data = Config(app_name='mi_tablet', lib_config_dir=config_path, fspec=fspec)
         cls.config_data = cls.raw_config_data.loaded_data
 
         for fname, cdata in cls.config_data.items():
-            config_file_path = config_dir / (fname+".yaml")
+            config_file_path = config_path / (fname + ".yaml")
             _logger.info(f"loading: {config_file_path}")
             if config_type[fname].pre:
                 # Retrieve the relevant preprocessing method name using the filename suffix
@@ -96,13 +94,6 @@ class StyleDB:
         _logger.info(f"---\n")
 
     @classmethod
-    def postprocess_images(cls):
-        """ Assign image file dictionary """
-        image_dict = cls.image['images']
-        root_dir = cls.raw_config_data.user_config_dir
-        cls.image = {k: Path(root_dir / _image_dir_name / v) for k,v in image_dict.items()}
-
-    @classmethod
     def postprocess_text_styles(cls):
         """
         Verify all typefaces are defined
@@ -110,7 +101,7 @@ class StyleDB:
         undefined_typefaces = [t.typeface for t in cls.text_style.values() if t.typeface not in cls.typeface]
         if undefined_typefaces:
             _logger.error(f"Undefined typefaces: {undefined_typefaces} encountered in"
-                          f"text styles configuration file:\n    {config_dir / 'text_styles.yaml'}")
+                          f"text styles configuration file:\n    {config_path / 'text_styles.yaml'}")
             raise BadConfigData
 
 
@@ -123,7 +114,7 @@ class StyleDB:
             for n in [rgb.r, rgb.g, rgb.b]:
                 if not 0 <= n <= 255:
                     _logger.error(f"Bad color value [{n}] for: {name} in "
-                                  f"configuration file:\n    {config_dir / 'colors.yaml'}")
+                                  f"configuration file:\n    {config_path / 'colors.yaml'}")
                     raise BadConfigData
             StyleDB.color[name] = rgb
 
@@ -135,7 +126,7 @@ class StyleDB:
         undefined_colors = [c for c in cls.color_usage.values() if c not in cls.color]
         if undefined_colors:
             _logger.error(f"Undefined colors: {undefined_colors} encountered in"
-                          f"color usages configuration file:\n    {config_dir / 'color_usages.yaml'}")
+                          f"color usages configuration file:\n    {config_path / 'color_usages.yaml'}")
             raise BadConfigData
 
     @classmethod

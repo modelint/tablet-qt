@@ -17,7 +17,7 @@ from tabletqt.graphics.polygon_se import PolygonSE
 from tabletqt.graphics.line_segment import LineSegment
 from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.graphics.text_element import TextElement
-from tabletqt.graphics.image import ImageE
+from tabletqt.graphics.image import ImageDE
 from tabletqt.graphics.symbol import Symbol
 from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
@@ -93,7 +93,7 @@ class Layer:
         PolygonSE.render(self)
         TextElement.render_underlays(self)  # Renders any color fills that lie underneath text blocks or lines
         TextElement.render(self)  # Render text after vector content so that it is never underneath
-        ImageE.render(self)  # Text should not be drawn over images, so we can render these last
+        ImageDE.render(self)  # Text should not be drawn over images, so we can render these last
 
         # Diagnostic elements with explicit styling that bypass StyleDB lookup
         # Not intended for use by any client applications

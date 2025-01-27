@@ -2,6 +2,7 @@
 
 # System
 import logging
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -11,16 +12,23 @@ if TYPE_CHECKING:
 from PyQt6.QtWidgets import QGraphicsPixmapItem
 from PyQt6.QtGui import QPixmap
 
+# Modelint
+from mi_config.config import Config
+
 # Tablet
 import tabletqt.element as element
 from tabletqt.geometry_types import Position, Rect_Size
 from tabletqt.exceptions import TabletBoundsExceeded
 from tabletqt.styledb import StyleDB
+from tabletqt.tablet_config import TabletConfig
 
 _logger = logging.getLogger(__name__)
 
-class ImageE:
+class ImageDE:
     """
+    Image Display Element
+    (subclass of Rectangular Display Element in Render Subsystem not shown on model yet)
+
     Manage the loading and rendering of Image Elements
 
     Attributes and relationships defined on the class model
@@ -35,14 +43,15 @@ class ImageE:
     - Lower left -- Position of the lower left image corner in tablet coordinates
     - Size -- The actual size of the image in the file
     """
-    image_paths = {}
+    image_paths = None
 
     @classmethod
-    def build_image_paths(cls):
+    def build_paths(cls):
         """ Assign image file dictionary """
-        image_dict = cls.image_paths['images']
-        root_dir = cls.raw_config_data.user_config_dir
-        cls.image = {k: Path(root_dir / _image_dir_name / v) for k,v in image_dict.items()}
+        raw_config_data = Config(app_name=TabletConfig.app_name, lib_config_dir=TabletConfig.config_path, fspec={'images': None})
+        image_dict = raw_config_data.loaded_data['images']
+        root_dir = raw_config_data.user_config_dir
+        cls.image_paths = {k: Path(root_dir / 'images' / v) for k,v in image_dict.items()}
 
 
     @classmethod

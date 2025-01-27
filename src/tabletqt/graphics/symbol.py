@@ -18,7 +18,7 @@ from tabletqt.styledb import StyleDB
 from tabletqt.geometry_types import Position
 from tabletqt.graphics.crayon_box import CrayonBox
 
-config_dir = Path(__file__).parent / "configuration"
+# config_dir = Path(__file__).parent / "configuration"
 
 class Symbol:
     """

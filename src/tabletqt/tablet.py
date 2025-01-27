@@ -17,7 +17,8 @@ from tabletqt.styledb import StyleDB
 from tabletqt.graphics.text_element import TextElement
 from tabletqt.layer import Layer
 from tabletqt.scene_view import MainWindow
-from tabletqt.tablet_config.styles import FloatRGB
+from tabletqt.graphics.image import ImageDE
+from tabletqt.configuration.styles import FloatRGB
 
 default_background = FloatRGB(255, 255, 255)  # White
 
@@ -83,6 +84,7 @@ class Tablet:
         self.app_name = "tablet"
 
         # Load all of the common font, color, etc. styles used by all Presentations from yaml files
+        ImageDE.build_paths()
         StyleDB.load_config_files()
         # Load all of the sticker stickers
         TextElement.load_stickers()
