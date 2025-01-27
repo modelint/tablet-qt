@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsLineItem, QGraphicsIt
 from PyQt6.QtCore import QPointF, QLineF, QRectF
 from PyQt6.QtGui import QPolygonF
 from typing import TYPE_CHECKING, Callable, Dict
+from pathlib import Path
 
 if TYPE_CHECKING:
     from tabletqt.tablet import Layer
@@ -17,8 +18,7 @@ from mi_config.config import Config
 from tabletqt.styledb import StyleDB
 from tabletqt.geometry_types import Position
 from tabletqt.graphics.crayon_box import CrayonBox
-
-# config_dir = Path(__file__).parent / "configuration"
+from tabletqt.tablet_config import TabletConfig
 
 class Symbol:
     """
@@ -86,12 +86,13 @@ class Symbol:
 
 
     @classmethod
-    def load_symbol_defs(cls, dtype: str):
+    def load_symbol_defs(cls):
         """
-        Load all symbol definitions defined for the Tablet's drawing type
+        Load all symbol definitions from the symbols.yaml file
         """
-        sticker_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'stickers': None})
-        cls.stickers = sticker_data.loaded_data['stickers']
+        raw_config_data = Config(app_name=TabletConfig.app_name, lib_config_dir=TabletConfig.config_path,
+                                 fspec={'symbols': None})
+        cls.symbol_defs = raw_config_data.loaded_data['symbols']
 
     def add_circle(self, shape: Dict):
         """

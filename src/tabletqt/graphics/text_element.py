@@ -23,9 +23,9 @@ from tabletqt.geometry_types import Position, Rect_Size, HorizAlign
 from tabletqt.styledb import StyleDB
 from tabletqt.graphics.rectangle_se import RectangleSE
 from tabletqt.exceptions import TabletBoundsExceeded
+from tabletqt.tablet_config import TabletConfig
 
 logger = logging.getLogger(__name__)
-config_dir = Path(__file__).parent / "configuration"
 
 # Constants
 tbox_xoffset = 4  # QT distance from text item origin (setPos) to lower left corner of text bounding box
@@ -71,7 +71,8 @@ class TextElement:
         """
         Load all predefined sticker text from the stickers.yaml file
         """
-        sticker_data = Config(app_name='mi_tablet', lib_config_dir=config_dir, fspec={'stickers': None})
+        sticker_data = Config(app_name=TabletConfig.app_name, lib_config_dir=TabletConfig.config_path,
+                              fspec={'stickers': None})
         cls.stickers = sticker_data.loaded_data['stickers']
 
     @classmethod
