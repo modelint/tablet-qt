@@ -61,8 +61,7 @@ class Symbol:
         self.component_methods: Dict[str, Callable[[dict], None]] = {
             'polygon': self.add_polygon,
             'polyline': self.add_polyline,
-            # 'path': self.add_path,
-            # 'circle': self.add_circle,
+            'circle': self.add_circle,
         }
 
         # Convert pin to device coordinates
@@ -102,37 +101,44 @@ class Symbol:
                                  fspec={'symbols': None})
         cls.symbol_defs = raw_config_data.loaded_data['symbols']
 
-    # def add_circle(self, shape_def):
-    #     """
-    #     Adds a circle shape element to the symbol item group
-    #
-    #     :param shape: The shape definition obtained from the symbol yaml file for this circle
-    #     """
-    #     # Translate center in symbol bounding box relative to the pin
-    #     # We just add the center position to the pin position to translate the circle
-    #     center_tablet = Position(self.pin[0]+shape['circle']['center'][0], self.pin[1]+shape['circle']['center'][1])
-    #
-    #     # Convert center tablet to device coordinates
-    #     center_dc = self.layer.Tablet.to_dc(center_tablet)
-    #     radius = shape['circle']['radius']
-    #     diameter = radius * 2
-    #
-    #     # Update dimensions of the bounding box if either dimension is larger
-    #     self.width = max(self.width, diameter)
-    #     self.height = max(self.height, diameter)
-    #
-    #     # Create Qt circle item
-    #     # We subtract the radius since Qt wants the top left corner for positioning
-    #     circle_item = QGraphicsEllipseItem(QRectF(center_dc.x-radius, center_dc.y-radius, diameter, diameter))
-    #
-    #     # Set pen and brush (border/fill) styles
-    #     CrayonBox.choose_crayons(
-    #         item=circle_item,
-    #         border_style=shape['border'],
-    #         fill=shape['fill'])
-    #
-    #     # Add circle shape element to the symbol item group
-    #     self.symbol_item.addToGroup(circle_item)
+    def add_circle(self, component_name: str, shape_def):
+        """
+        Adds a circle shape element to the symbol item group
+
+        :param component_name:
+        :param shape_def: The shape definition obtained from the symbol yaml file for this circle
+        """
+        # Translate center in symbol bounding box relative to the pin
+        # We just add the center position to the pin position to translate the circle
+        center_tablet = Position(self.pin[0]+shape_def['center'][0], self.pin[1]+shape_def['center'][1])
+
+        # Convert center tablet to device coordinates
+        center_dc = self.layer.Tablet.to_dc(center_tablet)
+        radius = shape_def['radius']
+        diameter = radius * 2
+
+        # Update dimensions of the bounding box if either dimension is larger
+        self.width = max(self.width, diameter)
+        self.height = max(self.height, diameter)
+
+        # Create Qt circle item
+        # We subtract the radius since Qt wants the top left corner for positioning
+        circle_item = QGraphicsEllipseItem(QRectF(center_dc.x-radius, center_dc.y-radius, diameter, diameter))
+
+        try:
+            component_style = self.layer.Presentation.Symbol_presentation[self.name][component_name]
+        except KeyError:
+            self.logger.error(f"No style defined for component [{component_name}] in symbol [{self.name}]")
+            raise BadConfigData
+
+        # Set pen and brush (border/fill) styles
+        CrayonBox.choose_crayons(
+            item=circle_item,
+            border_style=component_style['line style'],
+            fill=component_style['fill'])
+
+        # Add circle shape element to the symbol item group
+        self.symbol_item.addToGroup(circle_item)
 
     def add_polyline(self, component_name: str, shape_def):
         """

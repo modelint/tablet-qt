@@ -40,7 +40,7 @@ class SketchSymbols:
         # size = 27h, 253w
 
         # s = Symbol(layer=dlayer, name='final pseudo state', pin=Position(300, 300), angle=0)
-        s = Symbol(layer=dlayer, name='target state', pin=Position(400, 300), angle=0)
+        s = Symbol(layer=dlayer, name='final pseudo state', pin=Position(400, 300), angle=0)
 
         DiagnosticMarker.add_raw_rectangle(layer=dlayer, upper_left=Position(10, 580),
                                            size=Rect_Size(width=800,height=580))

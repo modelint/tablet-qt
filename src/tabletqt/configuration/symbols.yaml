@@ -77,7 +77,7 @@ xUML state machine diagram: # Symbol group (different notation and diagram type)
       polyline: [[-3,5], [0,0], [3,5]]
     stem:
       polyline: [[0,0], [0,60]]
-    psuedo state:
+    pseudo state:
       circle:
         center: [0,57]
         radius: 3

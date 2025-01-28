@@ -539,15 +539,15 @@ xUML state machine diagram:
       target state:
         open arrow:
           line style: normal
-      initial psuedo state:
+      initial pseudo state:
         open arrow:
           line style: normal
         stem:
           line style: normal
-        psuedo state:
+        pseudo state:
           line style: normal
           fill: black
-      final psuedo state:
+      final pseudo state:
         stem:
           line style: normal
         open arrow:
