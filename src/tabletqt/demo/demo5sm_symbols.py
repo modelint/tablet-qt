@@ -1,4 +1,4 @@
-""" demo5_symbols.py - Test symbol display """
+""" demo5sm_stickers.py - Test state machine symbol display """
 
 from pathlib import Path
 from tabletqt.tablet import Tablet
@@ -21,10 +21,10 @@ class SketchSymbols:
     @classmethod
     def make_a_tablet(cls):
         cls.size = Rect_Size(round(210*points_in_mm), round(297*points_in_mm))  # Ansi C portrait
-        dtype = "Starr class diagram"
+        # dtype = "Starr class diagram"
         # dtype = "xUML class diagram"
-        # dtype = "xUML state machine diagram"
-        output_path = Path(__file__).parent.parent.parent.parent / "working" / "demo5_symbols.pdf"
+        dtype = "xUML state machine diagram"
+        output_path = Path(__file__).parent.parent.parent.parent / "working" / "demo5sm_symbols.pdf"
         cls.tablet = Tablet(size=cls.size, output_file=output_path, drawing_type=dtype,
                             presentation="default", layer="diagram", show_window=False, background_color='blue steel')
 
@@ -40,7 +40,7 @@ class SketchSymbols:
         # size = 27h, 253w
 
         # s = Symbol(layer=dlayer, name='final pseudo state', pin=Position(300, 300), angle=0)
-        s = Symbol(layer=dlayer, name='M mult', pin=Position(400, 300), angle=0)
+        s = Symbol(layer=dlayer, name='target state', pin=Position(400, 300), angle=0)
 
         DiagnosticMarker.add_raw_rectangle(layer=dlayer, upper_left=Position(10, 580),
                                            size=Rect_Size(width=800,height=580))

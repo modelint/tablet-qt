@@ -60,6 +60,7 @@ class Symbol:
 
         self.component_methods: Dict[str, Callable[[dict], None]] = {
             'polygon': self.add_polygon,
+            'polyline': self.add_polyline,
             # 'path': self.add_path,
             # 'circle': self.add_circle,
         }
@@ -69,10 +70,14 @@ class Symbol:
 
         # Create item for each component shape element, position it on the tablet, and add it to a Qt
         # symbol item group for any transforms to be applied to the entire symbol
-        for component, cdef in symbol_def.items():
-            for component_name, method in self.component_methods.items():
-                if self.component_methods.get(component_name):
-                    method(component, cdef[component_name])  # Call method apporpriate to the shape
+        for component_name, cdef in symbol_def.items():
+            component_type = list(cdef.keys())[0]
+            try:
+                method = self.component_methods[component_type]
+            except KeyError:
+                self.logger.error(f"Component type {component_type} for symbol {name} not supported")
+                raise BadConfigData
+            method(component_name, cdef[component_type])  # Call method apporpriate to the shape
 
         # for shape in self.shape_elements:
         #     for sname, method in self.shape_methods.items():
@@ -96,7 +101,6 @@ class Symbol:
         raw_config_data = Config(app_name=TabletConfig.app_name, lib_config_dir=TabletConfig.config_path,
                                  fspec={'symbols': None})
         cls.symbol_defs = raw_config_data.loaded_data['symbols']
-        pass
 
     # def add_circle(self, shape_def):
     #     """
@@ -130,48 +134,55 @@ class Symbol:
     #     # Add circle shape element to the symbol item group
     #     self.symbol_item.addToGroup(circle_item)
 
-    # def add_path(self, shape_def):
-    #     """
-    #     Adds a path element (series of connected line segments) to the symbol item group
-    #
-    #     :param shape: The shape definition obtained from the symbol yaml file for this path
-    #     """
-    #     # Translate each vertex relative to the pin
-    #     # We just add the pin to vertex coordinates
-    #     canvas_vertices = [Position(v[0] + self.pin[0], v[1] + self.pin[1]) for v in shape['path']]
-    #
-    #     # Update dimensions of the bounding box if any vertex is outside the current dimensions
-    #     max_x = max(v[0] for v in shape['path'])
-    #     max_y = max(v[1] for v in shape['path'])
-    #     self.width = max(self.width, max_x)
-    #     self.height = max(self.height, max_y)
-    #
-    #     # Convert vertices to device coordinates
-    #     vertices_dc = [self.layer.Tablet.to_dc(v) for v in canvas_vertices]
-    #
-    #     # Create a line item connecting gap between each pair of vertices
-    #     # from beginning of vertex list to the last vertex in the list
-    #     # and add the line item to the symbol item group
-    #     for v in range(len(vertices_dc) - 1):
-    #         start_point = vertices_dc[v]
-    #         end_point = vertices_dc[v + 1]
-    #
-    #         # Create a line item connecting the points
-    #         line = QGraphicsLineItem(QLineF(*start_point, *end_point))
-    #
-    #         # Set line style
-    #         CrayonBox.choose_crayons(
-    #             item=line,
-    #             border_style=shape['border'])
-    #
-    #         # Add line to the symbol item group
-    #         self.symbol_item.addToGroup(line)
-
-    def add_polygon(self, component: str, shape_def):
+    def add_polyline(self, component_name: str, shape_def):
         """
-        Adds a triangle shape element to the symbol item group
+        Adds a path element (series of connected line segments) to the symbol item group
 
-        :param component:
+        :param shape_def: The shape definition obtained from the symbol yaml file for this path
+        """
+        # Translate each vertex relative to the pin
+        # We just add the pin to vertex coordinates
+        canvas_vertices = [Position(v[0] + self.pin[0], v[1] + self.pin[1]) for v in shape_def]
+
+        # Update dimensions of the bounding box if any vertex is outside the current dimensions
+        max_x = max(v[0] for v in shape_def)
+        max_y = max(v[1] for v in shape_def)
+        self.width = max(self.width, max_x)
+        self.height = max(self.height, max_y)
+
+        # Convert vertices to device coordinates
+        vertices_dc = [self.layer.Tablet.to_dc(v) for v in canvas_vertices]
+
+        try:
+            component_style = self.layer.Presentation.Symbol_presentation[self.name][component_name]
+        except KeyError:
+            self.logger.error(f"No style defined for component [{component_name}] in symbol [{self.name}]")
+            raise BadConfigData
+
+        # Create a line item connecting gap between each pair of vertices
+        # from beginning of vertex list to the last vertex in the list
+        # and add the line item to the symbol item group
+        for v in range(len(vertices_dc) - 1):
+            start_point = vertices_dc[v]
+            end_point = vertices_dc[v + 1]
+
+            # Create a line item connecting the points
+            line = QGraphicsLineItem(QLineF(*start_point, *end_point))
+
+            # Set line style
+            CrayonBox.choose_crayons(
+                item=line,
+                border_style=component_style['line style'])
+
+            # Add line to the symbol item group
+            self.symbol_item.addToGroup(line)
+
+    def add_polygon(self, component_name: str, shape_def):
+        """
+        Adds a polygon component to the symbol
+
+        :param polyline:
+        :param component_name:
         :param shape_def: The shape definition obtained from the symbol yaml file for this triangle
         """
         # Translate each vertex relative to the pin
@@ -193,12 +204,11 @@ class Symbol:
         poly_item = QGraphicsPolygonItem(polygon)
         #
         try:
-            component_style = self.layer.Presentation.Symbol_presentation[self.name][component]
+            component_style = self.layer.Presentation.Symbol_presentation[self.name][component_name]
         except KeyError:
-            self.logger.error(f"No style defined for component [{component}] in symbol [{self.name}]")
+            self.logger.error(f"No style defined for component [{component_name}] in symbol [{self.name}]")
             raise BadConfigData
         # # Set pen and brush (border/fill) styles
-        pass
         CrayonBox.choose_crayons(
             item=poly_item,
             border_style=component_style['line style'],
