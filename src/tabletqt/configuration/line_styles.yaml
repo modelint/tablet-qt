@@ -1,9 +1,12 @@
 # line_styles.yaml – Line styles
 
 normal: {pattern: no dash, width: 1, color: black}
+bpnormal: {pattern: no dash, width: 1, color: white}
 hidden: {pattern: no dash, width: 0, color: white}
 double: {pattern: no dash, width: 2, color: black}
+bpdouble: {pattern: no dash, width: 2, color: white}
 dashed: {pattern: even dash, width: 1, color: black}
+bpdashed: {pattern: even dash, width: 1, color: white}
 grid: {pattern: no dash, width: 1, color: grid blue}
 margin: {pattern: no dash, width: 3, color: gold}
 connector highlight: {pattern: no dash, width: 1, color: purple}

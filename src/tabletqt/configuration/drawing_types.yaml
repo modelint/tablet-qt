@@ -305,6 +305,76 @@ xUML class diagram: # Drawing type name
       imported class attribute:
         text style: p9body
         underlay: false
+  blueprint:
+    symbol:
+      superclass arrow:
+        line style: blueprint
+        fill: white
+    shape:
+      rectangle:
+        class name compartment:
+          line style: bpnormal
+          fill: blueprint
+        class attribute compartment:
+          line style: bpnormal
+          fill: blueprint
+        class method compartment:
+          line style: bpnormal
+          fill: blueprint
+        imported class name compartment:
+          line style: bpdashed
+          fill: blueprint
+        imported class attribute compartment:
+          line style: bpdashed
+          fill: blueprint
+      line:
+        binary association connector:
+          line style: bpnormal
+        generalization connector:
+          line style: bpnormal
+        association stem:
+          line style: bpdashed
+        grid:
+          line style: grid
+        margin:
+          line style: margin
+    text: # Text presentations
+      label:
+        text style: bpp9body
+        underlay: false
+      binary association:
+        text style: bpp9body
+        underlay: false
+      generalization:
+        text style: bpp9body
+        underlay: false
+      class face name:
+        text style: bpp9body
+        underlay: false
+      association name:
+        text style: bpp9body
+        underlay: false
+      superclass face name:
+        text style: bpp9body
+        underlay: true
+      see also:
+        text style: bpp9italic
+        underlay: false
+      class name:
+        text style: bpp12title
+        underlay: false
+      class attribute:
+        text style: bpp9body
+        underlay: false
+      class method:
+        text style: bpp9body
+        underlay: false
+      imported class name:
+        text style: bpp12title
+        underlay: false
+      imported class attribute:
+        text style: bpp9body
+        underlay: false
 
 #Shlaer-Mellor class diagram:
 #  default:
@@ -449,88 +519,88 @@ Starr class diagram:
     symbol:
       ordinal:
         circle stem:
-          line style: white
+          line style: bpnormal
           fill: blueprint
       1 mult:
         solid arrow:
-          line style: white
+          line style: bpnormal
           fill: white
       1c mult:
         hollow arrow:
-          line style: white
+          line style: bpnormal
           fill: blueprint
       M mult:
         solid arrow inner:
-          line style: white
+          line style: bpnormal
           fill: white
         solid arrow outer:
-          line style: white
+          line style: bpnormal
           fill: white
       Mc mult:
         hollow arrow inner:
-          line style: white
+          line style: bpnormal
           fill: blueprint
         hollow arrow outer:
-          line style: white
+          line style: bpnormal
           fill: blueprint
     shape:
       rectangle:
         class name compartment:
-          line style: bp normal
+          line style: bpnormal
           fill: blueprint
         class attribute compartment:
-          line style: bp normal
+          line style: bpnormal
           fill: blueprint
         class method compartment:
-          line style: bp normal
+          line style: bpnormal
           fill: blueprint
         imported class name compartment:
-          line style: bp dashed
+          line style: bpdashed
           fill: blueprint
         imported class attribute compartment:
-          line style: bp dashed
+          line style: bpdashed
           fill: blueprint
       line:
         binary association connector:
-          line style: bp normal
+          line style: bpnormal
         generalization connector:
-          line style: bp normal
+          line style: bpnormal
         association stem:
-          line style: bp normal
+          line style: bpnormal
         grid:
           line style: hide
         margin:
           line style: hide
     text:
       label:
-        text style: bp p9body
+        text style: bpp9body
         underlay: false
       binary association:
-        text style: bp p9body
+        text style: bpp9body
         underlay: false
       generalization:
-        text style: bp p9body
+        text style: bpp9body
         underlay: true
       class face name:
-        text style: bp p9body
+        text style: bpp9body
         underlay: false
       see also:
-        text style: bp p9italic
+        text style: bpp9italic
         underlay: false
       class name:
-        text style: bp p12title
+        text style: bpp12title
         underlay: false
       class attribute:
-        text style: bp p9body
+        text style: bpp9body
         underlay: false
       class method:
-        text style: bp p9body
+        text style: bpp9body
         underlay: false
       imported class name:
-        text style: bp p12title
+        text style: bpp12title
         underlay: false
       imported class attribute:
-        text style: bp p9body
+        text style: bpp9body
         underlay: false
 
 xUML state machine diagram:
@@ -603,6 +673,76 @@ xUML state machine diagram:
         underlay: false
       state name only name:
         text style: p12title
+        underlay: false
+  blueprint:
+    symbol:
+      target state:
+        open arrow:
+          line style: bpnormal
+      initial pseudo state:
+        open arrow:
+          line style: bpnormal
+        stem:
+          line style: bpnormal
+        pseudo state:
+          line style: bpnormal
+          fill: white
+      final pseudo state:
+        stem:
+          line style: bpnormal
+        open arrow:
+          line style: bpnormal
+        big circle:
+          line style: bpnormal
+          fill: blueprint
+        center dot:
+          line style: bpnormal
+          fill: white
+    shape:
+      rectangle:
+        state name compartment:
+          line style: bpnormal
+          fill: blueprint
+          corner spec:
+            radius: 4
+            top: true
+            bottom: false
+        state name only name compartment:
+          line style: bpnormal
+          fill: blueprint
+          corner spec:
+            radius: 4
+            top: true
+            bottom: true
+        state activity compartment:
+          line style: bpnormal
+          fill: blueprint
+          corner spec:
+            radius: 4
+            top: false
+            bottom: true
+      line:
+        transition connector:
+          line style: bpnormal
+        initial transition connector:
+          line style: bpnormal
+        deletion transition connector:
+          line style: bpnormal
+    text:
+      transition:
+        text style: bpp9body
+        underlay: true
+      initial transition:
+        text style: bpp9body
+        underlay: false
+      state activity:
+        text style: bpp9body
+        underlay: false
+      state name:
+        text style: bpp12title
+        underlay: false
+      state name only name:
+        text style: bpp12title
         underlay: false
 
 # Not supported yet

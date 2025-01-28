@@ -26,7 +26,7 @@ class SketchSymbols:
         dtype = "xUML state machine diagram"
         output_path = Path(__file__).parent.parent.parent.parent / "working" / "demo5sm_symbols.pdf"
         cls.tablet = Tablet(size=cls.size, output_file=output_path, drawing_type=dtype,
-                            presentation="default", layer="diagram", show_window=False, background_color='blue steel')
+                            presentation="blueprint", layer="diagram", show_window=False, background_color='blueprint')
 
 
     @classmethod
