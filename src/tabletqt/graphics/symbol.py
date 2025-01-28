@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsLineItem, QGraphicsIt
 from PyQt6.QtCore import QPointF, QLineF, QRectF
 from PyQt6.QtGui import QPolygonF
 from typing import TYPE_CHECKING, Callable, Dict
-from pathlib import Path
 
 if TYPE_CHECKING:
     from tabletqt.tablet import Layer
@@ -19,6 +18,7 @@ from tabletqt.styledb import StyleDB
 from tabletqt.geometry_types import Position
 from tabletqt.graphics.crayon_box import CrayonBox
 from tabletqt.tablet_config import TabletConfig
+from tabletqt.exceptions import BadConfigData
 
 class Symbol:
     """
@@ -50,20 +50,18 @@ class Symbol:
         self.angle = angle
         self.width = 0
         self.height = 0
-        try:
-            self.shape_elements = StyleDB.symbol[name]
-        except KeyError:
-            self.logger.exception(f"StyleDB has no entry for symbol: [{name}]")
-            return
-
         self.symbol_item = QGraphicsItemGroup()
 
-        # These are the shape elements currently supported
-        # TODO: Add rectangles and images
-        self.shape_methods: Dict[str, Callable[[dict], None]] = {
-            'triangle': self.add_triangle,
-            'path': self.add_path,
-            'circle': self.add_circle,
+        try:
+            symbol_def = self.symbol_defs[self.layer.Drawing_type][name]
+        except KeyError:
+            self.logger.error(f"No symbol named [{name}] defined for drawing type [{self.layer.Drawing_type}]")
+            raise BadConfigData
+
+        self.component_methods: Dict[str, Callable[[dict], None]] = {
+            'polygon': self.add_polygon,
+            # 'path': self.add_path,
+            # 'circle': self.add_circle,
         }
 
         # Convert pin to device coordinates
@@ -71,10 +69,15 @@ class Symbol:
 
         # Create item for each component shape element, position it on the tablet, and add it to a Qt
         # symbol item group for any transforms to be applied to the entire symbol
-        for shape in self.shape_elements:
-            for sname, method in self.shape_methods.items():
-                if shape.get(sname):
-                    method(shape)  # Call method apporpriate to the shape
+        for component, cdef in symbol_def.items():
+            for component_name, method in self.component_methods.items():
+                if self.component_methods.get(component_name):
+                    method(component, cdef[component_name])  # Call method apporpriate to the shape
+
+        # for shape in self.shape_elements:
+        #     for sname, method in self.shape_methods.items():
+        #         if shape.get(sname):
+        #             method(shape)  # Call method apporpriate to the shape
 
         # Create the rotation transform and apply it to the group
         self.symbol_item.setTransformOriginPoint(self.device_pin.x, self.device_pin.y)
@@ -93,106 +96,113 @@ class Symbol:
         raw_config_data = Config(app_name=TabletConfig.app_name, lib_config_dir=TabletConfig.config_path,
                                  fspec={'symbols': None})
         cls.symbol_defs = raw_config_data.loaded_data['symbols']
+        pass
 
-    def add_circle(self, shape: Dict):
-        """
-        Adds a circle shape element to the symbol item group
+    # def add_circle(self, shape_def):
+    #     """
+    #     Adds a circle shape element to the symbol item group
+    #
+    #     :param shape: The shape definition obtained from the symbol yaml file for this circle
+    #     """
+    #     # Translate center in symbol bounding box relative to the pin
+    #     # We just add the center position to the pin position to translate the circle
+    #     center_tablet = Position(self.pin[0]+shape['circle']['center'][0], self.pin[1]+shape['circle']['center'][1])
+    #
+    #     # Convert center tablet to device coordinates
+    #     center_dc = self.layer.Tablet.to_dc(center_tablet)
+    #     radius = shape['circle']['radius']
+    #     diameter = radius * 2
+    #
+    #     # Update dimensions of the bounding box if either dimension is larger
+    #     self.width = max(self.width, diameter)
+    #     self.height = max(self.height, diameter)
+    #
+    #     # Create Qt circle item
+    #     # We subtract the radius since Qt wants the top left corner for positioning
+    #     circle_item = QGraphicsEllipseItem(QRectF(center_dc.x-radius, center_dc.y-radius, diameter, diameter))
+    #
+    #     # Set pen and brush (border/fill) styles
+    #     CrayonBox.choose_crayons(
+    #         item=circle_item,
+    #         border_style=shape['border'],
+    #         fill=shape['fill'])
+    #
+    #     # Add circle shape element to the symbol item group
+    #     self.symbol_item.addToGroup(circle_item)
 
-        :param shape: The shape definition obtained from the symbol yaml file for this circle
-        """
-        # Translate center in symbol bounding box relative to the pin
-        # We just add the center position to the pin position to translate the circle
-        center_tablet = Position(self.pin[0]+shape['circle']['center'][0], self.pin[1]+shape['circle']['center'][1])
+    # def add_path(self, shape_def):
+    #     """
+    #     Adds a path element (series of connected line segments) to the symbol item group
+    #
+    #     :param shape: The shape definition obtained from the symbol yaml file for this path
+    #     """
+    #     # Translate each vertex relative to the pin
+    #     # We just add the pin to vertex coordinates
+    #     canvas_vertices = [Position(v[0] + self.pin[0], v[1] + self.pin[1]) for v in shape['path']]
+    #
+    #     # Update dimensions of the bounding box if any vertex is outside the current dimensions
+    #     max_x = max(v[0] for v in shape['path'])
+    #     max_y = max(v[1] for v in shape['path'])
+    #     self.width = max(self.width, max_x)
+    #     self.height = max(self.height, max_y)
+    #
+    #     # Convert vertices to device coordinates
+    #     vertices_dc = [self.layer.Tablet.to_dc(v) for v in canvas_vertices]
+    #
+    #     # Create a line item connecting gap between each pair of vertices
+    #     # from beginning of vertex list to the last vertex in the list
+    #     # and add the line item to the symbol item group
+    #     for v in range(len(vertices_dc) - 1):
+    #         start_point = vertices_dc[v]
+    #         end_point = vertices_dc[v + 1]
+    #
+    #         # Create a line item connecting the points
+    #         line = QGraphicsLineItem(QLineF(*start_point, *end_point))
+    #
+    #         # Set line style
+    #         CrayonBox.choose_crayons(
+    #             item=line,
+    #             border_style=shape['border'])
+    #
+    #         # Add line to the symbol item group
+    #         self.symbol_item.addToGroup(line)
 
-        # Convert center tablet to device coordinates
-        center_dc = self.layer.Tablet.to_dc(center_tablet)
-        radius = shape['circle']['radius']
-        diameter = radius * 2
-
-        # Update dimensions of the bounding box if either dimension is larger
-        self.width = max(self.width, diameter)
-        self.height = max(self.height, diameter)
-
-        # Create Qt circle item
-        # We subtract the radius since Qt wants the top left corner for positioning
-        circle_item = QGraphicsEllipseItem(QRectF(center_dc.x-radius, center_dc.y-radius, diameter, diameter))
-
-        # Set pen and brush (border/fill) styles
-        CrayonBox.choose_crayons(
-            item=circle_item,
-            border_style=shape['border'],
-            fill=shape['fill'])
-
-        # Add circle shape element to the symbol item group
-        self.symbol_item.addToGroup(circle_item)
-
-    def add_path(self, shape):
-        """
-        Adds a path element (series of connected line segments) to the symbol item group
-
-        :param shape: The shape definition obtained from the symbol yaml file for this path
-        """
-        # Translate each vertex relative to the pin
-        # We just add the pin to vertex coordinates
-        canvas_vertices = [Position(v[0] + self.pin[0], v[1] + self.pin[1]) for v in shape['path']]
-
-        # Update dimensions of the bounding box if any vertex is outside the current dimensions
-        max_x = max(v[0] for v in shape['path'])
-        max_y = max(v[1] for v in shape['path'])
-        self.width = max(self.width, max_x)
-        self.height = max(self.height, max_y)
-
-        # Convert vertices to device coordinates
-        vertices_dc = [self.layer.Tablet.to_dc(v) for v in canvas_vertices]
-
-        # Create a line item connecting gap between each pair of vertices
-        # from beginning of vertex list to the last vertex in the list
-        # and add the line item to the symbol item group
-        for v in range(len(vertices_dc) - 1):
-            start_point = vertices_dc[v]
-            end_point = vertices_dc[v + 1]
-
-            # Create a line item connecting the points
-            line = QGraphicsLineItem(QLineF(*start_point, *end_point))
-
-            # Set line style
-            CrayonBox.choose_crayons(
-                item=line,
-                border_style=shape['border'])
-
-            # Add line to the symbol item group
-            self.symbol_item.addToGroup(line)
-
-    def add_triangle(self, shape):
+    def add_polygon(self, component: str, shape_def):
         """
         Adds a triangle shape element to the symbol item group
 
-        :param shape: The shape definition obtained from the symbol yaml file for this triangle
+        :param component:
+        :param shape_def: The shape definition obtained from the symbol yaml file for this triangle
         """
-        # TODO: generalize this to handle any polygon
         # Translate each vertex relative to the pin
         # We just add the pin to vertex coordinates
-        canvas_vertices = [Position(v[0] + self.pin[0], v[1] + self.pin[1]) for v in shape['triangle']]
+        canvas_vertices = [Position(v[0] + self.pin[0], v[1] + self.pin[1]) for v in shape_def]
 
         # Update dimensions of the bounding box if any vertex is outside the current dimensions
-        max_x = max(v[0] for v in shape['triangle'])
-        max_y = max(v[1] for v in shape['triangle'])
+        max_x = max(v[0] for v in shape_def)
+        max_y = max(v[1] for v in shape_def)
         self.width = max(self.width, max_x)
         self.height = max(self.height, max_y)
-
-        # Convert vertices to device coordinates
+        #
+        # # Convert vertices to device coordinates
         vertices_dc = [self.layer.Tablet.to_dc(v) for v in canvas_vertices]
-
-        # Create a polygon item
+        #
+        # # Create a polygon item
         pverts = [QPointF(*v) for v in vertices_dc]
         polygon = QPolygonF(pverts)
         poly_item = QGraphicsPolygonItem(polygon)
-
-        # Set pen and brush (border/fill) styles
+        #
+        try:
+            component_style = self.layer.Presentation.Symbol_presentation[self.name][component]
+        except KeyError:
+            self.logger.error(f"No style defined for component [{component}] in symbol [{self.name}]")
+            raise BadConfigData
+        # # Set pen and brush (border/fill) styles
+        pass
         CrayonBox.choose_crayons(
             item=poly_item,
-            border_style=shape['border'],
-            fill=shape['fill'])
+            border_style=component_style['line style'],
+            fill=component_style['fill'])
 
         # Add triangle to the symbol item group
         self.symbol_item.addToGroup(poly_item)

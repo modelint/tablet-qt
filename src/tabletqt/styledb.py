@@ -71,11 +71,12 @@ class StyleDB:
         """
         _logger.info(f"StyleDB loading tabletqt configuration\n---")
         fspec = {k: v.nt for k,v in config_type.items()}
-        cls.raw_config_data = Config(app_name='mi_tablet', lib_config_dir=config_path, fspec=fspec)
+        cls.raw_config_data = Config(app_name=TabletConfig.app_name, lib_config_dir=TabletConfig.config_path,
+                                     fspec=fspec)
         cls.config_data = cls.raw_config_data.loaded_data
 
         for fname, cdata in cls.config_data.items():
-            config_file_path = config_path / (fname + ".yaml")
+            config_file_path = TabletConfig.config_path / (fname + ".yaml")
             _logger.info(f"loading: {config_file_path}")
             if config_type[fname].pre:
                 # Retrieve the relevant preprocessing method name using the filename suffix

@@ -85,10 +85,11 @@ class Tablet:
         self.app_name = "tablet"
 
         # Load all of the common font, color, etc. styles used by all Presentations from yaml files
+        StyleDB.load_config_files()
+
+        # Load symbols, stickers, and build image paths for all assets and drawing types
         Symbol.load_symbol_defs()
         ImageDE.build_paths()
-        StyleDB.load_config_files()
-        # Load all of the sticker stickers
         TextElement.load_stickers()
 
         # Establish a system default layer ordering. Not all of them will be used in any given
