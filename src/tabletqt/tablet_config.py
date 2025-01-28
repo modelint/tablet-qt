@@ -9,4 +9,4 @@ class TabletConfig:
     """
     config_path = Path(__file__).parent / "configuration"
     image_path = config_path / "images"
-    app_name = "mi-tablet"
+    app_name = "mi_tablet"

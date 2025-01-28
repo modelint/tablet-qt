@@ -56,7 +56,7 @@ Starr class diagram:
   M mult:
     solid arrow inner:
       polygon: [[-3,9], [0,0], [3,9]]
-    hollow arrow outer:
+    solid arrow outer:
       polygon: [[-3,18], [0,9], [3,18]]
   Mc mult:
     hollow arrow inner:

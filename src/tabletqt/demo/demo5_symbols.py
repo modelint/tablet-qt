@@ -24,7 +24,7 @@ class SketchSymbols:
         dtype = "Starr class diagram"
         # dtype = "xUML class diagram"
         # dtype = "xUML state machine diagram"
-        output_path = Path(__file__).parent.parent.parent.parent / "working" / "demo2_stickers.pdf"
+        output_path = Path(__file__).parent.parent.parent.parent / "working" / "demo5_symbols.pdf"
         cls.tablet = Tablet(size=cls.size, output_file=output_path, drawing_type=dtype,
                             presentation="default", layer="diagram", show_window=False, background_color='blue steel')
 
