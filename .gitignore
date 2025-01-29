@@ -2,6 +2,7 @@ build/
 dist/
 diagnostics/
 working/
+tests/output/
 *.dot
 *.log
 *.pyc
