@@ -240,9 +240,9 @@ xUML class diagram: # Drawing type name
   default: # Presentation name
     symbol: # Symbol presentations
       superclass:
-      superclass arrow:
-        line style: normal
-        fill: white
+        superclass arrow:
+          line style: normal
+          fill: white
     shape: # Shape presentations
       rectangle:
         class name compartment:

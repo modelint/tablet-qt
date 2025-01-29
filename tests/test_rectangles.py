@@ -61,7 +61,7 @@ def test_state_compartment():
                          presentation="default", layer="diagram", show_window=False, background_color='autumn')
     dlayer = test_tablet.layers['diagram']
 
-    r = RectangleSE.add(layer=dlayer, asset="state name only compartment", lower_left=Position(100, 100),
+    r = RectangleSE.add(layer=dlayer, asset="state name only name compartment", lower_left=Position(100, 100),
                         size=Rect_Size(height=27, width=253))
     test_tablet.render()
     assert True
