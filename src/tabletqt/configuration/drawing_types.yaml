@@ -239,6 +239,7 @@ Model Integration Diagram Small Frame:
 xUML class diagram: # Drawing type name
   default: # Presentation name
     symbol: # Symbol presentations
+      superclass:
       superclass arrow:
         line style: normal
         fill: white
@@ -647,7 +648,7 @@ xUML state machine diagram:
             radius: 4
             top: true
             bottom: false
-        state name only compartment:
+        state name only name compartment:
           line style: normal
           fill: white
           corner spec:
