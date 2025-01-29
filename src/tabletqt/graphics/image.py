@@ -65,11 +65,6 @@ class ImageDE:
         :param size: The actual size of the image in points
         :param lower_left:  Lower left corner of the image in tablet coordinates
         """
-        try:
-            image_path = StyleDB.image[name]
-        except KeyError:
-            _logger.warning(f"Image: {name} not found in StyleDB. Check entry in image.yaml file.")
-            return
 
         # Flip lower left corner to device coordinates
         try:
@@ -82,8 +77,12 @@ class ImageDE:
         ul = Position(x=ll_dc.x, y=ll_dc.y - size.height)
 
         # Add it to the list
-        layer.Images.append(element.Image(resource_path=image_path, upper_left=ul, size=size))
-        _logger.info(f'View>> Layer {layer.Name} registered resource at: {image_path}')
+        try:
+            layer.Images.append(element.Image(resource_path=cls.image_paths[name], upper_left=ul, size=size))
+        except KeyError:
+            _logger.warning(f"No path defined for image [{name}]")
+        else:
+            _logger.info(f'View>> Layer {layer.Name} registered resource at: {cls.image_paths[name]}')
 
     @classmethod
     def render(cls, layer: 'Layer'):
