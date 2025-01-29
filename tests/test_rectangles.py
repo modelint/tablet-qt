@@ -10,6 +10,20 @@ from tabletqt.graphics.rectangle_se import RectangleSE
 points_in_mm = 2.83465
 A4 = Rect_Size(round(210 * points_in_mm), round(297 * points_in_mm))
 
+def test_grid_boundary():
+    dtype = "Grid Diagnostic"
+    function_name = inspect.currentframe().f_code.co_name
+    output_path = Path(f"output/{function_name}.pdf")
+
+    test_tablet = Tablet(size=A4, output_file=output_path, drawing_type=dtype,
+                         presentation="default", layer="grid", show_window=False, background_color='white')
+    glayer = test_tablet.layers['grid']
+
+    r = RectangleSE.add(layer=glayer, asset="grid boundary", lower_left=Position(10, 10),
+                        size=Rect_Size(height=400, width=400))
+    test_tablet.render()
+    assert True
+
 def test_class_compartment():
     dtype = "Starr class diagram"
     function_name = inspect.currentframe().f_code.co_name
@@ -51,6 +65,7 @@ def test_state_compartment():
                         size=Rect_Size(height=27, width=253))
     test_tablet.render()
     assert True
+
 def test_bp_state_compartment():
     dtype = "xUML state machine diagram"
     function_name = inspect.currentframe().f_code.co_name

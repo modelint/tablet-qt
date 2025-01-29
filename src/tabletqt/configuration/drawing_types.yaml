@@ -23,8 +23,10 @@ Grid Diagnostic: # Drawing type name
           line style: grid
         row boundary:
           line style: grid
+      rectangle:
         grid boundary:
-          line style: diagram
+          line style: grid
+          # No fill
     text:
       grid label: # Asset name
         text style: coordinate
@@ -109,7 +111,7 @@ Model Integration Diagram Large Frame:
     shape:
       rectangle:
         block border:
-          line style: bp double
+          line style: bpdouble
           fill: blueprint
 
 Model Integration Diagram Medium Frame:

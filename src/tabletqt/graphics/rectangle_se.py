@@ -59,11 +59,8 @@ class RectangleSE:
         rect_style = layer.Presentation.Rectangle_presentation[asset]
 
         # Get the fill is defined for this rectangle asset in the layer's presentation
-        try:
-            fill = rect_style['fill']
-        except KeyError:
-            _logger.exception(f"No fill specified in rectangle presentation for asset: [{asset}")
-            raise MissingConfigData
+        # It is okay to specify no fill at all
+        fill = rect_style.get('fill')
 
         try:
             border = rect_style['line style']
