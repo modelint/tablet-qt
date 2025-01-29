@@ -3,10 +3,7 @@
 from pathlib import Path
 from tabletqt.tablet import Tablet
 from tabletqt.geometry_types import Rect_Size, Position
-from tabletqt.graphics.symbol import Symbol
 from tabletqt.graphics.text_element import TextElement, TextBlockCorner, HorizAlign
-from tabletqt.graphics.rectangle_se import RectangleSE
-from tabletqt.graphics.diagnostic_marker import DiagnosticMarker
 
 points_in_mm = 2.83465
 points_in_cm = 28.3465
