@@ -637,7 +637,7 @@ xUML state machine diagram:
             radius: 4
             top: true
             bottom: false
-        state name only name compartment:
+        state name only compartment:
           line style: normal
           fill: white
           corner spec:
@@ -707,7 +707,7 @@ xUML state machine diagram:
             radius: 4
             top: true
             bottom: false
-        state name only name compartment:
+        state name only compartment:
           line style: bpnormal
           fill: blueprint
           corner spec:

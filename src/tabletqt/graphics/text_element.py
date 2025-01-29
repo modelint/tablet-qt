@@ -167,7 +167,7 @@ class TextElement:
         :return:  The display size of the text block
         """
         style_name = presentation.Text_presentation[asset]  # Look up the text style for this asset
-        style = StyleDB.text_style[style_name]
+        style = StyleDB.text_style[style_name['text style']]
         font_height = style.size
         spacing = font_height * style.spacing
         inter_line_spacing = spacing - font_height  # Space between two lines
@@ -276,7 +276,7 @@ class TextElement:
         :param align: Horizontal text alignment (left, right or center)
         """
         style_name = layer.Presentation.Text_presentation[asset]  # Look up the text style for this asset
-        style = StyleDB.text_style[style_name]
+        style = StyleDB.text_style[style_name['text style']]
         font_height = style.size
         spacing = font_height * style.spacing
 
