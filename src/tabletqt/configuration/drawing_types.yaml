@@ -456,6 +456,10 @@ Starr class diagram:
         hollow arrow outer:
           line style: normal
           fill: white
+      superclass:
+        superclass arrow:
+          line style: normal
+          fill: white
     shape:
       rectangle:
         class name compartment:
@@ -541,6 +545,10 @@ Starr class diagram:
           line style: bpnormal
           fill: blueprint
         hollow arrow outer:
+          line style: bpnormal
+          fill: blueprint
+      superclass:
+        superclass arrow:
           line style: bpnormal
           fill: blueprint
     shape:
