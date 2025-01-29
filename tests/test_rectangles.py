@@ -1,4 +1,4 @@
-""" text_flatland_cd_pdf.py - test Starr and xUML notation Flatland class diagram pdf output"""
+""" test_rectangles.py - Draw some rectangle shapes for different presentations on the diagram layer """
 
 import pytest
 import inspect
