@@ -32,7 +32,7 @@ class Presentation:
         self.Name = name
         self.Drawing_type = drawing_type
         self.Text_presentation = {}
-        self.Underlays = set()  # Set of text presentations that require an underlay
+        self.Underlays = None  # Set of text presentations that require an underlay
         self.Line_presentation = {}
         self.Rectangle_presentation = {}
         self.Symbol_presentation = {}
@@ -59,6 +59,7 @@ class Presentation:
         # Load symbol presentations
         self.Symbol_presentation = my_data.get('symbol')
         self.Text_presentation = my_data.get('text')
+        self.Underlays = {k for k,v in self.Text_presentation.items() if v.get('underlay')}
         if my_data.get('shape'):
             self.Rectangle_presentation = my_data['shape'].get('rectangle')
             self.Line_presentation = my_data['shape'].get('line')

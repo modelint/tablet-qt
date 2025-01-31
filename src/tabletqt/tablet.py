@@ -11,7 +11,7 @@ from typing import Optional
 from PyQt6.QtWidgets import QApplication
 
 # Tablet
-from tabletqt.exceptions import NonSystemInitialLayer, TabletBoundsExceeded
+from tabletqt.exceptions import NonSystemInitialLayer, TabletBoundsExceeded, MissingConfigData
 from tabletqt.geometry_types import Rect_Size, Position
 from tabletqt.styledb import StyleDB
 from tabletqt.graphics.text_element import TextElement
@@ -96,7 +96,11 @@ class Tablet:
         # View, but this is the draw order from bottom-most layer upward
         # It can (should be) customizable by the user, but this should work for most diagrams
         self.show_window = show_window
-        self.background_color = StyleDB.color[background_color]  # This is referenced when filling text underlay rects
+        try:
+            self.background_color = StyleDB.color[background_color]  # This is referenced when filling text underlay rects
+        except KeyError:
+            self.logger.error(f'Background color [{background_color} not defined in colors.yaml file')
+            raise MissingConfigData
         self.layer_order = ['sheet', 'grid', 'frame', 'diagram', 'scenario', 'annotation']
         self.Presentations = {}  # Presentations loaded from the Flatland database, updated by Layer class
         self.App = gui_app  # QT Application (must be created before any QT widgets)

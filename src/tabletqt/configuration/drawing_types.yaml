@@ -280,7 +280,7 @@ xUML class diagram: # Drawing type name
         underlay: false
       generalization:
         text style: p9body
-        underlay: false
+        underlay: true
       class face name:
         text style: p9body
         underlay: false
