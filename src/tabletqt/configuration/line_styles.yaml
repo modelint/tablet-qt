@@ -8,6 +8,8 @@ bpdouble: {pattern: no dash, width: 2, color: white}
 dashed: {pattern: even dash, width: 1, color: black}
 bpdashed: {pattern: even dash, width: 1, color: white}
 grid: {pattern: no dash, width: 1, color: grid blue}
+grid box: {pattern: no dash, width: 2, color: purple}
 margin: {pattern: no dash, width: 3, color: gold}
 connector highlight: {pattern: no dash, width: 1, color: purple}
+guide: {pattern: no dash, width: 1, color: horrible red}
 hide: {pattern: no dash, width: 1, color: white}

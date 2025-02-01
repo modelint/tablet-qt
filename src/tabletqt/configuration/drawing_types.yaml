@@ -23,9 +23,11 @@ Grid Diagnostic: # Drawing type name
           line style: grid
         row boundary:
           line style: grid
+        ruler line:
+          line style: guide
       rectangle:
-        grid boundary:
-          line style: grid
+        grid border:
+          line style: grid box
           # No fill
     text:
       grid label: # Asset name
