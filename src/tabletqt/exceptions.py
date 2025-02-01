@@ -15,4 +15,9 @@ class NonSystemInitialLayer(TabletException):
     pass
 
 class TabletBoundsExceeded(TabletException):
-    pass
+    def __init__(self, message, height, width):
+        self.message = message
+        self.height = height
+        self.width = width
+        super().__init__(f"{message} (Height exceeded: {height} Width exceeded: {width})")
+

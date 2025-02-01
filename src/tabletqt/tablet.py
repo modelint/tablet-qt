@@ -188,7 +188,7 @@ class Tablet:
         :return: Position in device coordinates
         """
         if tablet_coord.y > self.Size.height:
-            raise TabletBoundsExceeded
+            raise TabletBoundsExceeded("Tablet height exceeded", height=tablet_coord.y - self.Size.height, width=0)
         assert tablet_coord.x >= 0, "Negative x value"
         assert tablet_coord.y >= 0, "Negative y value"
         return Position(x=tablet_coord.x, y=self.Size.height - tablet_coord.y)
