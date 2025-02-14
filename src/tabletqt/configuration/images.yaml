@@ -1,6 +1,8 @@
 # images.yaml – Image files and stickers by size group
 
 mint-large : mint_logo_large.png
+mint_tri-large : mint_tri_large.png
+mint_tri-medium : mint_tri_medium.png
 mint-medium : mint_logo_medium.png
 mint-small : mint_logo_small.png
 MIT-large : MIT_boilerplate_large.png
