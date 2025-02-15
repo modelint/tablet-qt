@@ -1,12 +1,12 @@
 # typefaces.yaml – System defined typefaces
 # System font stickers keyed by alias used internally
 
-Palatino  : Palatino Sans Informal LT Pro
 Gill_Sans : Gill Sans
 Helvetica : Helvetica
 Verdana   : Verdana
 Courier   : Courier
 #Eurostile : Eurostile BoldExtendedTwo
+#Palatino  : Palatino Sans Informal LT Pro
 
 # Uncomment above and update text_styles.yaml (see comment there) if you want to match
 # the style Leon uses. But be sure to download the font to your platform if you do!

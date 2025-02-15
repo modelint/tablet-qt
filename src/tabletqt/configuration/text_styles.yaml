@@ -1,12 +1,22 @@
 # text_styles.yaml – Named usages of type faces
 
 # Used in model diagrams
-p9body: {typeface: Palatino, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
-p12title: {typeface: Palatino, size: 12, slant: normal, weight: bold, color: black, spacing: 1.3}
-p9italic: {typeface: Palatino, size: 9, slant: italic, weight: normal, color: black, spacing: 1.3}
-bpp9body: {typeface: Palatino, size: 9, slant: normal, weight: normal, color: white, spacing: 1.3}
-bpp12title: {typeface: Palatino, size: 12, slant: normal, weight: bold, color: white, spacing: 1.3}
-bpp9italic: {typeface: Palatino, size: 9, slant: italic, weight: normal, color: white, spacing: 1.3}
+p9body: {typeface: Gill_Sans, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
+p12title: {typeface: Gill_Sans, size: 12, slant: normal, weight: bold, color: black, spacing: 1.3}
+p9italic: {typeface: Gill_Sans, size: 9, slant: italic, weight: normal, color: black, spacing: 1.3}
+bpp9body: {typeface: Gill_Sans, size: 9, slant: normal, weight: normal, color: white, spacing: 1.3}
+bpp12title: {typeface: Gill_Sans, size: 12, slant: normal, weight: bold, color: white, spacing: 1.3}
+bpp9italic: {typeface: Gill_Sans, size: 9, slant: italic, weight: normal, color: white, spacing: 1.3}
+
+# If you want to match style Leon uses, uncomment this and comment out above matching section
+# I commented this out since Eurostile is not a Mac system font--you have to download it
+
+#p9body: {typeface: Palatino, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
+#p12title: {typeface: Palatino, size: 12, slant: normal, weight: bold, color: black, spacing: 1.3}
+#p9italic: {typeface: Palatino, size: 9, slant: italic, weight: normal, color: black, spacing: 1.3}
+#bpp9body: {typeface: Palatino, size: 9, slant: normal, weight: normal, color: white, spacing: 1.3}
+#bpp12title: {typeface: Palatino, size: 12, slant: normal, weight: bold, color: white, spacing: 1.3}
+#bpp9italic: {typeface: Palatino, size: 9, slant: italic, weight: normal, color: white, spacing: 1.3}
 
 # Used in Frames
 free title large: {typeface: Verdana, size: 14, slant: normal, weight: bold, color: black, spacing: 1.3}
