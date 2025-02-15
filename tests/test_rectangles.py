@@ -19,7 +19,7 @@ def test_grid_boundary():
                          presentation="default", layer="grid", show_window=False, background_color='white')
     glayer = test_tablet.layers['grid']
 
-    r = RectangleSE.add(layer=glayer, asset="grid boundary", lower_left=Position(10, 10),
+    r = RectangleSE.add(layer=glayer, asset="grid border", lower_left=Position(10, 10),
                         size=Rect_Size(height=400, width=400))
     test_tablet.render()
     assert True

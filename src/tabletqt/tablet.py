@@ -20,6 +20,7 @@ from tabletqt.scene_view import MainWindow
 from tabletqt.graphics.image import ImageDE
 from tabletqt.configuration.styles import FloatRGB
 from tabletqt.graphics.symbol import Symbol
+from tabletqt.resource_library import ResourceLibrary
 
 default_background = FloatRGB(255, 255, 255)  # White
 
@@ -86,6 +87,9 @@ class Tablet:
 
         # Load all of the common font, color, etc. styles used by all Presentations from yaml files
         StyleDB.load_config_files()
+
+        # Ensure the user has an image library
+        ResourceLibrary.init_user_images()
 
         # Load symbols, stickers, and build image paths for all assets and drawing types
         Symbol.load_symbol_defs()
