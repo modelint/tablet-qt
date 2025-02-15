@@ -14,7 +14,7 @@ bp free title large: {typeface: Eurostile, size: 14, slant: normal, weight: norm
 free title medium: {typeface: Eurostile, size: 14, slant: normal, weight: normal, color: black, spacing: 1.3}
 free title small: {typeface: Eurostile, size: 12, slant: normal, weight: normal, color: black, spacing: 1.1}
 block title large: {typeface: Eurostile, size: 13, slant: normal, weight: normal, color: block blue, spacing: 1.3}
-bp block title large: {typeface: Eurostile, size: 13, slant: normal, weight: normal, color: block blue, spacing: 1.3}
+bp block title large: {typeface: Eurostile, size: 13, slant: normal, weight: normal, color: white, spacing: 1.3}
 block title medium: {typeface: Eurostile, size: 11, slant: normal, weight: normal, color: block blue, spacing: 1.3}
 block title small: {typeface: Eurostile, size: 9, slant: normal, weight: normal, color: block blue, spacing: 1.1}
 boilerplate: {typeface: Courier, size: 9, slant: normal, weight: normal, color: black, spacing: 1.3}
