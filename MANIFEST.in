@@ -1,2 +1,3 @@
 include src/tabletqt/log.conf
 include src/tabletqt/configuration/*.yaml
+include src/tabletqt/configuration/image_files/*.png
